@@ -10,8 +10,6 @@ function NewSession() {
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
     dispatch(startSession({ playerName: name }));
-
-    console.log(startSession.toString());
   };
 
   return (
