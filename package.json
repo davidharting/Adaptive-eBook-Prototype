@@ -12,6 +12,7 @@
     "@types/react": "^16.9.0",
     "@types/react-dom": "^16.9.0",
     "@types/react-redux": "^7.1.7",
+    "dotenv": "^8.2.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
@@ -19,6 +20,8 @@
     "typescript": "~3.8.2"
   },
   "scripts": {
+    "content:gen-types": "contentful-typescript-codegen --output src/types/generated/contentful.d.ts",
+    "content:export": "touch src/content.json && node ./scripts/contentful-export.js > src/content.json",
     "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint './src/**/*.{ts,tsx,js,jsx}'",
@@ -38,5 +41,12 @@
       "last 1 firefox version",
       "last 1 safari version"
     ]
+  },
+  "devDependencies": {
+    "@contentful/rich-text-types": "^14.1.0",
+    "contentful": "^7.14.4",
+    "contentful-management": "^5.26.2",
+    "contentful-typescript-codegen": "^3.2.1",
+    "prettier": "^2.0.5"
   }
 }
