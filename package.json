@@ -28,7 +28,10 @@
     "test": "react-scripts test"
   },
   "eslintConfig": {
-    "extends": "react-app"
+    "extends": "react-app",
+    "ignorePatterns": [
+      "src/types/generated/**/*.d.ts"
+    ]
   },
   "browserslist": {
     "production": [
