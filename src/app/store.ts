@@ -1,5 +1,6 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
+import contentReducer from "../features/content/contentSlice";
 import counterReducer from "../features/counter/counterSlice";
 import sessionReducer from "../features/session/sessionSlice";
 
@@ -28,6 +29,7 @@ const loadState = () => {
 export const store = configureStore({
   preloadedState: loadState(),
   reducer: {
+    content: contentReducer,
     counter: counterReducer,
     session: sessionReducer,
   },
