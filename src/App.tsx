@@ -1,9 +1,13 @@
 import React, { useEffect } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import NewSession from "./features/session/NewSession";
-import { setContent, SetContentPayload } from "./features/content/contentSlice";
+import SelectBook from "./features/select-book/SelectBook";
+import { setContent } from "./features/content/contentSlice";
 import "./App.css";
+import { RootState } from "./app/store";
 import content from "./content.json";
+
+type GameStatus = "CREATE_SESSION" | "PICK_BOOK" | "PLAYING";
 
 function App() {
   const dispatch = useDispatch();
@@ -14,10 +18,26 @@ function App() {
     dispatch(setContent(content));
   }, [dispatch]);
 
+  const gameStatus: GameStatus = useSelector((state: RootState) => {
+    if (state.session.id === null) {
+      return "CREATE_SESSION";
+    }
+    if (state.selectBook.bookId === null) {
+      return "PICK_BOOK";
+    }
+    return "PLAYING";
+  });
+
   return (
     <div className="App">
       <header className="App-header">
-        <NewSession />
+        {gameStatus === "CREATE_SESSION" && <NewSession />}
+        {gameStatus === "PICK_BOOK" && <SelectBook />}
+        {gameStatus === "PLAYING" && (
+          <>
+            <h1>Implement book here!</h1>
+          </>
+        )}
       </header>
     </div>
   );
