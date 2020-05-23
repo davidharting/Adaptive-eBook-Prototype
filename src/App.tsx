@@ -2,6 +2,7 @@ import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
 import NewSession from "./features/session/NewSession";
 import SelectBook from "./features/select-book/SelectBook";
+import Read from "./features/read/Read";
 import { setContent } from "./features/content/contentSlice";
 import "./App.css";
 import { RootState } from "./app/store";
@@ -33,11 +34,7 @@ function App() {
       <header className="App-header">
         {gameStatus === "CREATE_SESSION" && <NewSession />}
         {gameStatus === "PICK_BOOK" && <SelectBook />}
-        {gameStatus === "PLAYING" && (
-          <>
-            <h1>Implement book here!</h1>
-          </>
-        )}
+        {gameStatus === "PLAYING" && <Read />}
       </header>
     </div>
   );
