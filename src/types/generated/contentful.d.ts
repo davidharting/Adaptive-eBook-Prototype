@@ -8,7 +8,7 @@ export interface IBookFields {
   title: string;
 
   /** Pages */
-  pages?: (IPage | IQuestion)[] | undefined;
+  pages?: IPage[] | undefined;
 }
 
 /** This is an adaptive eBook which contains pages and questions of varying difficulty. */
