@@ -15,8 +15,11 @@ jobs:
                 command: yarn lint
             - run:
                 name: unit test
-                command: yarn test -- --watchAll=false
+                command: yarn test:ci
+            - run:
+                name: build
+                command: yarn build
 workflows:
-    build-and-test:
-      jobs:
-        - build-and-test
+  build-and-test:
+    jobs:
+      - build-and-test

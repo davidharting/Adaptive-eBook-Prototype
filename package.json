@@ -25,7 +25,8 @@
     "start": "react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint './src/**/*.{ts,tsx,js,jsx}'",
-    "test": "react-scripts test"
+    "test": "react-scripts test",
+    "test:ci": "react-scripts test --watchAll=false"
   },
   "eslintConfig": {
     "extends": "react-app",
