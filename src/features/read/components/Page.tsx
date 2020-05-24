@@ -6,7 +6,7 @@ interface PageProps {
 }
 
 function Page({ page }: PageProps) {
-  return <p>{page.fields.title}</p>;
+  return <p>{page.fields.prompt}</p>;
 }
 
 export default Page;

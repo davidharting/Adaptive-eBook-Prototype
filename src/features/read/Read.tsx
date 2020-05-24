@@ -5,6 +5,7 @@ import {
   selectBook,
   selectPage,
   selectPageNumber,
+  selectHasNextPage,
 } from "./readSlice";
 import Page from "./components/Page";
 
@@ -13,6 +14,7 @@ function Read() {
   const book = useSelector(selectBook);
   const pageNumber = useSelector(selectPageNumber);
   const page = useSelector(selectPage);
+  const hasNextPage = useSelector(selectHasNextPage);
 
   if (!book) {
     // TODO: Use an effect hook or something to make sure that we get a warning to sentry
@@ -33,13 +35,15 @@ function Read() {
         </>
       )}
       {page && <Page page={page} />}
-      <button
-        onClick={() => {
-          dispatch(nextPage());
-        }}
-      >
-        Next page >
-      </button>
+      {hasNextPage === true && (
+        <button
+          onClick={() => {
+            dispatch(nextPage());
+          }}
+        >
+          Next page >
+        </button>
+      )}
     </>
   );
 }

@@ -44,18 +44,42 @@ export const selectBook = (state: RootState) => {
 
 export const selectPageNumber = (state: RootState) => state.read.pageNumber;
 
-export const selectPage = (state: RootState) => {
+const selectBookPages = (state: RootState) => {
   const book = selectBook(state);
-  const pageNumber = selectPageNumber(state);
 
   if (!book) {
     return null;
   }
 
   const pages: IPage[] | undefined = book.fields.pages;
+  if (!pages || !pages.length) {
+    return null;
+  }
+
+  return pages;
+};
+
+export const selectPage = (state: RootState) => {
+  const pages = selectBookPages(state);
+  if (!pages) {
+    return null;
+  }
+
+  const pageNumber = selectPageNumber(state);
+
   if (!pages || !pages.length || pages.length < pageNumber) {
     return null;
   }
 
   return pages[pageNumber];
+};
+
+export const selectHasNextPage = (state: RootState) => {
+  const pages = selectBookPages(state);
+  const pageNumber = selectPageNumber(state);
+  if (!pages || !pages.length) {
+    return false;
+  }
+  console.log(pages.length - 1, pageNumber);
+  return pageNumber < pages.length - 1;
 };
