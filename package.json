@@ -32,7 +32,10 @@
     "extends": "react-app",
     "ignorePatterns": [
       "src/types/generated/**/*.d.ts"
-    ]
+    ],
+    "rules": {
+      "@typescript-eslint/no-unused-vars": "error"
+    }
   },
   "browserslist": {
     "production": [
