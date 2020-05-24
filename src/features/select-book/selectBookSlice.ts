@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "../../app/store";
 
+import { finishBook } from "../read/readSlice";
+
 // Could turn this into a book progress slice and also keep track of current page
 // But there will also be book variants and options in the future so maybe keep this narrow
 
@@ -18,6 +20,11 @@ export const selectBookSlice = createSlice({
   reducers: {
     chooseBook: (state, action: PayloadAction<string>) => {
       state.bookId = action.payload;
+    },
+  },
+  extraReducers: {
+    [finishBook.toString()]: (state) => {
+      state.bookId = null;
     },
   },
 });

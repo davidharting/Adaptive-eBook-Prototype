@@ -2,18 +2,21 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 
 import contentReducer from "../features/content/contentSlice";
 import counterReducer from "../features/counter/counterSlice";
+import readReducer from "../features/read/readSlice";
 import selectBookReducer from "../features/select-book/selectBookSlice";
 import sessionReducer from "../features/session/sessionSlice";
 
 // Approach for persisting state came from Dan Abramov himself 🙏
 // https://egghead.io/lessons/javascript-redux-persisting-the-state-to-the-local-storage
 const saveState = (state: {
+  read: Object;
   selectBook: Object;
   session: Object;
   counter: Object;
 }) => {
   try {
     const serializedState = JSON.stringify({
+      read: state.read,
       selectBook: state.selectBook,
       session: state.session,
     });
@@ -37,6 +40,7 @@ export const store = configureStore({
   reducer: {
     content: contentReducer,
     counter: counterReducer,
+    read: readReducer,
     session: sessionReducer,
     selectBook: selectBookReducer,
   },
