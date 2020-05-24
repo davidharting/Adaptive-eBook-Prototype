@@ -15,6 +15,9 @@ export const readSlice = createSlice({
   name: "read",
   initialState,
   reducers: {
+    finishBook: (state) => {
+      state.pageNumber = initialState.pageNumber;
+    },
     nextPage: (state) => {
       state.pageNumber++;
     },
@@ -22,6 +25,7 @@ export const readSlice = createSlice({
 });
 
 const { nextPage } = readSlice.actions;
+export const { finishBook } = readSlice.actions;
 
 // The name nextPage is taken by the basic action
 export const goToNextPage = (): AppThunk => (dispatch, getState) => {

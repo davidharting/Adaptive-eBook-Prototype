@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
+  finishBook,
   goToNextPage,
   selectBook,
   selectPage,
@@ -42,6 +43,15 @@ function Read() {
           }}
         >
           Next page >
+        </button>
+      )}
+      {hasNextPage === false && (
+        <button
+          onClick={() => {
+            dispatch(finishBook());
+          }}
+        >
+          All done!
         </button>
       )}
     </>
