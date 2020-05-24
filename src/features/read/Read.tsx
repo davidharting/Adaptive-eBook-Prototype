@@ -1,7 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import {
-  nextPage,
+  goToNextPage,
   selectBook,
   selectPage,
   selectPageNumber,
@@ -38,7 +38,7 @@ function Read() {
       {hasNextPage === true && (
         <button
           onClick={() => {
-            dispatch(nextPage());
+            dispatch(goToNextPage());
           }}
         >
           Next page >

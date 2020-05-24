@@ -1,4 +1,4 @@
-import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../../app/store";
 import { IPage } from "../../types/generated/contentful";
 
@@ -16,16 +16,21 @@ export const readSlice = createSlice({
   initialState,
   reducers: {
     nextPage: (state) => {
-      // TODO: Make this a thunk
-      // From state, figure out what book we are reading
-      // to determine if the page turn is valid
-      // Page turn should also only be allowed after they have selected the correct response
       state.pageNumber++;
     },
   },
 });
 
-export const { nextPage } = readSlice.actions;
+const { nextPage } = readSlice.actions;
+
+// The name nextPage is taken by the basic action
+export const goToNextPage = (): AppThunk => (dispatch, getState) => {
+  const state = getState();
+  const hasNextPage = selectHasNextPage(state);
+  if (hasNextPage) {
+    dispatch(nextPage());
+  }
+};
 
 export default readSlice.reducer;
 
