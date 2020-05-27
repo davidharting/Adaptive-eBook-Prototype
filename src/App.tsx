@@ -32,7 +32,7 @@ function App() {
   });
 
   return (
-    <Container className="d-flex justify-center align-items-center vw-100 vh-100">
+    <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
       <main>
         {gameStatus === "CREATE_SESSION" && <NewSession />}
         {gameStatus === "PICK_BOOK" && <SelectBook />}
