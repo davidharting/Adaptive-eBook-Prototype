@@ -1,12 +1,14 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Container from "react-bootstrap/Container";
 import NewSession from "./features/session/NewSession";
 import SelectBook from "./features/select-book/SelectBook";
 import Read from "./features/read/Read";
 import { setContent } from "./features/content/contentSlice";
-import "./App.css";
 import { RootState } from "./app/store";
 import content from "./content.json";
+
+import "bootstrap/dist/css/bootstrap.min.css";
 
 type GameStatus = "CREATE_SESSION" | "PICK_BOOK" | "PLAYING";
 
@@ -30,13 +32,13 @@ function App() {
   });
 
   return (
-    <div className="App">
-      <header className="App-header">
+    <Container className="d-flex justify-center align-items-center vw-100 vh-100">
+      <main>
         {gameStatus === "CREATE_SESSION" && <NewSession />}
         {gameStatus === "PICK_BOOK" && <SelectBook />}
         {gameStatus === "PLAYING" && <Read />}
-      </header>
-    </div>
+      </main>
+    </Container>
   );
 }
 

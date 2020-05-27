@@ -1,5 +1,7 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 import { chooseBook, selectAvailableBooks } from "./selectBookSlice";
 
 function SelectBook() {
@@ -11,34 +13,35 @@ function SelectBook() {
   return (
     <>
       <h1>Select a book!</h1>
-      <form
-        onSubmit={(e) => {
+      <Form
+        onSubmit={(e: React.FormEvent) => {
           e.preventDefault();
           if (selected !== null) {
             dispatch(chooseBook(selected));
           }
         }}
       >
-        {choices.map((book) => {
-          return (
-            <>
-              <input
+        <Form.Group>
+          {choices.map((book) => {
+            return (
+              <Form.Check
                 type="radio"
-                id={book.sys.id}
                 name="book"
+                id={book.sys.id}
+                label={book.fields.title}
                 value={book.sys.id}
-                onChange={(e) => setSelected(e.target.value)}
+                onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
+                  setSelected(e.target.value);
+                }}
               />
-              <label htmlFor={book.sys.id}>{book.fields.title}</label>
-              <br />
-            </>
-          );
-        })}
-        <button disabled={selected === null} type="submit">
+            );
+          })}
+        </Form.Group>
+        <Button variant="primary" disabled={selected === null} type="submit">
           {selected === null && "Please choose a book"}
           {selected !== null && "Read this book!"}
-        </button>
-      </form>
+        </Button>
+      </Form>
     </>
   );
 }
