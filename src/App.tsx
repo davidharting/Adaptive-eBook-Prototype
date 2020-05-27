@@ -37,13 +37,15 @@ function App() {
   return (
     <>
       <header>
-        <Button
-          className="text-muted"
-          variant="link"
-          onClick={() => dispatch(signOut())}
-        >
-          Sign out
-        </Button>
+        {gameStatus !== "CREATE_SESSION" && (
+          <Button
+            className="text-muted"
+            variant="link"
+            onClick={() => dispatch(signOut())}
+          >
+            Sign out
+          </Button>
+        )}
       </header>
       <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
         <main>
