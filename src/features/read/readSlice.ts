@@ -2,6 +2,8 @@ import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../../app/store";
 import { IPage } from "../../types/generated/contentful";
 
+import { signOut } from "../session/sessionSlice";
+
 interface ReadState {
   pageNumber: number;
 }
@@ -20,6 +22,11 @@ export const readSlice = createSlice({
     },
     nextPage: (state) => {
       state.pageNumber++;
+    },
+  },
+  extraReducers: {
+    [signOut.toString()]: (state) => {
+      state.pageNumber = initialState.pageNumber;
     },
   },
 });

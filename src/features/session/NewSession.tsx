@@ -1,5 +1,7 @@
 import React from "react";
 import { useDispatch } from "react-redux";
+import Button from "react-bootstrap/Button";
+import Form from "react-bootstrap/Form";
 
 import { startSession } from "./sessionSlice";
 
@@ -20,17 +22,16 @@ function NewSession() {
         not to share this information, you can leave it blank or fill it in with
         a random value.
       </p>
-      <form onSubmit={onSubmit}>
-        <label htmlFor="name">What is your name?</label>
-        <br />
-        <input
-          name="name"
-          type="text"
-          placeholder="Harry Potter"
-          onChange={(e) => setName(e.target.value)}
-        />
-        <input type="submit" />
-      </form>
+      <Form onSubmit={onSubmit}>
+        <Form.Group>
+          <Form.Label>What is your name?</Form.Label>
+          <Form.Control type="text" onChange={(e) => setName(e.target.value)} />
+          <Form.Text>This will just help us keep your data straight.</Form.Text>
+        </Form.Group>
+        <Button variant="primary" type="submit">
+          Let's go!
+        </Button>
+      </Form>
     </>
   );
 }

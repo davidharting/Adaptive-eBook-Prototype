@@ -25,9 +25,14 @@ export const sessionSlice = createSlice({
       state.id = "abc-123-in-the-future-randomly-generate-me";
       state.playerName = action.payload.playerName;
     },
+    signOut: (state) => {
+      state.status = "unstarted";
+      state.id = null;
+      state.playerName = "";
+    },
   },
 });
 
 export default sessionSlice.reducer;
 
-export const { startSession } = sessionSlice.actions;
+export const { signOut, startSession } = sessionSlice.actions;

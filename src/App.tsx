@@ -1,12 +1,17 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import NewSession from "./features/session/NewSession";
-import SelectBook from "./features/select-book/SelectBook";
-import Read from "./features/read/Read";
-import { setContent } from "./features/content/contentSlice";
-import "./App.css";
-import { RootState } from "./app/store";
-import content from "./content.json";
+import Button from "react-bootstrap/Button";
+import Container from "react-bootstrap/Container";
+
+import "bootstrap/dist/css/bootstrap.min.css";
+
+import NewSession from "features/session/NewSession";
+import SelectBook from "features/select-book/SelectBook";
+import Read from "features/read/Read";
+import { setContent } from "features/content/contentSlice";
+import { signOut } from "features/session/sessionSlice";
+import { RootState } from "app/store";
+import content from "content.json";
 
 type GameStatus = "CREATE_SESSION" | "PICK_BOOK" | "PLAYING";
 
@@ -30,13 +35,26 @@ function App() {
   });
 
   return (
-    <div className="App">
-      <header className="App-header">
-        {gameStatus === "CREATE_SESSION" && <NewSession />}
-        {gameStatus === "PICK_BOOK" && <SelectBook />}
-        {gameStatus === "PLAYING" && <Read />}
+    <>
+      <header>
+        {gameStatus !== "CREATE_SESSION" && (
+          <Button
+            className="text-muted"
+            variant="link"
+            onClick={() => dispatch(signOut())}
+          >
+            Sign out
+          </Button>
+        )}
       </header>
-    </div>
+      <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
+        <main>
+          {gameStatus === "CREATE_SESSION" && <NewSession />}
+          {gameStatus === "PICK_BOOK" && <SelectBook />}
+          {gameStatus === "PLAYING" && <Read />}
+        </main>
+      </Container>
+    </>
   );
 }
 
