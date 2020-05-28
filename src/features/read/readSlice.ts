@@ -1,6 +1,6 @@
 import { createSlice } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../../app/store";
-import { IPage } from "../../types/generated/contentful";
+import { IPage, IQuestion } from "../../types/generated/contentful";
 
 import { signOut } from "../session/sessionSlice";
 
@@ -60,6 +60,11 @@ export const selectBook = (state: RootState) => {
 
 export const selectPageNumber = (state: RootState) => state.read.pageNumber;
 
+// I don't love the naming here. I probably want to rename Page and Question content types to:
+// NarrativePage and QuestionPage so that they are both "page"s
+// This will disambiguate things. When I say "page" then I can actually mean both quite clearly.
+type BookPage = IPage | IQuestion;
+
 const selectBookPages = (state: RootState) => {
   const book = selectBook(state);
 
@@ -67,7 +72,7 @@ const selectBookPages = (state: RootState) => {
     return null;
   }
 
-  const pages: IPage[] | undefined = book.fields.pages;
+  const pages: BookPage[] | undefined = book.fields.pages;
   if (!pages || !pages.length) {
     return null;
   }
