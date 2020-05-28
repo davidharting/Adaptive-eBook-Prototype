@@ -1,5 +1,8 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import Container from "react-bootstrap/Container";
+import Col from "react-bootstrap/Col";
+import Row from "react-bootstrap/Row";
 import Button from "react-bootstrap/Button";
 import {
   finishBook,
@@ -29,33 +32,41 @@ function Read() {
   }
 
   return (
-    <>
-      <h1>You are on page: {pageNumber + 1}</h1>
+    <Container fluid>
       {page === null && (
         <>
           <h2>Sorry, we cannot find that page.</h2>
         </>
       )}
-      {page && <Page page={page} />}
-      {hasNextPage === true && (
-        <Button
-          onClick={() => {
-            dispatch(goToNextPage());
-          }}
-        >
-          Next page >
-        </Button>
-      )}
-      {hasNextPage === false && (
-        <Button
-          onClick={() => {
-            dispatch(finishBook());
-          }}
-        >
-          All done!
-        </Button>
-      )}
-    </>
+      <Row className="align-items-center">
+        <Col>{page && <Page page={page} />}</Col>
+        <Col xs={2}>
+          {hasNextPage === true && (
+            <Button
+              onClick={() => {
+                dispatch(goToNextPage());
+              }}
+            >
+              Next page >
+            </Button>
+          )}
+        </Col>
+      </Row>
+      <Row>
+        {hasNextPage === false && (
+          <Button
+            onClick={() => {
+              dispatch(finishBook());
+            }}
+          >
+            All done!
+          </Button>
+        )}
+      </Row>
+      <Row className="justify-content-center">
+        <p className="text-muted">Page {pageNumber + 1}</p>
+      </Row>
+    </Container>
   );
 }
 

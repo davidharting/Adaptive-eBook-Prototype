@@ -34,10 +34,12 @@ function App() {
     return "PLAYING";
   });
 
+  const showHeader = gameStatus !== "CREATE_SESSION";
+
   return (
     <>
       <header>
-        {gameStatus !== "CREATE_SESSION" && (
+        {showHeader && (
           <Button
             className="text-muted"
             variant="link"
@@ -47,13 +49,16 @@ function App() {
           </Button>
         )}
       </header>
-      <Container className="d-flex justify-content-center align-items-center vw-100 vh-100">
-        <main>
-          {gameStatus === "CREATE_SESSION" && <NewSession />}
-          {gameStatus === "PICK_BOOK" && <SelectBook />}
-          {gameStatus === "PLAYING" && <Read />}
-        </main>
-      </Container>
+      <main
+        style={{
+          // This feels hacky that I know the pixel height of the header but 🤷🏼‍♀️
+          height: showHeader ? "calc(100vh - 38px)" : "100vh",
+        }}
+      >
+        {gameStatus === "CREATE_SESSION" && <NewSession />}
+        {gameStatus === "PICK_BOOK" && <SelectBook />}
+        {gameStatus === "PLAYING" && <Read />}
+      </main>
     </>
   );
 }
