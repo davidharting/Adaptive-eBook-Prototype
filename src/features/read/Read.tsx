@@ -1,9 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Container from "react-bootstrap/Container";
-import Col from "react-bootstrap/Col";
-import Row from "react-bootstrap/Row";
-import Button from "react-bootstrap/Button";
+import BookPageLayout from "layouts/BookPage";
 import {
   finishBook,
   goToNextPage,
@@ -31,42 +28,23 @@ function Read() {
     );
   }
 
+  // TODO: Naming is so wonky. finishBook used by completeBook passed as finishBook
+  const completeBook = hasNextPage ? undefined : () => dispatch(finishBook());
+  const pageForward = hasNextPage ? () => dispatch(goToNextPage()) : undefined;
+
   return (
-    <Container fluid>
+    <BookPageLayout
+      finishBook={completeBook}
+      pageForward={pageForward}
+      pageNumber={pageNumber}
+    >
       {page === null && (
         <>
           <h2>Sorry, we cannot find that page.</h2>
         </>
       )}
-      <Row className="align-items-center">
-        <Col>{page && <Page page={page} />}</Col>
-        <Col xs={2}>
-          {hasNextPage === true && (
-            <Button
-              onClick={() => {
-                dispatch(goToNextPage());
-              }}
-            >
-              Next page >
-            </Button>
-          )}
-        </Col>
-      </Row>
-      <Row>
-        {hasNextPage === false && (
-          <Button
-            onClick={() => {
-              dispatch(finishBook());
-            }}
-          >
-            All done!
-          </Button>
-        )}
-      </Row>
-      <Row className="justify-content-center">
-        <p className="text-muted">Page {pageNumber + 1}</p>
-      </Row>
-    </Container>
+      {page && <Page page={page} />}
+    </BookPageLayout>
   );
 }
 
