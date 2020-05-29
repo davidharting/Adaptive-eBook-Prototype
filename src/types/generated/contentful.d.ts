@@ -8,7 +8,7 @@ export interface IBookFields {
   title: string;
 
   /** Pages */
-  pages?: IPage[] | undefined;
+  pages?: (IPage | IQuestion)[] | undefined;
 }
 
 /** This is an adaptive eBook which contains pages and questions of varying difficulty. */
@@ -58,17 +58,8 @@ export interface IOption extends Entry<IOptionFields> {
 }
 
 export interface IPageFields {
-  /** Title */
-  title: string;
-
   /** Prompt */
-  prompt?: string | undefined;
-
-  /** Stimuli */
-  stimuli?: IStimulus[] | undefined;
-
-  /** Choices */
-  choices?: IOption[] | undefined;
+  prompt: string;
 }
 
 /** A page of an eBook containing content, but no question.  */
@@ -90,12 +81,42 @@ export interface IPage extends Entry<IPageFields> {
   };
 }
 
+export interface IQuestionFields {
+  /** Prompt */
+  prompt: string;
+
+  /** Left */
+  left: IStimulus;
+
+  /** Right */
+  right: IStimulus;
+
+  /** Correct Stimulus */
+  correctStimulus: boolean;
+}
+
+/** A question presents a prompt about two stimuli, one of which is correct. */
+
+export interface IQuestion extends Entry<IQuestionFields> {
+  sys: {
+    id: string;
+    type: string;
+    createdAt: string;
+    updatedAt: string;
+    locale: string;
+    contentType: {
+      sys: {
+        id: "question";
+        linkType: "ContentType";
+        type: "Link";
+      };
+    };
+  };
+}
+
 export interface IStimulusFields {
   /** Title */
   title?: string | undefined;
-
-  /** Difficulty */
-  difficulty: number;
 
   /** Image */
   image: Asset;
@@ -120,7 +141,7 @@ export interface IStimulus extends Entry<IStimulusFields> {
   };
 }
 
-export type CONTENT_TYPE = "book" | "option" | "page" | "stimulus";
+export type CONTENT_TYPE = "book" | "option" | "page" | "question" | "stimulus";
 
 export type LOCALE_CODE = "en-US";
 

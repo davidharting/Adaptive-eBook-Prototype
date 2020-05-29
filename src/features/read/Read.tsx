@@ -1,6 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "react-bootstrap/Button";
+import BookPageLayout from "layouts/BookPage";
 import {
   finishBook,
   goToNextPage,
@@ -28,34 +28,23 @@ function Read() {
     );
   }
 
+  // TODO: Naming is so wonky. finishBook used by completeBook passed as finishBook
+  const completeBook = hasNextPage ? undefined : () => dispatch(finishBook());
+  const pageForward = hasNextPage ? () => dispatch(goToNextPage()) : undefined;
+
   return (
-    <>
-      <h1>You are on page: {pageNumber + 1}</h1>
+    <BookPageLayout
+      finishBook={completeBook}
+      pageForward={pageForward}
+      pageNumber={pageNumber}
+    >
       {page === null && (
         <>
           <h2>Sorry, we cannot find that page.</h2>
         </>
       )}
       {page && <Page page={page} />}
-      {hasNextPage === true && (
-        <Button
-          onClick={() => {
-            dispatch(goToNextPage());
-          }}
-        >
-          Next page >
-        </Button>
-      )}
-      {hasNextPage === false && (
-        <Button
-          onClick={() => {
-            dispatch(finishBook());
-          }}
-        >
-          All done!
-        </Button>
-      )}
-    </>
+    </BookPageLayout>
   );
 }
 
