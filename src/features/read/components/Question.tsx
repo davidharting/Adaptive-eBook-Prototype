@@ -29,7 +29,13 @@ function Stimulus({ stimulus }: StimulusProps) {
     <div
       className={`d-flex flex-column justify-content-between w-50 h-100 rounded ${styles.stimulus}`}
       onClick={() => {
-        console.log("hey!");
+        const stimulusId = stimulus.sys.id;
+
+        // TODO: Dispatch an action with the stimulus ID.
+        // I guess the action creator can do a bunch of work to figure out if it's the right answer.
+        // Then we can work across reducers to do what we need to do in terms of showing feedback, recording history, and advancing the page
+
+        console.log(stimulusId);
       }}
       role="button"
     >
