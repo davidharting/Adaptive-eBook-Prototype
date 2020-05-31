@@ -7,7 +7,13 @@
   opacity: 0.5;
 }
 
-.stimulus + .stimulus {
+.disabledStimulus {
+  pointer-events: none;
+  cursor: not-allowed;
+}
+
+.stimulus + .stimulus,
+.disabledStimulus + .disabledStimulus {
   /*
    * I should probably consider leveraging bootstrap's Rows and Cols instead 
    * That way, if I need to wrap on narrow screens, I get stacking with correct spacing

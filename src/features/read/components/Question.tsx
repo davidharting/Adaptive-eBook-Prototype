@@ -1,44 +1,68 @@
 import React from "react";
+import cn from "classnames";
+import { useDispatch } from "react-redux";
 import Button from "react-bootstrap/Button";
 import { IQuestion, IStimulus } from "types/generated/contentful";
 
+import { chooseAnswer } from "../readSlice";
+
 import styles from "./question.module.css";
+
+type QuestionStatus = "unanswered" | "correct" | "wrong";
 
 interface QuestionProps {
   question: IQuestion;
 }
 
 function Question({ question }: QuestionProps) {
+  const dispatch = useDispatch();
+
+  const status: QuestionStatus = "unanswered";
+
+  const selectStimulus = (stimulusId: string) => {
+    dispatch(chooseAnswer({ questionId: question.sys.id, stimulusId }));
+  };
+
   return (
     <>
       <p>{question.fields.prompt}</p>
       <div className="d-flex align-items-center justify-content-around">
-        <Stimulus stimulus={question.fields.left} />
-        <Stimulus stimulus={question.fields.right} />
+        <Stimulus
+          disabled={status !== "unanswered"}
+          onClick={selectStimulus}
+          stimulus={question.fields.left}
+        />
+        <Stimulus
+          disabled={status !== "unanswered"}
+          onClick={selectStimulus}
+          stimulus={question.fields.right}
+        />
       </div>
     </>
   );
 }
 
 interface StimulusProps {
+  disabled: boolean;
+  onClick: OnStimulusClick;
   stimulus: IStimulus;
 }
 
-function Stimulus({ stimulus }: StimulusProps) {
+interface OnStimulusClick {
+  (stimulusId: string): void;
+}
+
+function Stimulus({ disabled, onClick, stimulus }: StimulusProps) {
+  const cx = cn(
+    "d-flex flex-column justify-content-between w-50 h-100 rounded",
+    {
+      [styles.stimulus]: disabled === false,
+      [styles.disabledStimulus]: disabled === true,
+    }
+  );
+
   return (
-    <div
-      className={`d-flex flex-column justify-content-between w-50 h-100 rounded ${styles.stimulus}`}
-      onClick={() => {
-        const stimulusId = stimulus.sys.id;
-
-        // TODO: Dispatch an action with the stimulus ID.
-        // I guess the action creator can do a bunch of work to figure out if it's the right answer.
-        // Then we can work across reducers to do what we need to do in terms of showing feedback, recording history, and advancing the page
-
-        console.log(stimulusId);
-      }}
-      role="button"
-    >
+    <div className={cx} onClick={() => onClick(stimulus.sys.id)} role="button">
       <img
         alt={stimulus.fields.image.fields.description}
         src={stimulus.fields.image.fields.file.url}
