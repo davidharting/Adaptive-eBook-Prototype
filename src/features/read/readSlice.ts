@@ -1,4 +1,4 @@
-import { createSlice } from "@reduxjs/toolkit";
+import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "../../app/store";
 import { IPage, IQuestion } from "../../types/generated/contentful";
 
@@ -6,11 +6,21 @@ import { signOut } from "../session/sessionSlice";
 
 interface ReadState {
   pageNumber: number;
+  // For now, only saving the current read-throughs answers
+  // In the future I may want to save all of them indefinitely to make them easier to persist while play continues
+  // If I do that, however, I will need to "namespace" the answers by some sort of "read-through" ID.
+  answers: Answer[];
+}
+
+interface Answer {
+  questionId: string;
+  stimulusId: string;
 }
 
 const initialState: ReadState = {
-  // This will correspond to the book.pages array and is 0-indexed
+  // The pageNumber corresponds to the book.pages array and is 0-indexed
   pageNumber: 0,
+  answers: [],
 };
 
 export const readSlice = createSlice({
@@ -19,20 +29,30 @@ export const readSlice = createSlice({
   reducers: {
     finishBook: (state) => {
       state.pageNumber = initialState.pageNumber;
+      state.answers = initialState.answers;
     },
     nextPage: (state) => {
       state.pageNumber++;
+    },
+    chooseAnswer: (state, action: PayloadAction<Answer>) => {
+      const hasAnsweredQuestion = !!state.answers.find(
+        (a) => a.questionId === action.payload.questionId
+      );
+      if (!hasAnsweredQuestion) {
+        state.answers.push(action.payload);
+      }
     },
   },
   extraReducers: {
     [signOut.toString()]: (state) => {
       state.pageNumber = initialState.pageNumber;
+      state.answers = initialState.answers;
     },
   },
 });
 
 const { nextPage } = readSlice.actions;
-export const { finishBook } = readSlice.actions;
+export const { chooseAnswer, finishBook } = readSlice.actions;
 
 // The name nextPage is taken by the basic action
 export const goToNextPage = (): AppThunk => (dispatch, getState) => {
@@ -101,6 +121,56 @@ export const selectHasNextPage = (state: RootState) => {
   if (!pages || !pages.length) {
     return false;
   }
-  console.log(pages.length - 1, pageNumber);
   return pageNumber < pages.length - 1;
 };
+
+export const selectOnLastPage = (state: RootState): boolean => {
+  const hasNextPage = selectHasNextPage(state);
+  return !hasNextPage;
+};
+
+export const selectQuestionStatus = (state: RootState): QuestionStatus => {
+  const page = selectPage(state);
+  if (!page || page.sys.contentType.sys.id === "page") {
+    return "NOT_QUESTION";
+  }
+
+  const question = page as IQuestion;
+
+  const questionId = question.sys.id;
+  const answers = state.read.answers;
+
+  const answer = answers.find((a) => a.questionId === questionId);
+
+  if (!answer) {
+    return "UNANSWERED";
+  }
+
+  // TODO: "correctStimulus" is not a well-named field
+  const isLeftCorrect = question.fields.correctStimulus;
+
+  const leftStimulusId = question.fields.left.sys.id;
+  const rightStimulusId = question.fields.right.sys.id;
+
+  if (isLeftCorrect && leftStimulusId === answer.stimulusId) {
+    return "CORRECT";
+  }
+
+  if (!isLeftCorrect && rightStimulusId === answer.stimulusId) {
+    return "CORRECT";
+  }
+
+  return "WRONG";
+};
+
+export const selectCanPageForward = (state: RootState): boolean => {
+  const hasNextPage = selectHasNextPage(state);
+  const questionStatus = selectQuestionStatus(state);
+
+  if (questionStatus === "NOT_QUESTION") {
+    return hasNextPage;
+  }
+  return hasNextPage && questionStatus !== "UNANSWERED";
+};
+
+type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | "CORRECT" | "WRONG";
