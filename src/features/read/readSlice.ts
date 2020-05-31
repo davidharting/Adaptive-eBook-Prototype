@@ -35,7 +35,12 @@ export const readSlice = createSlice({
       state.pageNumber++;
     },
     chooseAnswer: (state, action: PayloadAction<Answer>) => {
-      state.answers.push(action.payload);
+      const hasAnsweredQuestion = !!state.answers.find(
+        (a) => a.questionId === action.payload.questionId
+      );
+      if (!hasAnsweredQuestion) {
+        state.answers.push(action.payload);
+      }
     },
   },
   extraReducers: {
@@ -118,3 +123,54 @@ export const selectHasNextPage = (state: RootState) => {
   }
   return pageNumber < pages.length - 1;
 };
+
+export const selectOnLastPage = (state: RootState): boolean => {
+  const hasNextPage = selectHasNextPage(state);
+  return !hasNextPage;
+};
+
+export const selectQuestionStatus = (state: RootState): QuestionStatus => {
+  const page = selectPage(state);
+  if (!page || page.sys.contentType.sys.id === "page") {
+    return "NOT_QUESTION";
+  }
+
+  const question = page as IQuestion;
+
+  const questionId = question.sys.id;
+  const answers = state.read.answers;
+
+  const answer = answers.find((a) => a.questionId === questionId);
+
+  if (!answer) {
+    return "UNANSWERED";
+  }
+
+  // TODO: "correctStimulus" is not a well-named field
+  const isLeftCorrect = question.fields.correctStimulus;
+
+  const leftStimulusId = question.fields.left.sys.id;
+  const rightStimulusId = question.fields.right.sys.id;
+
+  if (isLeftCorrect && leftStimulusId === answer.stimulusId) {
+    return "CORRECT";
+  }
+
+  if (!isLeftCorrect && rightStimulusId === answer.stimulusId) {
+    return "CORRECT";
+  }
+
+  return "WRONG";
+};
+
+export const selectCanPageForward = (state: RootState): boolean => {
+  const hasNextPage = selectHasNextPage(state);
+  const questionStatus = selectQuestionStatus(state);
+
+  if (questionStatus === "NOT_QUESTION") {
+    return hasNextPage;
+  }
+  return hasNextPage && questionStatus !== "UNANSWERED";
+};
+
+type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | "CORRECT" | "WRONG";

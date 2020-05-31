@@ -7,7 +7,8 @@ import {
   selectBook,
   selectPage,
   selectPageNumber,
-  selectHasNextPage,
+  selectOnLastPage,
+  selectCanPageForward,
 } from "./readSlice";
 import Page from "./components/Page";
 
@@ -16,7 +17,8 @@ function Read() {
   const book = useSelector(selectBook);
   const pageNumber = useSelector(selectPageNumber);
   const page = useSelector(selectPage);
-  const hasNextPage = useSelector(selectHasNextPage);
+  const onLastPage = useSelector(selectOnLastPage);
+  const canPageForward = useSelector(selectCanPageForward);
 
   if (!book) {
     // TODO: Use an effect hook or something to make sure that we get a warning to sentry
@@ -29,8 +31,10 @@ function Read() {
   }
 
   // TODO: Naming is so wonky. finishBook used by completeBook passed as finishBook
-  const completeBook = hasNextPage ? undefined : () => dispatch(finishBook());
-  const pageForward = hasNextPage ? () => dispatch(goToNextPage()) : undefined;
+  const completeBook = onLastPage ? () => dispatch(finishBook()) : undefined;
+  const pageForward = canPageForward
+    ? () => dispatch(goToNextPage())
+    : undefined;
 
   return (
     <BookPageLayout

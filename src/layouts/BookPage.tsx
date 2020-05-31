@@ -29,14 +29,20 @@ function BookPageLayout({
       </div>
 
       <div className="w-100 d-flex flex-column align-items-center justify-content-center">
-        {pageForward && (
-          <Button block onClick={pageForward}>
+        {!finishBook && (
+          <Button
+            disabled={!pageForward}
+            block
+            onClick={pageForward}
+            size="lg"
+            style={{ visibility: pageForward ? "visible" : "hidden" }}
+          >
             Next page
           </Button>
         )}
 
         {finishBook && (
-          <Button block onClick={finishBook}>
+          <Button block onClick={finishBook} size="lg">
             All done!
           </Button>
         )}

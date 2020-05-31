@@ -1,14 +1,12 @@
 import React from "react";
 import cn from "classnames";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import { IQuestion, IStimulus } from "types/generated/contentful";
 
-import { chooseAnswer } from "../readSlice";
+import { chooseAnswer, selectQuestionStatus } from "../readSlice";
 
 import styles from "./question.module.css";
-
-type QuestionStatus = "unanswered" | "correct" | "wrong";
 
 interface QuestionProps {
   question: IQuestion;
@@ -16,24 +14,25 @@ interface QuestionProps {
 
 function Question({ question }: QuestionProps) {
   const dispatch = useDispatch();
-
-  const status: QuestionStatus = "unanswered";
+  const status = useSelector(selectQuestionStatus);
 
   const selectStimulus = (stimulusId: string) => {
     dispatch(chooseAnswer({ questionId: question.sys.id, stimulusId }));
   };
+
+  const disabled = status !== "UNANSWERED";
 
   return (
     <>
       <p>{question.fields.prompt}</p>
       <div className="d-flex align-items-center justify-content-around">
         <Stimulus
-          disabled={status !== "unanswered"}
+          disabled={disabled}
           onClick={selectStimulus}
           stimulus={question.fields.left}
         />
         <Stimulus
-          disabled={status !== "unanswered"}
+          disabled={disabled}
           onClick={selectStimulus}
           stimulus={question.fields.right}
         />
@@ -62,13 +61,18 @@ function Stimulus({ disabled, onClick, stimulus }: StimulusProps) {
   );
 
   return (
-    <div className={cx} onClick={() => onClick(stimulus.sys.id)} role="button">
+    <div
+      className={cx}
+      aria-disabled={disabled}
+      onClick={() => onClick(stimulus.sys.id)}
+      role="button"
+    >
       <img
         alt={stimulus.fields.image.fields.description}
         src={stimulus.fields.image.fields.file.url}
         style={{ maxWidth: "100%", height: "auto" }}
       />
-      <Button variant="link" size="lg">
+      <Button disabled={disabled} variant="link" size="lg">
         Pick me
       </Button>
     </div>
