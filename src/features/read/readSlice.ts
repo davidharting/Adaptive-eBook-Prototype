@@ -129,18 +129,40 @@ export const selectOnLastPage = (state: RootState): boolean => {
   return !hasNextPage;
 };
 
-export const selectQuestionStatus = (state: RootState): QuestionStatus => {
+/**
+ * Select the _current_ question
+ */
+const selectQuestion = (state: RootState): IQuestion | null => {
   const page = selectPage(state);
   if (!page || page.sys.contentType.sys.id === "page") {
+    return null;
+  }
+  const question = page as IQuestion;
+  return question;
+};
+
+/**
+ * Select the user's answer to the _current_ question
+ */
+export const selectAnswer = (state: RootState): Answer | undefined => {
+  const question = selectQuestion(state);
+  if (!question) {
+    return undefined;
+  }
+
+  return state.read.answers.find((a) => a.questionId === question.sys.id);
+};
+
+/**
+ * Status of the _current_ question
+ */
+export const selectQuestionStatus = (state: RootState): QuestionStatus => {
+  const question = selectQuestion(state);
+  if (!question) {
     return "NOT_QUESTION";
   }
 
-  const question = page as IQuestion;
-
-  const questionId = question.sys.id;
-  const answers = state.read.answers;
-
-  const answer = answers.find((a) => a.questionId === questionId);
+  const answer = selectAnswer(state);
 
   if (!answer) {
     return "UNANSWERED";

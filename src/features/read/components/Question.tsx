@@ -4,7 +4,7 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import { IQuestion, IStimulus } from "types/generated/contentful";
 
-import { chooseAnswer, selectQuestionStatus } from "../readSlice";
+import { chooseAnswer, selectAnswer, selectQuestionStatus } from "../readSlice";
 
 import styles from "./question.module.css";
 
@@ -15,6 +15,7 @@ interface QuestionProps {
 function Question({ question }: QuestionProps) {
   const dispatch = useDispatch();
   const status = useSelector(selectQuestionStatus);
+  const answer = useSelector(selectAnswer);
 
   const selectStimulus = (stimulusId: string) => {
     dispatch(chooseAnswer({ questionId: question.sys.id, stimulusId }));
@@ -22,16 +23,28 @@ function Question({ question }: QuestionProps) {
 
   const disabled = status !== "UNANSWERED";
 
+  const decorate = (stimulusId: string) => {
+    if (
+      (status === "CORRECT" || status === "WRONG") &&
+      stimulusId === answer?.stimulusId
+    ) {
+      return status;
+    }
+    return false;
+  };
+
   return (
     <>
       <p>{question.fields.prompt}</p>
       <div className="d-flex align-items-center justify-content-around">
         <Stimulus
+          decorate={decorate(question.fields.left.sys.id)}
           disabled={disabled}
           onClick={selectStimulus}
           stimulus={question.fields.left}
         />
         <Stimulus
+          decorate={decorate(question.fields.right.sys.id)}
           disabled={disabled}
           onClick={selectStimulus}
           stimulus={question.fields.right}
@@ -42,6 +55,7 @@ function Question({ question }: QuestionProps) {
 }
 
 interface StimulusProps {
+  decorate?: "CORRECT" | "WRONG" | false;
   disabled: boolean;
   onClick: OnStimulusClick;
   stimulus: IStimulus;
@@ -51,9 +65,13 @@ interface OnStimulusClick {
   (stimulusId: string): void;
 }
 
-function Stimulus({ disabled, onClick, stimulus }: StimulusProps) {
+function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
   const cx = cn(
-    "d-flex flex-column justify-content-between w-50 h-100 rounded",
+    "d-flex flex-column justify-content-between w-50 h-100",
+    {
+      "border border-success": decorate === "CORRECT",
+      "border border-danger": decorate === "WRONG",
+    },
     {
       [styles.stimulus]: disabled === false,
       [styles.disabledStimulus]: disabled === true,
