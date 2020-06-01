@@ -11,6 +11,11 @@
   cursor: not-allowed;
 }
 
+.stimulus,
+.disabledStimulus {
+  position: relative;
+}
+
 .stimulus + .stimulus,
 .disabledStimulus + .disabledStimulus {
   /*
@@ -19,4 +24,11 @@
    * fo' free
   */
   padding-left: 8px;
+}
+
+.feedback {
+  position: absolute;
+  top: 50%;
+  width: 100%;
+  text-align: center;
 }
