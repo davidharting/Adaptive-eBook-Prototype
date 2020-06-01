@@ -65,6 +65,11 @@ interface OnStimulusClick {
   (stimulusId: string): void;
 }
 
+// TODO: Stimulus should probably be own file
+// When it is its own file that will make me want to rethink the data passing
+// The stimulus should be able to use it's stimulus ID and then ask more about itself of state
+// e.g., - am I disabled? am I right / wrong?
+
 function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
   const cx = cn(
     "d-flex flex-column justify-content-between w-50 h-100",
@@ -93,6 +98,14 @@ function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
       <Button disabled={disabled} variant="link" size="lg">
         Pick me
       </Button>
+      {decorate === "CORRECT" && (
+        <p className={`text-success ${styles.feedback}`}>Nice work!</p>
+      )}
+      {decorate === "WRONG" && (
+        <p className={`text-danger ${styles.feedback}`}>
+          Sorry, this is not the right one!
+        </p>
+      )}
     </div>
   );
 }
