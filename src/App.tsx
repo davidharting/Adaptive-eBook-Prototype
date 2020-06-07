@@ -79,7 +79,7 @@ function useVhCustomProperty() {
 
     updateVh();
 
-    // TODO: Debounce
+    // TODO: Add debounce or throttle if we notice issues
 
     window.addEventListener("resize", updateVh);
 
