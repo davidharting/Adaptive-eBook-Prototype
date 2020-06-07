@@ -44,7 +44,7 @@ function App() {
             variant="link"
             onClick={() => dispatch(signOut())}
           >
-            Sign out
+            Reset
           </Button>
         )}
       </header>
