@@ -14,7 +14,11 @@ import content from "content.json";
 
 type GameStatus = "CREATE_SESSION" | "PICK_BOOK" | "PLAYING";
 
+// https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
+const ONE_HUNDRED_VH = "calc(var(--vh, 1vh) * 100)";
+
 function App() {
+  useVhCustomProperty();
   const dispatch = useDispatch();
   useEffect(() => {
     // Sadly typescript I must once again ask you to trust me
@@ -44,14 +48,16 @@ function App() {
             variant="link"
             onClick={() => dispatch(signOut())}
           >
-            Sign out
+            Reset
           </Button>
         )}
       </header>
       <main
         style={{
           // This feels hacky that I know the pixel height of the header but 🤷🏼‍♀️
-          height: showHeader ? "calc(100vh - 38px)" : "100vh",
+          height: showHeader
+            ? `calc(${ONE_HUNDRED_VH} - 38px)`
+            : ONE_HUNDRED_VH,
         }}
       >
         {gameStatus === "CREATE_SESSION" && <NewSession />}
@@ -63,3 +69,22 @@ function App() {
 }
 
 export default App;
+
+function useVhCustomProperty() {
+  useEffect(() => {
+    const updateVh = () => {
+      const vh = window.innerHeight * 0.01;
+      document.documentElement.style.setProperty("--vh", `${vh}px`);
+    };
+
+    updateVh();
+
+    // TODO: Add debounce or throttle if we notice issues
+
+    window.addEventListener("resize", updateVh);
+
+    return () => {
+      window.removeEventListener("resize", updateVh);
+    };
+  }, []);
+}
