@@ -27,6 +27,7 @@ function SelectBook() {
             {choices.map((book) => {
               return (
                 <Form.Check
+                  key={book.sys.id}
                   type="radio"
                   name="book"
                   id={book.sys.id}
