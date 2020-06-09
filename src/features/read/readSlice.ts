@@ -1,6 +1,8 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { AppThunk, RootState } from "../../app/store";
-import { IPage, IQuestion } from "../../types/generated/contentful";
+
+import { AppThunk, RootState } from "app/store";
+import { IPage, IQuestion, IBook } from "types/generated/contentful";
+import { AnswerDocument, recordAnswer } from "db";
 
 import { signOut } from "../session/sessionSlice";
 
@@ -35,12 +37,7 @@ export const readSlice = createSlice({
       state.pageNumber++;
     },
     chooseAnswer: (state, action: PayloadAction<Answer>) => {
-      const hasAnsweredQuestion = !!state.answers.find(
-        (a) => a.questionId === action.payload.questionId
-      );
-      if (!hasAnsweredQuestion) {
-        state.answers.push(action.payload);
-      }
+      state.answers.push(action.payload);
     },
   },
   extraReducers: {
@@ -51,8 +48,8 @@ export const readSlice = createSlice({
   },
 });
 
-const { nextPage } = readSlice.actions;
-export const { chooseAnswer, finishBook } = readSlice.actions;
+const { chooseAnswer, nextPage } = readSlice.actions;
+export const { finishBook } = readSlice.actions;
 
 // The name nextPage is taken by the basic action
 export const goToNextPage = (): AppThunk => (dispatch, getState) => {
@@ -62,6 +59,73 @@ export const goToNextPage = (): AppThunk => (dispatch, getState) => {
     dispatch(nextPage());
   }
 };
+
+export const chooseAnswerAsync = (answer: Answer): AppThunk => (
+  dispatch,
+  getState
+) => {
+  const state = getState();
+  const hasAnsweredQuestion = !!state.read.answers.find(
+    (a) => a.questionId === answer.questionId
+  );
+  if (!hasAnsweredQuestion) {
+    dispatch(chooseAnswer(answer));
+    const record = enrichAnswer(answer, state);
+    return recordAnswer(record);
+  }
+};
+
+function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
+  const book = selectBook(state);
+  if (!book) {
+    // TODO: Sentry
+    // TODO: Debuggable error message
+    // TODO: Recover from error, don't just throw it
+    throw new Error("Cannot find book for answer");
+  }
+
+  const { question, pageNumber } = getQuestion(book, answer.questionId);
+  if (!question) {
+    throw new Error("AAAaaaahhhhhh");
+  }
+
+  // This is messy as heck that I have to re-implement this logic for a given question ID as opposed to "current"
+  // Would be better if I could either safely just use the current info
+  // Or if I could share abstractions to use the same logic for "current" or "given ID"
+  const leftIsCorrect = question.fields.correctStimulus;
+  const leftStimulusId = question.fields.left.sys.id;
+  const isCorrect = leftIsCorrect
+    ? leftStimulusId === answer.stimulusId
+    : leftStimulusId !== answer.stimulusId;
+
+  // TODO: Really need a randomly generated "playthrough" ID
+  // To represent a single session within the book
+  return {
+    userId: state.session.id,
+    userName: state.session.playerName,
+    bookId: book.sys.id,
+    bookTitle: book.fields.title,
+    pageNumber: pageNumber || -1,
+    questionId: answer.questionId,
+    stimulusId: answer.stimulusId,
+    questionText: question.fields.prompt,
+    isCorrect,
+  };
+}
+
+interface GetQuestion {
+  pageNumber: number | null;
+  question: IQuestion | null;
+}
+function getQuestion(book: IBook, questionId: string): GetQuestion {
+  const pages = book.fields.pages || [];
+  const page = pages.find(
+    (p) => p.sys.contentType.sys.id === "question" && p.sys.id === questionId
+  );
+  const question = page as IQuestion;
+  const pageNumber = pages.indexOf(question);
+  return { pageNumber, question };
+}
 
 export default readSlice.reducer;
 
@@ -100,7 +164,7 @@ const selectBookPages = (state: RootState) => {
   return pages;
 };
 
-export const selectPage = (state: RootState) => {
+export const selectPage = (state: RootState, questionId?: string) => {
   const pages = selectBookPages(state);
   if (!pages) {
     return null;

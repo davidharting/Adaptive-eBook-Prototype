@@ -4,8 +4,8 @@ type SessionStatus = "unstarted" | "started";
 
 interface SessionState {
   status: SessionStatus;
-  id: String | null;
-  playerName: String;
+  id: string | null;
+  playerName: string;
 }
 
 const initialState: SessionState = {
