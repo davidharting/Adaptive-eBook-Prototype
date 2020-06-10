@@ -106,7 +106,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     userName: state.session.playerName,
     bookId: book.sys.id,
     bookTitle: book.fields.title,
-    pageNumber: pageNumber || -1,
+    pageNumber: pageNumber ? pageNumber + 1 : -1,
     questionId: answer.questionId,
     stimulusId: answer.stimulusId,
     questionText: question.fields.prompt,
