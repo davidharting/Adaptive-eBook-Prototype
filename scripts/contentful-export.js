@@ -2,6 +2,9 @@ const contentful = require("contentful");
 require("dotenv").config();
 
 function main() {
+  if (!process.env.CONTENTFUL_DELIVERY_API_KEY) {
+    throw new Error("Missing environment variable CONTENTFUL_DELIVERY_API_KEY");
+  }
   const client = contentful.createClient({
     space: "hfznm2gke77t",
     environment: "master",

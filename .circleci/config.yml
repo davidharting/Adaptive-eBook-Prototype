@@ -5,6 +5,17 @@ jobs:
   build-and-test:
     executor:
       name: node/default
+    environment:
+      # Only put client-side deploy-specific variables here
+      # Use the CircleCI UI to add environment secrets
+      - REACT_APP_DEPLOY: test
+      - REACT_APP_FIREBASE_PROJECT_ID: adaptive-ebook
+      - REACT_APP_FIREBASE_APP_ID: 1:338065520619:web:36cff7f9762ffd88c04bae
+      - REACT_APP_FIREBASE_API_KEY: AIzaSyAEXKnnn_sGmdWCntuNnXxXjO_n2CjVO9Q
+      - REACT_APP_FIREBASE_AUTH_DOMAIN: adaptive-ebook.firebaseapp.com
+      - REACT_APP_FIREBASE_DATABASE_URL: https://adaptive-ebook.firebaseio.com
+      - REACT_APP_FIREBASE_STORAGE_BUCKET: adaptive-ebook.appspot.com
+      - REACT_APP_FIREBASE_MESSAGING_SENDER_ID: 338065520619
     steps:
       - checkout
       - node/with-cache:

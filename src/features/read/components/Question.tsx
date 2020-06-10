@@ -4,7 +4,11 @@ import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import { IQuestion, IStimulus } from "types/generated/contentful";
 
-import { chooseAnswer, selectAnswer, selectQuestionStatus } from "../readSlice";
+import {
+  chooseAnswerAsync,
+  selectAnswer,
+  selectQuestionStatus,
+} from "../readSlice";
 
 import styles from "./question.module.css";
 
@@ -18,7 +22,7 @@ function Question({ question }: QuestionProps) {
   const answer = useSelector(selectAnswer);
 
   const selectStimulus = (stimulusId: string) => {
-    dispatch(chooseAnswer({ questionId: question.sys.id, stimulusId }));
+    dispatch(chooseAnswerAsync({ questionId: question.sys.id, stimulusId }));
   };
 
   const disabled = status !== "UNANSWERED";

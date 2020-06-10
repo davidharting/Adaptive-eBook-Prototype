@@ -1,0 +1,27 @@
+# These are all public-facing variables that are needed client-side
+# Create React App has a convention that REACT_APP_* variables will actually make it through into the build
+# Variables that are needed only at build time can be included here as well
+# However, any secrets should **NOT** be checked into this file, as this file will be published to a public github repository
+# Instead, those should be added manually via the Netlify UI.
+
+# If you are working locally, you will need to add values for each of these variables to your local .env
+
+[context.production.environment]
+  REACT_APP_DEPLOY="production"
+  REACT_APP_FIREBASE_PROJECT_ID="adaptive-ebook"
+  REACT_APP_FIREBASE_APP_ID="1:338065520619:web:36cff7f9762ffd88c04bae"
+  REACT_APP_FIREBASE_API_KEY="AIzaSyAEXKnnn_sGmdWCntuNnXxXjO_n2CjVO9Q"
+  REACT_APP_FIREBASE_AUTH_DOMAIN="adaptive-ebook.firebaseapp.com"
+  REACT_APP_FIREBASE_DATABASE_URL="https://adaptive-ebook.firebaseio.com"
+  REACT_APP_FIREBASE_STORAGE_BUCKET="adaptive-ebook.appspot.com"
+  REACT_APP_FIREBASE_MESSAGING_SENDER_ID="338065520619"
+
+[context.deploy-preview.environment]
+  REACT_APP_DEPLOY="preview"
+  REACT_APP_FIREBASE_PROJECT_ID="adaptive-ebook"
+  REACT_APP_FIREBASE_APP_ID="1:338065520619:web:36cff7f9762ffd88c04bae"
+  REACT_APP_FIREBASE_API_KEY="AIzaSyAEXKnnn_sGmdWCntuNnXxXjO_n2CjVO9Q"
+  REACT_APP_FIREBASE_AUTH_DOMAIN="adaptive-ebook.firebaseapp.com"
+  REACT_APP_FIREBASE_DATABASE_URL="https://adaptive-ebook.firebaseio.com"
+  REACT_APP_FIREBASE_STORAGE_BUCKET="adaptive-ebook.appspot.com"
+  REACT_APP_FIREBASE_MESSAGING_SENDER_ID="338065520619"
