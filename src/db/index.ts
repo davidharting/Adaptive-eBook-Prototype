@@ -4,13 +4,13 @@ import "firebase/firestore";
 // These are not secrets but if I want them to be configurable by deploy,
 // then I will need to utilize environment variables
 var config = {
-  apiKey: "AIzaSyAEXKnnn_sGmdWCntuNnXxXjO_n2CjVO9Q",
-  authDomain: "adaptive-ebook.firebaseapp.com",
-  databaseURL: "https://adaptive-ebook.firebaseio.com",
-  projectId: "adaptive-ebook",
-  storageBucket: "adaptive-ebook.appspot.com",
-  messagingSenderId: "338065520619",
-  appId: "1:338065520619:web:36cff7f9762ffd88c04bae",
+  apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
+  authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
+  databaseURL: process.env.REACT_APP_FIREBASE_DATABASE_URL,
+  projectId: process.env.REACT_APP_FIREBASE_PROJECT_ID,
+  storageBucket: process.env.REACT_APP_FIREBASE_STORAGE_BUCKET,
+  messagingSenderId: process.env.REACT_APP_FIREBASE_MESSAGING_SENDER_ID,
+  appId: process.env.REACT_APP_FIREBASE_APP_ID,
 };
 
 // Initialize Firebase
@@ -49,9 +49,3 @@ async function recordAnswer(answer: AnswerDocument) {
 }
 
 export { recordAnswer };
-
-// I could create a react component that listens for changes to read...
-// I could create another slice that just records the history
-// I could handle this inside an async action creator
-//   only downside there is that I have to push the validation logic into the creator
-//   and out of the reducer
