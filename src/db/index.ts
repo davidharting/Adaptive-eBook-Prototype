@@ -1,8 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
 
-// These are not secrets but if I want them to be configurable by deploy,
-// then I will need to utilize environment variables
 var config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
   authDomain: process.env.REACT_APP_FIREBASE_AUTH_DOMAIN,
@@ -18,7 +16,7 @@ firebase.initializeApp(config);
 
 const db = firebase.firestore();
 
-// TODO: Offline persistance
+// TODO: Offline persistance https://firebase.google.com/docs/firestore/manage-data/enable-offline
 // This should allow me to just do my write code not thinking about it.
 // Under the hood it will persist when it comes back online.
 
@@ -32,7 +30,6 @@ export interface AnswerDocument {
   questionText: string;
   isCorrect: boolean;
   pageNumber: number;
-  // TODO: createdAt timestamp!
 
   // TODO: correctStimulusID
   // TODO: choseStimulusID
@@ -40,12 +37,23 @@ export interface AnswerDocument {
   // TODO: choseCorrectStimulus
 }
 
+interface Auditable {
+  createdAt: firebase.firestore.FieldValue;
+  deploy: string;
+}
+
+function getInsertAuditFields() {
+  return {
+    createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+    deploy: process.env.REACT_APP_DEPLOY || "unknown",
+  };
+}
+
 async function recordAnswer(answer: AnswerDocument) {
   try {
     await db.collection("responses").add({
       ...answer,
-      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
-      deploy: process.env.REACT_APP_DEPLOY,
+      ...getInsertAuditFields(),
     });
   } catch (err) {
     // TODO: Alert sentry that I was unable to record answer
