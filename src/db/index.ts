@@ -42,7 +42,11 @@ export interface AnswerDocument {
 
 async function recordAnswer(answer: AnswerDocument) {
   try {
-    await db.collection("responses").add(answer);
+    await db.collection("responses").add({
+      ...answer,
+      createdAt: firebase.firestore.FieldValue.serverTimestamp(),
+      deploy: process.env.REACT_APP_DEPLOY,
+    });
   } catch (err) {
     // TODO: Alert sentry that I was unable to record answer
     console.error(err, { msg: "Failed to create document", answer });
