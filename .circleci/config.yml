@@ -8,6 +8,7 @@ jobs:
     environment:
       # Only put client-side deploy-specific variables here
       # Use the CircleCI UI to add environment secrets
+      - REACT_APP_DEPLOY: test
       - REACT_APP_FIREBASE_PROJECT_ID: adaptive-ebook
       - REACT_APP_FIREBASE_APP_ID: 1:338065520619:web:36cff7f9762ffd88c04bae
       - REACT_APP_FIREBASE_API_KEY: AIzaSyAEXKnnn_sGmdWCntuNnXxXjO_n2CjVO9Q
