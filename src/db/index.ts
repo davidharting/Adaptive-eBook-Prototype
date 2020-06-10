@@ -32,6 +32,7 @@ export interface AnswerDocument {
   questionText: string;
   isCorrect: boolean;
   pageNumber: number;
+  // TODO: createdAt timestamp!
 
   // TODO: correctStimulusID
   // TODO: choseStimulusID
