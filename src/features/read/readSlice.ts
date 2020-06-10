@@ -101,10 +101,6 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
   // TODO: Really need a randomly generated "playthrough" ID
   // To represent a single session within the book
 
-  // I could add an "environment" field and then just filter on that field during export
-  // That would keep things very simple but not very clean.
-  // Especially would be nice to isolate quotas (probably going to have way more usage in test)
-
   return {
     userId: state.session.id,
     userName: state.session.playerName,
@@ -169,7 +165,7 @@ const selectBookPages = (state: RootState) => {
   return pages;
 };
 
-export const selectPage = (state: RootState, questionId?: string) => {
+export const selectPage = (state: RootState) => {
   const pages = selectBookPages(state);
   if (!pages) {
     return null;
