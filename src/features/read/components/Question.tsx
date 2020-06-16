@@ -76,31 +76,29 @@ interface OnStimulusClick {
 
 function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
   const cx = cn(
-    "d-flex flex-column justify-content-between w-50 h-100",
+    `d-flex flex-column justify-content-between w-50 h-100`,
     {
       "border border-success": decorate === "CORRECT",
       "border border-danger": decorate === "WRONG",
     },
-    {
-      [styles.stimulus]: disabled === false,
-      [styles.disabledStimulus]: disabled === true,
-    }
+    { [styles.stimulus]: true }
   );
 
   return (
-    <div
-      className={cx}
-      aria-disabled={disabled}
-      onClick={() => onClick(stimulus.sys.id)}
-      role="button"
-    >
+    <div className={cx}>
       <img
         alt={stimulus.fields.image.fields.description}
         src={stimulus.fields.image.fields.file.url}
         style={{ maxWidth: "100%", height: "auto" }}
       />
-      <Button disabled={disabled} variant="link" size="lg">
-        Pick me
+      <Button
+        disabled={disabled}
+        variant="primary"
+        size="lg"
+        onClick={() => onClick(stimulus.sys.id)}
+        style={{ visibility: disabled ? "hidden" : "visible" }}
+      >
+        Select
       </Button>
       {decorate === "CORRECT" && (
         <p className={`text-success ${styles.feedback}`}>Nice work!</p>
