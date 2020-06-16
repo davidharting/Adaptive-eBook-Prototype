@@ -91,16 +91,15 @@ function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
         src={stimulus.fields.image.fields.file.url}
         style={{ maxWidth: "100%", height: "auto" }}
       />
-      {!disabled && (
-        <Button
-          disabled={disabled}
-          variant="primary"
-          size="lg"
-          onClick={() => onClick(stimulus.sys.id)}
-        >
-          Select
-        </Button>
-      )}
+      <Button
+        disabled={disabled}
+        variant="primary"
+        size="lg"
+        onClick={() => onClick(stimulus.sys.id)}
+        style={{ visibility: disabled ? "hidden" : "visible" }}
+      >
+        Select
+      </Button>
       {decorate === "CORRECT" && (
         <p className={`text-success ${styles.feedback}`}>Nice work!</p>
       )}
