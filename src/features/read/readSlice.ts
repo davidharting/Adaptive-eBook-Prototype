@@ -3,7 +3,7 @@ import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { AppThunk, RootState } from "app/store";
 import { IQuestion, IBook } from "types/generated/contentful";
 import { AnswerDocument, recordAnswer } from "db";
-import Book from "models/book";
+import Book from "models/Book";
 
 import { signOut } from "../session/sessionSlice";
 import Question from "models/Question";
