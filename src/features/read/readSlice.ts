@@ -6,6 +6,7 @@ import { AnswerDocument, recordAnswer } from "db";
 import Book from "models/book";
 
 import { signOut } from "../session/sessionSlice";
+import Question from "models/Question";
 
 interface ReadState {
   pageNumber: number;
@@ -85,19 +86,14 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     throw new Error("Cannot find book for answer");
   }
 
-  const { question, pageNumber } = getQuestion(book, answer.questionId);
-  if (!question) {
+  // TODO: Book.getQuestionById
+  const getQuestion = Book.getQuestionById(book, answer.questionId);
+  if (!getQuestion) {
     throw new Error("AAAaaaahhhhhh");
   }
 
-  // This is messy as heck that I have to re-implement this logic for a given question ID as opposed to "current"
-  // Would be better if I could either safely just use the current info
-  // Or if I could share abstractions to use the same logic for "current" or "given ID"
-  const leftIsCorrect = question.fields.correctStimulus;
-  const leftStimulusId = question.fields.left.sys.id;
-  const isCorrect = leftIsCorrect
-    ? leftStimulusId === answer.stimulusId
-    : leftStimulusId !== answer.stimulusId;
+  const { question, pageNumber } = getQuestion;
+  const isCorrect = Question.isChoiceCorrect(question, answer.stimulusId);
 
   // TODO: Really need a randomly generated "playthrough" ID
   // To represent a single session within the book
@@ -118,15 +114,6 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
 interface GetQuestion {
   pageNumber: number | null;
   question: IQuestion | null;
-}
-function getQuestion(book: IBook, questionId: string): GetQuestion {
-  const pages = book.fields.pages || [];
-  const page = pages.find(
-    (p) => p.sys.contentType.sys.id === "question" && p.sys.id === questionId
-  );
-  const question = page as IQuestion;
-  const pageNumber = pages.indexOf(question);
-  return { pageNumber, question };
 }
 
 export default readSlice.reducer;
@@ -194,27 +181,13 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   if (!question) {
     return "NOT_QUESTION";
   }
-
   const answer = selectAnswer(state);
-
   if (!answer) {
     return "UNANSWERED";
   }
-
-  // TODO: "correctStimulus" is not a well-named field
-  const isLeftCorrect = question.fields.correctStimulus;
-
-  const leftStimulusId = question.fields.left.sys.id;
-  const rightStimulusId = question.fields.right.sys.id;
-
-  if (isLeftCorrect && leftStimulusId === answer.stimulusId) {
+  if (Question.isChoiceCorrect(question, answer.stimulusId)) {
     return "CORRECT";
   }
-
-  if (!isLeftCorrect && rightStimulusId === answer.stimulusId) {
-    return "CORRECT";
-  }
-
   return "WRONG";
 };
 
