@@ -127,10 +127,6 @@ export const selectBook = (state: RootState) => {
 
 export const selectPageNumber = (state: RootState) => state.read.pageNumber;
 
-// I don't love the naming here. I probably want to rename Page and Question content types to:
-// NarrativePage and QuestionPage so that they are both "page"s
-// This will disambiguate things. When I say "page" then I can actually mean both quite clearly.
-
 export const selectPage = (state: RootState) => {
   const book = selectBook(state);
   const pageNumber = selectPageNumber(state);
