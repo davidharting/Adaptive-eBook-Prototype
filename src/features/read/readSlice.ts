@@ -86,7 +86,6 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     throw new Error("Cannot find book for answer");
   }
 
-  // TODO: Book.getQuestionById
   const getQuestion = Book.getQuestionById(book, answer.questionId);
   if (!getQuestion) {
     throw new Error("AAAaaaahhhhhh");
