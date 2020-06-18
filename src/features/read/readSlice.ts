@@ -1,8 +1,10 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { AppThunk, RootState } from "app/store";
-import { IPage, IQuestion, IBook } from "types/generated/contentful";
+import { IQuestion, IBook } from "types/generated/contentful";
 import { AnswerDocument, recordAnswer } from "db";
+import Book from "models/Book";
+import Question from "models/Question";
 
 import { signOut } from "../session/sessionSlice";
 
@@ -84,19 +86,13 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     throw new Error("Cannot find book for answer");
   }
 
-  const { question, pageNumber } = getQuestion(book, answer.questionId);
-  if (!question) {
+  const getQuestion = Book.getQuestionById(book, answer.questionId);
+  if (!getQuestion) {
     throw new Error("AAAaaaahhhhhh");
   }
 
-  // This is messy as heck that I have to re-implement this logic for a given question ID as opposed to "current"
-  // Would be better if I could either safely just use the current info
-  // Or if I could share abstractions to use the same logic for "current" or "given ID"
-  const leftIsCorrect = question.fields.correctStimulus;
-  const leftStimulusId = question.fields.left.sys.id;
-  const isCorrect = leftIsCorrect
-    ? leftStimulusId === answer.stimulusId
-    : leftStimulusId !== answer.stimulusId;
+  const { question, pageNumber } = getQuestion;
+  const isCorrect = Question.isChoiceCorrect(question, answer.stimulusId);
 
   // TODO: Really need a randomly generated "playthrough" ID
   // To represent a single session within the book
@@ -118,15 +114,6 @@ interface GetQuestion {
   pageNumber: number | null;
   question: IQuestion | null;
 }
-function getQuestion(book: IBook, questionId: string): GetQuestion {
-  const pages = book.fields.pages || [];
-  const page = pages.find(
-    (p) => p.sys.contentType.sys.id === "question" && p.sys.id === questionId
-  );
-  const question = page as IQuestion;
-  const pageNumber = pages.indexOf(question);
-  return { pageNumber, question };
-}
 
 export default readSlice.reducer;
 
@@ -135,58 +122,24 @@ export const selectBook = (state: RootState) => {
   if (!bookId) {
     return null;
   }
-  const books = state.content.books;
-  if (!books || !books.length) {
-    return null;
-  }
-  const book = books.find((b) => b.sys.id === bookId);
-  return book || null;
+  return getBook(state, bookId);
 };
 
 export const selectPageNumber = (state: RootState) => state.read.pageNumber;
 
-// I don't love the naming here. I probably want to rename Page and Question content types to:
-// NarrativePage and QuestionPage so that they are both "page"s
-// This will disambiguate things. When I say "page" then I can actually mean both quite clearly.
-type BookPage = IPage | IQuestion;
-
-const selectBookPages = (state: RootState) => {
-  const book = selectBook(state);
-
-  if (!book) {
-    return null;
-  }
-
-  const pages: BookPage[] | undefined = book.fields.pages;
-  if (!pages || !pages.length) {
-    return null;
-  }
-
-  return pages;
-};
-
 export const selectPage = (state: RootState) => {
-  const pages = selectBookPages(state);
-  if (!pages) {
-    return null;
-  }
-
+  const book = selectBook(state);
   const pageNumber = selectPageNumber(state);
-
-  if (!pages || !pages.length || pages.length < pageNumber) {
-    return null;
-  }
-
-  return pages[pageNumber];
+  return book ? Book.getPage(book, pageNumber) : null;
 };
 
-export const selectHasNextPage = (state: RootState) => {
-  const pages = selectBookPages(state);
+export const selectHasNextPage = (state: RootState): boolean => {
+  const book = selectBook(state);
   const pageNumber = selectPageNumber(state);
-  if (!pages || !pages.length) {
+  if (!book) {
     return false;
   }
-  return pageNumber < pages.length - 1;
+  return Book.hasNextPage(book, pageNumber);
 };
 
 export const selectOnLastPage = (state: RootState): boolean => {
@@ -198,12 +151,9 @@ export const selectOnLastPage = (state: RootState): boolean => {
  * Select the _current_ question
  */
 const selectQuestion = (state: RootState): IQuestion | null => {
-  const page = selectPage(state);
-  if (!page || page.sys.contentType.sys.id === "page") {
-    return null;
-  }
-  const question = page as IQuestion;
-  return question;
+  const book = selectBook(state);
+  const pageNumber = selectPageNumber(state);
+  return book ? Book.getQuestion(book, pageNumber) : null;
 };
 
 /**
@@ -226,27 +176,13 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   if (!question) {
     return "NOT_QUESTION";
   }
-
   const answer = selectAnswer(state);
-
   if (!answer) {
     return "UNANSWERED";
   }
-
-  // TODO: "correctStimulus" is not a well-named field
-  const isLeftCorrect = question.fields.correctStimulus;
-
-  const leftStimulusId = question.fields.left.sys.id;
-  const rightStimulusId = question.fields.right.sys.id;
-
-  if (isLeftCorrect && leftStimulusId === answer.stimulusId) {
+  if (Question.isChoiceCorrect(question, answer.stimulusId)) {
     return "CORRECT";
   }
-
-  if (!isLeftCorrect && rightStimulusId === answer.stimulusId) {
-    return "CORRECT";
-  }
-
   return "WRONG";
 };
 
@@ -261,3 +197,12 @@ export const selectCanPageForward = (state: RootState): boolean => {
 };
 
 type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | "CORRECT" | "WRONG";
+
+function getBook(state: RootState, bookId: string): IBook | null {
+  const books = state.content.books;
+  if (!books || !books.length) {
+    return null;
+  }
+  const book = books.find((b) => b.sys.id === bookId);
+  return book || null;
+}
