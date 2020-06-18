@@ -18,18 +18,16 @@ jobs:
       - REACT_APP_FIREBASE_MESSAGING_SENDER_ID: 338065520619
     steps:
       - checkout
-      - node/with-cache:
-          steps:
-            - run: yarn install
-            - run:
-                name: lint
-                command: yarn lint
-            - run:
-                name: unit test
-                command: yarn test:ci
-            - run:
-                name: build
-                command: yarn build
+      - run: yarn install
+      - run:
+          name: lint
+          command: yarn lint
+      - run:
+          name: unit test
+          command: yarn test:ci
+      - run:
+          name: build
+          command: yarn build
 workflows:
   build-and-test:
     jobs:
