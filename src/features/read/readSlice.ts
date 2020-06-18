@@ -4,9 +4,9 @@ import { AppThunk, RootState } from "app/store";
 import { IQuestion, IBook } from "types/generated/contentful";
 import { AnswerDocument, recordAnswer } from "db";
 import Book from "models/Book";
+import Question from "models/Question";
 
 import { signOut } from "../session/sessionSlice";
-import Question from "models/Question";
 
 interface ReadState {
   pageNumber: number;
