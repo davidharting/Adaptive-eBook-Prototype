@@ -105,7 +105,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     pageNumber: pageNumber ? pageNumber + 1 : -1,
     questionId: answer.questionId,
     stimulusId: answer.stimulusId,
-    questionText: question.fields.prompt,
+    questionText: question.fields.quantityPrompt,
     isCorrect,
   };
 }

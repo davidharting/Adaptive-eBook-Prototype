@@ -39,7 +39,7 @@ function Question({ question }: QuestionProps) {
 
   return (
     <>
-      <p>{question.fields.prompt}</p>
+      <p>{question.fields.quantityPrompt}</p>
       <div className="d-flex align-items-center justify-content-around">
         <Stimulus
           decorate={decorate(question.fields.left.sys.id)}
