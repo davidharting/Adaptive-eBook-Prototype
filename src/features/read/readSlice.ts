@@ -6,7 +6,7 @@ import { AnswerDocument, recordAnswer } from "db";
 import Book from "models/Book";
 import Question from "models/Question";
 
-import { signOut } from "../setup-device/setupDeviceSlice";
+import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 
 interface ReadState {
   pageNumber: number;
@@ -99,6 +99,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
 
   return {
     setupId: state.setupDevice.setupId,
+    treatment: state.setupDevice.treatment,
     userName: state.setupDevice.playerName,
     readThroughId: state.selectBook.readThroughId,
     bookId: book.sys.id,
@@ -109,11 +110,6 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     questionText: question.fields.quantityPrompt,
     isCorrect,
   };
-}
-
-interface GetQuestion {
-  pageNumber: number | null;
-  question: IQuestion | null;
 }
 
 export default readSlice.reducer;
@@ -155,6 +151,23 @@ const selectQuestion = (state: RootState): IQuestion | null => {
   const book = selectBook(state);
   const pageNumber = selectPageNumber(state);
   return book ? Book.getQuestion(book, pageNumber) : null;
+};
+
+export const selectPrompt = (state: RootState): string | null => {
+  const question = selectQuestion(state);
+  const treatment = selectTreatment(state);
+  if (!question || !treatment) {
+    return null;
+  }
+
+  // TODO: Implement mixed mode
+  if (treatment === "number" || treatment === "mixed") {
+    return question.fields.quantityPrompt;
+  }
+  if (treatment === "size") {
+    return question.fields.sizePrompt;
+  }
+  return null;
 };
 
 /**

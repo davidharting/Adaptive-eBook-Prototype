@@ -1,4 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { RootState } from "app/store";
+
 const shortid = require("shortid");
 
 type SessionStatus = "unstarted" | "started";
@@ -43,3 +45,7 @@ export const sessionSlice = createSlice({
 export default sessionSlice.reducer;
 
 export const { signOut, startSession } = sessionSlice.actions;
+
+export const selectTreatment = (state: RootState): Treatment | null => {
+  return state.setupDevice.treatment;
+};
