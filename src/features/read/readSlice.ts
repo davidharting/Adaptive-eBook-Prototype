@@ -4,7 +4,7 @@ import { AppThunk, RootState } from "app/store";
 import { IQuestion, IBook } from "types/generated/contentful";
 import { AnswerDocument, recordAnswer } from "db";
 import Book from "models/Book";
-import Question from "models/Question";
+import Question, { Mode } from "models/Question";
 
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 
@@ -14,6 +14,8 @@ interface ReadState {
   // In the future I may want to save all of them indefinitely to make them easier to persist while play continues
   // If I do that, however, I will need to "namespace" the answers by some sort of "read-through" ID.
   answers: Answer[];
+  // TODO: Document this property
+  mode: Mode;
 }
 
 interface Answer {
@@ -25,6 +27,7 @@ const initialState: ReadState = {
   // The pageNumber corresponds to the book.pages array and is 0-indexed
   pageNumber: 0,
   answers: [],
+  mode: randomMode(),
 };
 
 export const readSlice = createSlice({
@@ -37,6 +40,7 @@ export const readSlice = createSlice({
     },
     nextPage: (state) => {
       state.pageNumber++;
+      state.mode = randomMode();
     },
     chooseAnswer: (state, action: PayloadAction<Answer>) => {
       state.answers.push(action.payload);
@@ -46,6 +50,7 @@ export const readSlice = createSlice({
     [signOut.toString()]: (state) => {
       state.pageNumber = initialState.pageNumber;
       state.answers = initialState.answers;
+      state.mode = initialState.mode;
     },
   },
 });
@@ -100,6 +105,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
   return {
     setupId: state.setupDevice.setupId,
     treatment: state.setupDevice.treatment,
+    mode: state.read.mode,
     userName: state.setupDevice.playerName,
     readThroughId: state.selectBook.readThroughId,
     bookId: book.sys.id,
@@ -153,20 +159,22 @@ const selectQuestion = (state: RootState): IQuestion | null => {
   return book ? Book.getQuestion(book, pageNumber) : null;
 };
 
+const selectMode = (state: RootState): Mode | null => {
+  const treatment = selectTreatment(state);
+  if (treatment === "mixed") {
+    return state.read.mode;
+  }
+  return treatment;
+};
+
 export const selectPrompt = (state: RootState): string | null => {
   // Getting prompt based on treatment could get pushed down into Question model
   const question = selectQuestion(state);
-  const treatment = selectTreatment(state);
-  if (!question || !treatment) {
+  const mode = selectMode(state);
+  if (!question || !mode) {
     return null;
   }
-
-  if (treatment === "mixed") {
-    // TODO: Implement mixed mode
-    return null;
-  }
-
-  return Question.getPrompt(question, treatment);
+  return Question.getPrompt(question, mode);
 };
 
 /**
@@ -218,4 +226,12 @@ function getBook(state: RootState, bookId: string): IBook | null {
   }
   const book = books.find((b) => b.sys.id === bookId);
   return book || null;
+}
+
+function randomMode(): Mode {
+  const r = Math.random();
+  if (r <= 0.5) {
+    return "number";
+  }
+  return "size";
 }

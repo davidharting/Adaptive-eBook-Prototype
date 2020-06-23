@@ -23,6 +23,7 @@ const db = firebase.firestore();
 export interface AnswerDocument {
   setupId: string | null;
   treatment: string | null;
+  mode: string | null;
   questionId: string;
   stimulusId: string;
   bookId: string;
