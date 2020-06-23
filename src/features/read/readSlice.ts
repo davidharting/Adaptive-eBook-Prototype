@@ -154,20 +154,19 @@ const selectQuestion = (state: RootState): IQuestion | null => {
 };
 
 export const selectPrompt = (state: RootState): string | null => {
+  // Getting prompt based on treatment could get pushed down into Question model
   const question = selectQuestion(state);
   const treatment = selectTreatment(state);
   if (!question || !treatment) {
     return null;
   }
 
-  // TODO: Implement mixed mode
-  if (treatment === "number" || treatment === "mixed") {
-    return question.fields.quantityPrompt;
+  if (treatment === "mixed") {
+    // TODO: Implement mixed mode
+    return null;
   }
-  if (treatment === "size") {
-    return question.fields.sizePrompt;
-  }
-  return null;
+
+  return Question.getPrompt(question, treatment);
 };
 
 /**

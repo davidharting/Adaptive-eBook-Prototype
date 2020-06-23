@@ -1,5 +1,7 @@
 import { IQuestion } from "types/generated/contentful";
 
+export type Mode = "number" | "size";
+
 class Question {
   static isChoiceCorrect(question: IQuestion, stimulusId: string): boolean {
     const isLeftCorrect = question.fields.correctStimulus; // TODO: "correctStimulus" is not a well-named field
@@ -15,6 +17,14 @@ class Question {
     }
 
     return false;
+  }
+
+  static getPrompt(question: IQuestion, mode: Mode): string {
+    if (mode === "number") {
+      return question.fields.quantityPrompt;
+    }
+
+    return question.fields.sizePrompt;
   }
 }
 

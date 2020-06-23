@@ -1,11 +1,12 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "app/store";
+import { Mode } from "models/Question";
 
 const shortid = require("shortid");
 
 type SessionStatus = "unstarted" | "started";
 
-export type Treatment = "size" | "number" | "mixed";
+export type Treatment = Mode | "mixed";
 
 interface SetupDeviceState {
   setupId: string | null;
