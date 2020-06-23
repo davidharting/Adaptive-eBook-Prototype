@@ -4,11 +4,11 @@ import Button from "react-bootstrap/Button";
 
 import "bootstrap/dist/css/bootstrap.min.css";
 
-import NewSession from "features/session/NewSession";
+import NewSession from "features/setup-device/SetupDevice";
 import SelectBook from "features/select-book/SelectBook";
 import Read from "features/read/Read";
 import { setContent } from "features/content/contentSlice";
-import { signOut } from "features/session/sessionSlice";
+import { signOut } from "features/setup-device/setupDeviceSlice";
 import { RootState } from "app/store";
 import content from "content.json";
 
@@ -28,7 +28,7 @@ function App() {
   }, [dispatch]);
 
   const gameStatus: GameStatus = useSelector((state: RootState) => {
-    if (state.session.id === null) {
+    if (state.setupDevice.status === "unstarted") {
       return "CREATE_SESSION";
     }
     if (state.selectBook.bookId === null) {

@@ -3,7 +3,7 @@ import { useDispatch } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import CenteredLayout from "layouts/Centered";
-import { startSession } from "./sessionSlice";
+import { startSession } from "./setupDeviceSlice";
 
 function NewSession() {
   const [name, setName] = React.useState("");
@@ -20,8 +20,7 @@ function NewSession() {
         <h1>Let's get started!</h1>
         <p>
           We just need to get a little info from you before you begin. If you do
-          not to share this information, you can leave it blank or fill it in
-          with a random value.
+          not want to share this information, you can leave it blank.
         </p>
         <Form onSubmit={onSubmit}>
           <Form.Group>

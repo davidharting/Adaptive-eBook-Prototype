@@ -6,7 +6,7 @@ import { AnswerDocument, recordAnswer } from "db";
 import Book from "models/Book";
 import Question from "models/Question";
 
-import { signOut } from "../session/sessionSlice";
+import { signOut } from "../setup-device/setupDeviceSlice";
 
 interface ReadState {
   pageNumber: number;
@@ -98,8 +98,9 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
   // To represent a single session within the book
 
   return {
-    userId: state.session.id,
-    userName: state.session.playerName,
+    deviceId: state.setupDevice.deviceId,
+    userName: state.setupDevice.playerName,
+    readThroughId: state.selectBook.readThroughId,
     bookId: book.sys.id,
     bookTitle: book.fields.title,
     pageNumber: pageNumber ? pageNumber + 1 : -1,

@@ -21,11 +21,12 @@ const db = firebase.firestore();
 // Under the hood it will persist when it comes back online.
 
 export interface AnswerDocument {
+  deviceId: string | null;
   questionId: string;
   stimulusId: string;
   bookId: string;
+  readThroughId: string | null;
   bookTitle: string;
-  userId: string | null;
   userName: string;
   questionText: string;
   isCorrect: boolean;

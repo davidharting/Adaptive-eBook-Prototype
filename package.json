@@ -22,6 +22,7 @@
     "react-dom": "^16.13.1",
     "react-redux": "^7.2.0",
     "react-scripts": "3.4.1",
+    "shortid": "^2.2.15",
     "typescript": "~3.8.2"
   },
   "scripts": {
@@ -56,6 +57,7 @@
   },
   "devDependencies": {
     "@contentful/rich-text-types": "^14.1.0",
+    "@types/shortid": "^0.0.29",
     "contentful": "^7.14.4",
     "contentful-management": "^5.26.2",
     "contentful-typescript-codegen": "^3.2.1",
