@@ -3,38 +3,36 @@ const shortid = require("shortid");
 
 type SessionStatus = "unstarted" | "started";
 
-type Treatment = "size" | "number" | "mixed";
+export type Treatment = "size" | "number" | "mixed";
 
 interface SetupDeviceState {
-  deviceId: string | null;
-  ipAddressHash: string | null;
+  setupId: string | null;
   playerName: string;
   status: SessionStatus;
   treatment: Treatment | null;
 }
 
 const initialState: SetupDeviceState = {
-  deviceId: null,
-  ipAddressHash: null,
+  setupId: null,
   playerName: "",
   status: "unstarted",
   treatment: null,
 };
 
-type StartSessionPayload = { playerName: string };
+type StartSessionPayload = { playerName: string; treatment: Treatment };
 
 export const sessionSlice = createSlice({
   name: "session",
   initialState,
   reducers: {
     startSession: (state, action: PayloadAction<StartSessionPayload>) => {
-      state.deviceId = shortid.generate();
+      state.setupId = shortid.generate();
       state.status = "started";
+      state.treatment = action.payload.treatment;
       state.playerName = action.payload.playerName;
     },
     signOut: (state) => {
-      state.deviceId = initialState.deviceId;
-      state.ipAddressHash = initialState.ipAddressHash;
+      state.setupId = initialState.setupId;
       state.playerName = initialState.playerName;
       state.status = initialState.status;
       state.treatment = initialState.treatment;

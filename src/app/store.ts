@@ -18,7 +18,7 @@ const saveState = (state: {
     const serializedState = JSON.stringify({
       read: state.read,
       selectBook: state.selectBook,
-      session: state.setupDevice,
+      setupDevice: state.setupDevice,
     });
     localStorage.setItem("state", serializedState);
   } catch (err) {
@@ -41,8 +41,8 @@ export const store = configureStore({
     content: contentReducer,
     counter: counterReducer,
     read: readReducer,
-    setupDevice: setupDeviceReducer,
     selectBook: selectBookReducer,
+    setupDevice: setupDeviceReducer,
   },
 });
 

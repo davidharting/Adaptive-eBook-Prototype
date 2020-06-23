@@ -98,7 +98,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
   // To represent a single session within the book
 
   return {
-    deviceId: state.setupDevice.deviceId,
+    setupId: state.setupDevice.setupId,
     userName: state.setupDevice.playerName,
     readThroughId: state.selectBook.readThroughId,
     bookId: book.sys.id,
