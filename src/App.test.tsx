@@ -11,5 +11,5 @@ test("renders learn react link", () => {
     </Provider>
   );
 
-  expect(getByText(/let's get started/i)).toBeInTheDocument();
+  expect(getByText(/set up this device/i)).toBeInTheDocument();
 });
