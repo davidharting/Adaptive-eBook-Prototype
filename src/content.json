@@ -11,7 +11,7 @@
       "id": "2H8qQFDdYBXj1LZVW6FmF1",
       "type": "Entry",
       "createdAt": "2020-05-28T02:06:16.045Z",
-      "updatedAt": "2020-06-22T22:51:38.665Z",
+      "updatedAt": "2020-06-24T20:58:24.024Z",
       "environment": {
         "sys": {
           "id": "master",
@@ -19,7 +19,7 @@
           "linkType": "Environment"
         }
       },
-      "revision": 3,
+      "revision": 4,
       "contentType": {
         "sys": {
           "type": "Link",
@@ -30,8 +30,8 @@
       "locale": "en-US"
     },
     "fields": {
-      "sizePrompt": "Which one has the biggest stars?",
       "quantityPrompt": "Which one has more stars?",
+      "sizePrompt": "Which one has the biggest stars?",
       "left": {
         "sys": {
           "space": {
@@ -178,6 +178,7 @@
           }
         }
       },
+      "quantityWhichIsCorrect": false,
       "correctStimulus": false
     }
   },
@@ -193,7 +194,7 @@
       "id": "20LKQQZ4yUQxIRoWGkInrv",
       "type": "Entry",
       "createdAt": "2020-05-28T02:04:46.899Z",
-      "updatedAt": "2020-06-22T22:51:20.799Z",
+      "updatedAt": "2020-06-24T20:58:04.724Z",
       "environment": {
         "sys": {
           "id": "master",
@@ -201,7 +202,7 @@
           "linkType": "Environment"
         }
       },
-      "revision": 3,
+      "revision": 4,
       "contentType": {
         "sys": {
           "type": "Link",
@@ -212,8 +213,8 @@
       "locale": "en-US"
     },
     "fields": {
-      "sizePrompt": "Which one has the smallest stars?",
       "quantityPrompt": "Which one has more stars?",
+      "sizePrompt": "Which one has the smallest stars?",
       "left": {
         "sys": {
           "space": {
@@ -360,7 +361,8 @@
           }
         }
       },
-      "correctStimulus": true
+      "quantityWhichIsCorrect": false,
+      "correctStimulus": false
     }
   },
   {
@@ -375,7 +377,7 @@
       "id": "2BlyKws0lKvYeQwcevvA3A",
       "type": "Entry",
       "createdAt": "2020-05-28T02:02:40.637Z",
-      "updatedAt": "2020-06-22T22:51:06.143Z",
+      "updatedAt": "2020-06-24T20:57:27.242Z",
       "environment": {
         "sys": {
           "id": "master",
@@ -383,7 +385,7 @@
           "linkType": "Environment"
         }
       },
-      "revision": 3,
+      "revision": 4,
       "contentType": {
         "sys": {
           "type": "Link",
@@ -394,8 +396,8 @@
       "locale": "en-US"
     },
     "fields": {
-      "sizePrompt": "Which one has bigger stars?",
       "quantityPrompt": "Which one has more stars?",
+      "sizePrompt": "Which one has bigger stars?",
       "left": {
         "sys": {
           "space": {
@@ -542,7 +544,8 @@
           }
         }
       },
-      "correctStimulus": false
+      "quantityWhichIsCorrect": false,
+      "correctStimulus": true
     }
   },
   {
@@ -658,7 +661,7 @@
             "id": "2BlyKws0lKvYeQwcevvA3A",
             "type": "Entry",
             "createdAt": "2020-05-28T02:02:40.637Z",
-            "updatedAt": "2020-06-22T22:51:06.143Z",
+            "updatedAt": "2020-06-24T20:57:27.242Z",
             "environment": {
               "sys": {
                 "id": "master",
@@ -666,7 +669,7 @@
                 "linkType": "Environment"
               }
             },
-            "revision": 3,
+            "revision": 4,
             "contentType": {
               "sys": {
                 "type": "Link",
@@ -677,8 +680,8 @@
             "locale": "en-US"
           },
           "fields": {
-            "sizePrompt": "Which one has bigger stars?",
             "quantityPrompt": "Which one has more stars?",
+            "sizePrompt": "Which one has bigger stars?",
             "left": {
               "sys": {
                 "space": {
@@ -825,7 +828,8 @@
                 }
               }
             },
-            "correctStimulus": false
+            "quantityWhichIsCorrect": false,
+            "correctStimulus": true
           }
         },
         {
@@ -840,7 +844,7 @@
             "id": "20LKQQZ4yUQxIRoWGkInrv",
             "type": "Entry",
             "createdAt": "2020-05-28T02:04:46.899Z",
-            "updatedAt": "2020-06-22T22:51:20.799Z",
+            "updatedAt": "2020-06-24T20:58:04.724Z",
             "environment": {
               "sys": {
                 "id": "master",
@@ -848,7 +852,7 @@
                 "linkType": "Environment"
               }
             },
-            "revision": 3,
+            "revision": 4,
             "contentType": {
               "sys": {
                 "type": "Link",
@@ -859,8 +863,8 @@
             "locale": "en-US"
           },
           "fields": {
-            "sizePrompt": "Which one has the smallest stars?",
             "quantityPrompt": "Which one has more stars?",
+            "sizePrompt": "Which one has the smallest stars?",
             "left": {
               "sys": {
                 "space": {
@@ -1007,7 +1011,8 @@
                 }
               }
             },
-            "correctStimulus": true
+            "quantityWhichIsCorrect": false,
+            "correctStimulus": false
           }
         },
         {
@@ -1056,7 +1061,7 @@
             "id": "2H8qQFDdYBXj1LZVW6FmF1",
             "type": "Entry",
             "createdAt": "2020-05-28T02:06:16.045Z",
-            "updatedAt": "2020-06-22T22:51:38.665Z",
+            "updatedAt": "2020-06-24T20:58:24.024Z",
             "environment": {
               "sys": {
                 "id": "master",
@@ -1064,7 +1069,7 @@
                 "linkType": "Environment"
               }
             },
-            "revision": 3,
+            "revision": 4,
             "contentType": {
               "sys": {
                 "type": "Link",
@@ -1075,8 +1080,8 @@
             "locale": "en-US"
           },
           "fields": {
-            "sizePrompt": "Which one has the biggest stars?",
             "quantityPrompt": "Which one has more stars?",
+            "sizePrompt": "Which one has the biggest stars?",
             "left": {
               "sys": {
                 "space": {
@@ -1223,6 +1228,7 @@
                 }
               }
             },
+            "quantityWhichIsCorrect": false,
             "correctStimulus": false
           }
         },

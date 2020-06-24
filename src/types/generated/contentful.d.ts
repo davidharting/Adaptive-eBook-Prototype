@@ -115,11 +115,11 @@ export interface IPage extends Entry<IPageFields> {
 }
 
 export interface IQuestionFields {
-  /** Size Prompt */
-  sizePrompt: string;
-
   /** Quantity Prompt */
   quantityPrompt: string;
+
+  /** Size Prompt */
+  sizePrompt: string;
 
   /** Left */
   left: IStimulus;
@@ -127,7 +127,10 @@ export interface IQuestionFields {
   /** Right */
   right: IStimulus;
 
-  /** Correct Stimulus */
+  /** Quantity: Which is correct? */
+  quantityWhichIsCorrect: boolean;
+
+  /** Size: Which is correct */
   correctStimulus: boolean;
 }
 

@@ -18,9 +18,13 @@ interface ReadState {
   mode: Mode;
 }
 
-interface Answer {
+interface AnswerPayload {
   questionId: string;
   stimulusId: string;
+}
+
+interface Answer extends AnswerPayload {
+  mode: Mode;
 }
 
 const initialState: ReadState = {
@@ -67,15 +71,20 @@ export const goToNextPage = (): AppThunk => (dispatch, getState) => {
   }
 };
 
-export const chooseAnswerAsync = (answer: Answer): AppThunk => (
+export const chooseAnswerAsync = (payload: AnswerPayload): AppThunk => (
   dispatch,
   getState
 ) => {
   const state = getState();
   const hasAnsweredQuestion = !!state.read.answers.find(
-    (a) => a.questionId === answer.questionId
+    (a) => a.questionId === payload.questionId
   );
   if (!hasAnsweredQuestion) {
+    const mode = selectMode(state);
+    if (!mode) {
+      throw new Error("What in the heck is going on");
+    }
+    const answer: Answer = { ...payload, mode };
     dispatch(chooseAnswer(answer));
     const record = enrichAnswer(answer, state);
     return recordAnswer(record);
@@ -97,7 +106,12 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
   }
 
   const { question, pageNumber } = getQuestion;
-  const isCorrect = Question.isChoiceCorrect(question, answer.stimulusId);
+
+  const isCorrect = Question.isChoiceCorrect(
+    question,
+    answer.mode,
+    answer.stimulusId
+  );
 
   // TODO: Really need a randomly generated "playthrough" ID
   // To represent a single session within the book
@@ -189,6 +203,8 @@ export const selectAnswer = (state: RootState): Answer | undefined => {
   return state.read.answers.find((a) => a.questionId === question.sys.id);
 };
 
+// I need to apply the mode when determining if a choice is correct
+
 /**
  * Status of the _current_ question
  */
@@ -201,7 +217,7 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   if (!answer) {
     return "UNANSWERED";
   }
-  if (Question.isChoiceCorrect(question, answer.stimulusId)) {
+  if (Question.isChoiceCorrect(question, answer.mode, answer.stimulusId)) {
     return "CORRECT";
   }
   return "WRONG";

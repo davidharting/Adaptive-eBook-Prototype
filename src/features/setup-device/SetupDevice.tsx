@@ -53,7 +53,7 @@ function NewSession() {
             >
               <option value="number">Quantity</option>
               <option value="size">Size</option>
-              {/* <option value='mixed'>Mixed</option> */}
+              <option value="mixed">Mixed</option>
             </Form.Control>
           </Form.Group>
           <Button disabled={disabled} variant="primary" type="submit">
