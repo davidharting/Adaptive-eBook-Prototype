@@ -30,6 +30,36 @@ export interface IBook extends Entry<IBookFields> {
   };
 }
 
+export interface IChoiceFields {
+  /** Correct Stimulus */
+  correctStimulus: Asset;
+
+  /** Distractor Stimulus */
+  distractorStimulus: Asset;
+
+  /** Difficulty */
+  difficulty?: "easy" | "medium" | "hard" | undefined;
+}
+
+/** A choice presents two stimuli as the possible answers to a question. Only one is correct. */
+
+export interface IChoice extends Entry<IChoiceFields> {
+  sys: {
+    id: string;
+    type: string;
+    createdAt: string;
+    updatedAt: string;
+    locale: string;
+    contentType: {
+      sys: {
+        id: "choice";
+        linkType: "ContentType";
+        type: "Link";
+      };
+    };
+  };
+}
+
 export interface IOptionFields {
   /** Is this correct? */
   isThisCorrect: boolean;
@@ -60,6 +90,9 @@ export interface IOption extends Entry<IOptionFields> {
 export interface IPageFields {
   /** Prompt */
   prompt: string;
+
+  /** Picture */
+  picture?: Asset | undefined;
 }
 
 /** A page of an eBook containing content, but no question.  */
@@ -82,8 +115,11 @@ export interface IPage extends Entry<IPageFields> {
 }
 
 export interface IQuestionFields {
-  /** Prompt */
-  prompt: string;
+  /** Quantity Prompt */
+  quantityPrompt: string;
+
+  /** Size Prompt */
+  sizePrompt: string;
 
   /** Left */
   left: IStimulus;
@@ -91,7 +127,10 @@ export interface IQuestionFields {
   /** Right */
   right: IStimulus;
 
-  /** Correct Stimulus */
+  /** Quantity: Which is correct? */
+  quantityWhichIsCorrect: boolean;
+
+  /** Size: Which is correct */
   correctStimulus: boolean;
 }
 
@@ -141,7 +180,13 @@ export interface IStimulus extends Entry<IStimulusFields> {
   };
 }
 
-export type CONTENT_TYPE = "book" | "option" | "page" | "question" | "stimulus";
+export type CONTENT_TYPE =
+  | "book"
+  | "choice"
+  | "option"
+  | "page"
+  | "question"
+  | "stimulus";
 
 export type LOCALE_CODE = "en-US";
 

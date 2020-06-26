@@ -8,6 +8,7 @@ import {
   chooseAnswerAsync,
   selectAnswer,
   selectQuestionStatus,
+  selectPrompt,
 } from "../readSlice";
 
 import styles from "./question.module.css";
@@ -20,6 +21,7 @@ function Question({ question }: QuestionProps) {
   const dispatch = useDispatch();
   const status = useSelector(selectQuestionStatus);
   const answer = useSelector(selectAnswer);
+  const prompt = useSelector(selectPrompt);
 
   const selectStimulus = (stimulusId: string) => {
     dispatch(chooseAnswerAsync({ questionId: question.sys.id, stimulusId }));
@@ -39,7 +41,7 @@ function Question({ question }: QuestionProps) {
 
   return (
     <>
-      <p>{question.fields.prompt}</p>
+      <p>{prompt}</p>
       <div className="d-flex align-items-center justify-content-around">
         <Stimulus
           decorate={decorate(question.fields.left.sys.id)}

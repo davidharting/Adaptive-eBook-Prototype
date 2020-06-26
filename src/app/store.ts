@@ -4,23 +4,25 @@ import contentReducer from "../features/content/contentSlice";
 import counterReducer from "../features/counter/counterSlice";
 import readReducer from "../features/read/readSlice";
 import selectBookReducer from "../features/select-book/selectBookSlice";
-import sessionReducer from "../features/session/sessionSlice";
+import setupDeviceReducer from "../features/setup-device/setupDeviceSlice";
+
+const LOCAL_STORAGE_STATE_CACHE_KEY = "adaptive-ebook-redux-state";
 
 // Approach for persisting state came from Dan Abramov himself 🙏
 // https://egghead.io/lessons/javascript-redux-persisting-the-state-to-the-local-storage
 const saveState = (state: {
   read: Object;
   selectBook: Object;
-  session: Object;
+  setupDevice: Object;
   counter: Object;
 }) => {
   try {
     const serializedState = JSON.stringify({
       read: state.read,
       selectBook: state.selectBook,
-      session: state.session,
+      setupDevice: state.setupDevice,
     });
-    localStorage.setItem("state", serializedState);
+    localStorage.setItem(LOCAL_STORAGE_STATE_CACHE_KEY, serializedState);
   } catch (err) {
     console.error("Unable to persist state to local storage.", err);
   }
@@ -28,7 +30,7 @@ const saveState = (state: {
 
 const loadState = () => {
   try {
-    const serializedState = localStorage.getItem("state");
+    const serializedState = localStorage.getItem(LOCAL_STORAGE_STATE_CACHE_KEY);
     return serializedState ? JSON.parse(serializedState) : undefined;
   } catch (err) {
     return undefined;
@@ -41,8 +43,8 @@ export const store = configureStore({
     content: contentReducer,
     counter: counterReducer,
     read: readReducer,
-    session: sessionReducer,
     selectBook: selectBookReducer,
+    setupDevice: setupDeviceReducer,
   },
 });
 
@@ -57,3 +59,5 @@ export type AppThunk<ReturnType = void> = ThunkAction<
   unknown,
   Action<string>
 >;
+
+// TODO: Update local storage state key!

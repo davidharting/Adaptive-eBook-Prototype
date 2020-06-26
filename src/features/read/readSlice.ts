@@ -4,27 +4,44 @@ import { AppThunk, RootState } from "app/store";
 import { IQuestion, IBook } from "types/generated/contentful";
 import { AnswerDocument, recordAnswer } from "db";
 import Book from "models/Book";
-import Question from "models/Question";
+import Question, { Mode } from "models/Question";
 
-import { signOut } from "../session/sessionSlice";
+import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 
 interface ReadState {
+  /**
+   * The **current** page in the book.
+   */
   pageNumber: number;
-  // For now, only saving the current read-throughs answers
-  // In the future I may want to save all of them indefinitely to make them easier to persist while play continues
-  // If I do that, however, I will need to "namespace" the answers by some sort of "read-through" ID.
+  /**
+   * For now, only saving the current read-throughs answers
+   * In the future I may want to save all of them indefinitely to make them easier to persist while play continues
+   * If I do that, however, I will need to "namespace" the answers by some sort of "read-through" ID.
+   */
   answers: Answer[];
+  /**
+   * The "randomMode" property is only relevant when in the Mixed Treatment.
+   * This mode property describes the randomly generated mode for the current page.
+   * If in the Number or Size Treatment, this value will be ignored.
+   * In the Mixed treatment, we will take on the random mode as the current mode of the page.
+   */
+  randomMode: Mode;
 }
 
-interface Answer {
+interface AnswerPayload {
   questionId: string;
   stimulusId: string;
+}
+
+interface Answer extends AnswerPayload {
+  mode: Mode;
 }
 
 const initialState: ReadState = {
   // The pageNumber corresponds to the book.pages array and is 0-indexed
   pageNumber: 0,
   answers: [],
+  randomMode: randomMode(),
 };
 
 export const readSlice = createSlice({
@@ -37,6 +54,7 @@ export const readSlice = createSlice({
     },
     nextPage: (state) => {
       state.pageNumber++;
+      state.randomMode = randomMode();
     },
     chooseAnswer: (state, action: PayloadAction<Answer>) => {
       state.answers.push(action.payload);
@@ -46,6 +64,7 @@ export const readSlice = createSlice({
     [signOut.toString()]: (state) => {
       state.pageNumber = initialState.pageNumber;
       state.answers = initialState.answers;
+      state.randomMode = initialState.randomMode;
     },
   },
 });
@@ -62,15 +81,20 @@ export const goToNextPage = (): AppThunk => (dispatch, getState) => {
   }
 };
 
-export const chooseAnswerAsync = (answer: Answer): AppThunk => (
+export const chooseAnswerAsync = (payload: AnswerPayload): AppThunk => (
   dispatch,
   getState
 ) => {
   const state = getState();
   const hasAnsweredQuestion = !!state.read.answers.find(
-    (a) => a.questionId === answer.questionId
+    (a) => a.questionId === payload.questionId
   );
   if (!hasAnsweredQuestion) {
+    const mode = selectMode(state);
+    if (!mode) {
+      throw new Error("What in the heck is going on");
+    }
+    const answer: Answer = { ...payload, mode };
     dispatch(chooseAnswer(answer));
     const record = enrichAnswer(answer, state);
     return recordAnswer(record);
@@ -92,27 +116,31 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
   }
 
   const { question, pageNumber } = getQuestion;
-  const isCorrect = Question.isChoiceCorrect(question, answer.stimulusId);
+
+  const isCorrect = Question.isChoiceCorrect(
+    question,
+    answer.mode,
+    answer.stimulusId
+  );
 
   // TODO: Really need a randomly generated "playthrough" ID
   // To represent a single session within the book
 
   return {
-    userId: state.session.id,
-    userName: state.session.playerName,
+    setupId: state.setupDevice.setupId,
+    treatment: state.setupDevice.treatment,
+    mode: answer.mode,
+    childName: state.setupDevice.childName,
+    parentName: state.setupDevice.parentName,
+    readThroughId: state.selectBook.readThroughId,
     bookId: book.sys.id,
     bookTitle: book.fields.title,
     pageNumber: pageNumber ? pageNumber + 1 : -1,
     questionId: answer.questionId,
     stimulusId: answer.stimulusId,
-    questionText: question.fields.prompt,
+    questionText: question.fields.quantityPrompt,
     isCorrect,
   };
-}
-
-interface GetQuestion {
-  pageNumber: number | null;
-  question: IQuestion | null;
 }
 
 export default readSlice.reducer;
@@ -156,6 +184,24 @@ const selectQuestion = (state: RootState): IQuestion | null => {
   return book ? Book.getQuestion(book, pageNumber) : null;
 };
 
+const selectMode = (state: RootState): Mode | null => {
+  const treatment = selectTreatment(state);
+  if (treatment === "mixed") {
+    return state.read.randomMode;
+  }
+  return treatment;
+};
+
+export const selectPrompt = (state: RootState): string | null => {
+  // Getting prompt based on treatment could get pushed down into Question model
+  const question = selectQuestion(state);
+  const mode = selectMode(state);
+  if (!question || !mode) {
+    return null;
+  }
+  return Question.getPrompt(question, mode);
+};
+
 /**
  * Select the user's answer to the _current_ question
  */
@@ -167,6 +213,8 @@ export const selectAnswer = (state: RootState): Answer | undefined => {
 
   return state.read.answers.find((a) => a.questionId === question.sys.id);
 };
+
+// I need to apply the mode when determining if a choice is correct
 
 /**
  * Status of the _current_ question
@@ -180,7 +228,7 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   if (!answer) {
     return "UNANSWERED";
   }
-  if (Question.isChoiceCorrect(question, answer.stimulusId)) {
+  if (Question.isChoiceCorrect(question, answer.mode, answer.stimulusId)) {
     return "CORRECT";
   }
   return "WRONG";
@@ -205,4 +253,12 @@ function getBook(state: RootState, bookId: string): IBook | null {
   }
   const book = books.find((b) => b.sys.id === bookId);
   return book || null;
+}
+
+function randomMode(): Mode {
+  const r = Math.random();
+  if (r <= 0.5) {
+    return "number";
+  }
+  return "size";
 }
