@@ -15,7 +15,7 @@ function NewSession() {
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
-    dispatch(startSession({ playerName: childName, treatment }));
+    dispatch(startSession({ childName, parentName, treatment }));
   };
 
   return (

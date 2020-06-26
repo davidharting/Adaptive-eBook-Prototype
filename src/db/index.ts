@@ -29,7 +29,8 @@ export interface AnswerDocument {
   bookId: string;
   readThroughId: string | null;
   bookTitle: string;
-  userName: string;
+  childName: string;
+  parentName: string;
   questionText: string;
   isCorrect: boolean;
   pageNumber: number;
@@ -53,11 +54,15 @@ function getInsertAuditFields() {
 }
 
 async function recordAnswer(answer: AnswerDocument) {
+  const document = {
+    ...answer,
+    ...getInsertAuditFields(),
+  };
+  if (process.env.REACT_APP_LOG_FIRESTORE_WRITES === "true") {
+    console.log(document);
+  }
   try {
-    await db.collection("responses").add({
-      ...answer,
-      ...getInsertAuditFields(),
-    });
+    await db.collection("responses").add(document);
   } catch (err) {
     // TODO: Alert sentry that I was unable to record answer
     console.error(err, { msg: "Failed to create document", answer });

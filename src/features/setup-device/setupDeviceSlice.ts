@@ -10,19 +10,25 @@ export type Treatment = Mode | "mixed";
 
 interface SetupDeviceState {
   setupId: string | null;
-  playerName: string;
+  parentName: string;
+  childName: string;
   status: SessionStatus;
   treatment: Treatment | null;
 }
 
 const initialState: SetupDeviceState = {
   setupId: null,
-  playerName: "",
+  childName: "",
+  parentName: "",
   status: "unstarted",
   treatment: null,
 };
 
-type StartSessionPayload = { playerName: string; treatment: Treatment };
+type StartSessionPayload = {
+  childName: string;
+  parentName: string;
+  treatment: Treatment;
+};
 
 export const sessionSlice = createSlice({
   name: "session",
@@ -32,11 +38,13 @@ export const sessionSlice = createSlice({
       state.setupId = shortid.generate();
       state.status = "started";
       state.treatment = action.payload.treatment;
-      state.playerName = action.payload.playerName;
+      state.childName = action.payload.childName;
+      state.parentName = action.payload.parentName;
     },
     signOut: (state) => {
       state.setupId = initialState.setupId;
-      state.playerName = initialState.playerName;
+      state.childName = initialState.childName;
+      state.parentName = initialState.parentName;
       state.status = initialState.status;
       state.treatment = initialState.treatment;
     },

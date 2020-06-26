@@ -15,6 +15,7 @@
   REACT_APP_FIREBASE_DATABASE_URL="https://adaptive-ebook.firebaseio.com"
   REACT_APP_FIREBASE_STORAGE_BUCKET="adaptive-ebook.appspot.com"
   REACT_APP_FIREBASE_MESSAGING_SENDER_ID="338065520619"
+  REACT_APP_LOG_FIRESTORE_WRITES="false"
 
 [context.deploy-preview.environment]
   REACT_APP_DEPLOY="preview"
@@ -25,3 +26,4 @@
   REACT_APP_FIREBASE_DATABASE_URL="https://adaptive-ebook.firebaseio.com"
   REACT_APP_FIREBASE_STORAGE_BUCKET="adaptive-ebook.appspot.com"
   REACT_APP_FIREBASE_MESSAGING_SENDER_ID="338065520619"
+  REACT_APP_LOG_FIRESTORE_WRITES="false"
