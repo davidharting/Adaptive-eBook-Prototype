@@ -9,13 +9,23 @@ import Question, { Mode } from "models/Question";
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 
 interface ReadState {
+  /**
+   * The **current** page in the book.
+   */
   pageNumber: number;
-  // For now, only saving the current read-throughs answers
-  // In the future I may want to save all of them indefinitely to make them easier to persist while play continues
-  // If I do that, however, I will need to "namespace" the answers by some sort of "read-through" ID.
+  /**
+   * For now, only saving the current read-throughs answers
+   * In the future I may want to save all of them indefinitely to make them easier to persist while play continues
+   * If I do that, however, I will need to "namespace" the answers by some sort of "read-through" ID.
+   */
   answers: Answer[];
-  // TODO: Document this property
-  mode: Mode;
+  /**
+   * The "randomMode" property is only relevant when in the Mixed Treatment.
+   * This mode property describes the randomly generated mode for the current page.
+   * If in the Number or Size Treatment, this value will be ignored.
+   * In the Mixed treatment, we will take on the random mode as the current mode of the page.
+   */
+  randomMode: Mode;
 }
 
 interface AnswerPayload {
@@ -31,7 +41,7 @@ const initialState: ReadState = {
   // The pageNumber corresponds to the book.pages array and is 0-indexed
   pageNumber: 0,
   answers: [],
-  mode: randomMode(),
+  randomMode: randomMode(),
 };
 
 export const readSlice = createSlice({
@@ -44,7 +54,7 @@ export const readSlice = createSlice({
     },
     nextPage: (state) => {
       state.pageNumber++;
-      state.mode = randomMode();
+      state.randomMode = randomMode();
     },
     chooseAnswer: (state, action: PayloadAction<Answer>) => {
       state.answers.push(action.payload);
@@ -54,7 +64,7 @@ export const readSlice = createSlice({
     [signOut.toString()]: (state) => {
       state.pageNumber = initialState.pageNumber;
       state.answers = initialState.answers;
-      state.mode = initialState.mode;
+      state.randomMode = initialState.randomMode;
     },
   },
 });
@@ -119,7 +129,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
   return {
     setupId: state.setupDevice.setupId,
     treatment: state.setupDevice.treatment,
-    mode: state.read.mode,
+    mode: answer.mode,
     childName: state.setupDevice.childName,
     parentName: state.setupDevice.parentName,
     readThroughId: state.selectBook.readThroughId,
@@ -177,7 +187,7 @@ const selectQuestion = (state: RootState): IQuestion | null => {
 const selectMode = (state: RootState): Mode | null => {
   const treatment = selectTreatment(state);
   if (treatment === "mixed") {
-    return state.read.mode;
+    return state.read.randomMode;
   }
   return treatment;
 };
