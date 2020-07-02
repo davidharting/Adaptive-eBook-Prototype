@@ -1,12 +1,13 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { AppThunk, RootState } from "app/store";
-import { IQuestion, IBook } from "types/generated/contentful";
+import { IQuestion, IBook, IChoice } from "types/generated/contentful";
 import { AnswerDocument, recordAnswer } from "db";
 import Book from "models/Book";
-import Question, { Mode } from "models/Question";
+import Question from "models/Question";
 
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
+import { Mode } from "models/constants";
 
 interface ReadState {
   /**
@@ -117,7 +118,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
 
   const { question, pageNumber } = getQuestion;
 
-  const isCorrect = Question.isChoiceCorrect(
+  const isCorrect = Question.isSelectionCorrect(
     question,
     answer.mode,
     answer.stimulusId
@@ -214,6 +215,11 @@ export const selectAnswer = (state: RootState): Answer | undefined => {
   return state.read.answers.find((a) => a.questionId === question.sys.id);
 };
 
+export const selectChoice = (state: RootState): IChoice | null => {
+  const question = selectQuestion(state);
+  return question ? Question.getChoice(question) : null;
+};
+
 // I need to apply the mode when determining if a choice is correct
 
 /**
@@ -228,7 +234,7 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   if (!answer) {
     return "UNANSWERED";
   }
-  if (Question.isChoiceCorrect(question, answer.mode, answer.stimulusId)) {
+  if (Question.isSelectionCorrect(question, answer.mode, answer.stimulusId)) {
     return "CORRECT";
   }
   return "WRONG";

@@ -2,13 +2,15 @@ import React from "react";
 import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
-import { IQuestion, IStimulus } from "types/generated/contentful";
+import { Asset } from "contentful";
+import { IQuestion, IChoice } from "types/generated/contentful";
 
 import {
   chooseAnswerAsync,
   selectAnswer,
   selectQuestionStatus,
   selectPrompt,
+  selectChoice,
 } from "../readSlice";
 
 import styles from "./question.module.css";
@@ -18,16 +20,28 @@ interface QuestionProps {
 }
 
 function Question({ question }: QuestionProps) {
+  const prompt = useSelector(selectPrompt);
+  const choice = useSelector(selectChoice);
+
+  return (
+    <>
+      <p>{prompt}</p>
+      <div className="d-flex align-items-center justify-content-around">
+        {choice && <Choice choice={choice} questionId={question.sys.id} />}
+      </div>
+    </>
+  );
+}
+
+function Choice({ choice, questionId }: ChoiceProps) {
   const dispatch = useDispatch();
+
   const status = useSelector(selectQuestionStatus);
   const answer = useSelector(selectAnswer);
-  const prompt = useSelector(selectPrompt);
 
   const selectStimulus = (stimulusId: string) => {
-    dispatch(chooseAnswerAsync({ questionId: question.sys.id, stimulusId }));
+    dispatch(chooseAnswerAsync({ questionId, stimulusId }));
   };
-
-  const disabled = status !== "UNANSWERED";
 
   const decorate = (stimulusId: string) => {
     if (
@@ -39,32 +53,35 @@ function Question({ question }: QuestionProps) {
     return false;
   };
 
+  const disabled = status !== "UNANSWERED";
   return (
     <>
-      <p>{prompt}</p>
-      <div className="d-flex align-items-center justify-content-around">
-        <Stimulus
-          decorate={decorate(question.fields.left.sys.id)}
-          disabled={disabled}
-          onClick={selectStimulus}
-          stimulus={question.fields.left}
-        />
-        <Stimulus
-          decorate={decorate(question.fields.right.sys.id)}
-          disabled={disabled}
-          onClick={selectStimulus}
-          stimulus={question.fields.right}
-        />
-      </div>
+      <Stimulus
+        decorate={decorate(choice.fields.stimulusA.sys.id)}
+        disabled={disabled}
+        onClick={selectStimulus}
+        stimulus={choice.fields.stimulusA}
+      />
+      <Stimulus
+        decorate={decorate(choice.fields.stimulusB.sys.id)}
+        disabled={disabled}
+        onClick={selectStimulus}
+        stimulus={choice.fields.stimulusB}
+      />
     </>
   );
+}
+
+interface ChoiceProps {
+  choice: IChoice;
+  questionId: string;
 }
 
 interface StimulusProps {
   decorate?: "CORRECT" | "WRONG" | false;
   disabled: boolean;
   onClick: OnStimulusClick;
-  stimulus: IStimulus;
+  stimulus: Asset;
 }
 
 interface OnStimulusClick {
@@ -89,8 +106,8 @@ function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
   return (
     <div className={cx}>
       <img
-        alt={stimulus.fields.image.fields.description}
-        src={stimulus.fields.image.fields.file.url}
+        alt={stimulus.fields.description}
+        src={stimulus.fields.file.url}
         style={{ maxWidth: "100%", height: "auto" }}
       />
       <Button

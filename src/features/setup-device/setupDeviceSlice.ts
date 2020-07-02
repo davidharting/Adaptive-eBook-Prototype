@@ -1,6 +1,6 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import { RootState } from "app/store";
-import { Mode } from "models/Question";
+import { Mode } from "models/constants";
 
 const shortid = require("shortid");
 
