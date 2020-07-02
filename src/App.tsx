@@ -1,14 +1,12 @@
 import React, { useEffect } from "react";
 import { useDispatch, useSelector } from "react-redux";
-import Button from "react-bootstrap/Button";
-
 import "bootstrap/dist/css/bootstrap.min.css";
 
 import NewSession from "features/setup-device/SetupDevice";
+import ResetDevice from "features/setup-device/ResetDevice";
 import SelectBook from "features/select-book/SelectBook";
 import Read from "features/read/Read";
 import { setContent } from "features/content/contentSlice";
-import { signOut } from "features/setup-device/setupDeviceSlice";
 import { RootState } from "app/store";
 import content from "content.json";
 
@@ -41,17 +39,7 @@ function App() {
 
   return (
     <>
-      <header>
-        {showHeader && (
-          <Button
-            className="text-muted"
-            variant="link"
-            onClick={() => dispatch(signOut())}
-          >
-            Reset
-          </Button>
-        )}
-      </header>
+      <header>{showHeader && <ResetDevice />}</header>
       <main
         style={{
           // This feels hacky that I know the pixel height of the header but 🤷🏼‍♀️
