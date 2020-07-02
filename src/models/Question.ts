@@ -1,32 +1,27 @@
 import { IQuestion } from "types/generated/contentful";
-
-export type Mode = "number" | "size";
+import { Mode } from "./constants";
+import Choice from "./Choice";
 
 class Question {
-  // This should take a "mode"
-  static isChoiceCorrect(
+  static isSelectionCorrect(
     question: IQuestion,
     mode: Mode,
     stimulusId: string
   ): boolean {
-    // TODO: Refactor content model - how we determine which is correct is garbo!
-    const isLeftCorrect =
-      mode === "number"
-        ? question.fields.quantityWhichIsCorrect
-        : question.fields.correctStimulus;
+    const choice = Question.getChoice(question);
+    return Choice.isSelectionCorrect(choice, mode, stimulusId);
+  }
 
-    const leftStimulusId = question.fields.left.sys.id;
-    const rightStimulusId = question.fields.right.sys.id;
+  static areChoicesValid(question: IQuestion) {
+    return question.fields.choices.length === 1;
+  }
 
-    if (isLeftCorrect && leftStimulusId === stimulusId) {
-      return true;
+  static getChoice(question: IQuestion) {
+    if (!Question.areChoicesValid(question)) {
+      throw new InvalidChoiceError(question);
     }
 
-    if (!isLeftCorrect && rightStimulusId === stimulusId) {
-      return true;
-    }
-
-    return false;
+    return question.fields.choices[0];
   }
 
   static getPrompt(question: IQuestion, mode: Mode): string {
@@ -39,3 +34,12 @@ class Question {
 }
 
 export default Question;
+
+class InvalidChoiceError extends Error {
+  questionId: string;
+
+  constructor(question: IQuestion) {
+    super("Question has invalid choices.");
+    this.questionId = question.sys.id;
+  }
+}

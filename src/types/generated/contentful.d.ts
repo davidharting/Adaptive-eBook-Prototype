@@ -31,14 +31,20 @@ export interface IBook extends Entry<IBookFields> {
 }
 
 export interface IChoiceFields {
-  /** Correct Stimulus */
-  correctStimulus: Asset;
-
-  /** Distractor Stimulus */
-  distractorStimulus: Asset;
-
   /** Difficulty */
-  difficulty?: "easy" | "medium" | "hard" | undefined;
+  difficulty: "easy" | "medium" | "hard";
+
+  /** Stimulus A */
+  stimulusA: Asset;
+
+  /** Stimulus B */
+  stimulusB: Asset;
+
+  /** Number: Correct Stimulus */
+  quantityCorrectStimulus: "A" | "B";
+
+  /** Size: Correct stimulus */
+  sizeCorrectStimulus: "A" | "B";
 }
 
 /** A choice presents two stimuli as the possible answers to a question. Only one is correct. */
@@ -53,6 +59,31 @@ export interface IChoice extends Entry<IChoiceFields> {
     contentType: {
       sys: {
         id: "choice";
+        linkType: "ContentType";
+        type: "Link";
+      };
+    };
+  };
+}
+
+export interface IDifficultyFields {
+  /** Level */
+  level: number;
+
+  /** Name */
+  name: string;
+}
+
+export interface IDifficulty extends Entry<IDifficultyFields> {
+  sys: {
+    id: string;
+    type: string;
+    createdAt: string;
+    updatedAt: string;
+    locale: string;
+    contentType: {
+      sys: {
+        id: "difficulty";
         linkType: "ContentType";
         type: "Link";
       };
@@ -121,17 +152,8 @@ export interface IQuestionFields {
   /** Size Prompt */
   sizePrompt: string;
 
-  /** Left */
-  left: IStimulus;
-
-  /** Right */
-  right: IStimulus;
-
-  /** Quantity: Which is correct? */
-  quantityWhichIsCorrect: boolean;
-
-  /** Size: Which is correct */
-  correctStimulus: boolean;
+  /** Choices */
+  choices: IChoice[];
 }
 
 /** A question presents a prompt about two stimuli, one of which is correct. */
@@ -183,6 +205,7 @@ export interface IStimulus extends Entry<IStimulusFields> {
 export type CONTENT_TYPE =
   | "book"
   | "choice"
+  | "difficulty"
   | "option"
   | "page"
   | "question"
