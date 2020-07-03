@@ -1,6 +1,7 @@
 import { IQuestion } from "types/generated/contentful";
 import { Difficulty, Mode } from "./constants";
 import Choice from "./Choice";
+import { uniqueCount } from "lib/array";
 
 class Question {
   static isSelectionCorrect(
@@ -14,8 +15,10 @@ class Question {
   }
 
   static areChoicesValid(question: IQuestion) {
-    // TODO: Validate that it has a hard, easy, and medium
-    return question.fields.choices.length === 3;
+    return (
+      question.fields.choices.length === 3 &&
+      uniqueCount(question.fields.choices.map((c) => c.fields.difficulty)) === 3
+    );
   }
 
   /**
