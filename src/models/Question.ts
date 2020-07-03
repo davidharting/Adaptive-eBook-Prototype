@@ -14,6 +14,7 @@ class Question {
   }
 
   static areChoicesValid(question: IQuestion) {
+    // TODO: Validate that it has a hard, easy, and medium
     return question.fields.choices.length === 1;
   }
 

@@ -8,6 +8,7 @@ import Question from "models/Question";
 
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 import { Mode } from "models/constants";
+import { last, uniqueCount, lastItem } from "lib/array";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -115,22 +116,14 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     throw new Error("Cannot find book for answer");
   }
 
+  const grade = gradeAnswer(book, answer);
+
   const getQuestion = Book.getQuestionById(book, answer.questionId);
   if (!getQuestion) {
     throw new Error("AAAaaaahhhhhh");
   }
 
   const { question, pageNumber } = getQuestion;
-
-  const isCorrect = Question.isSelectionCorrect(
-    question,
-    answer.mode,
-    answer.difficulty,
-    answer.stimulusId
-  );
-
-  // TODO: Really need a randomly generated "playthrough" ID
-  // To represent a single session within the book
 
   return {
     setupId: state.setupDevice.setupId,
@@ -146,7 +139,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     questionId: answer.questionId,
     stimulusId: answer.stimulusId,
     questionText: question.fields.quantityPrompt,
-    isCorrect,
+    isCorrect: grade === "CORRECT",
   };
 }
 
@@ -222,7 +215,65 @@ export const selectAnswer = (state: RootState): Answer | undefined => {
 };
 
 function selectDifficulty(state: RootState): Difficulty {
-  return "medium";
+  const CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY = 1;
+  const CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY = 1;
+
+  const STARTING_DIFFICULTY = "easy";
+
+  const book = selectBook(state);
+  const answers = state.read.answers;
+
+  if (
+    !book ||
+    answers.length < 1 ||
+    (answers.length < CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY &&
+      answers.length < CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY)
+  ) {
+    return STARTING_DIFFICULTY;
+  }
+
+  interface GradeHistoryItem {
+    difficulty: Difficulty;
+    grade: Grade | "ERROR";
+  }
+
+  const history: Array<GradeHistoryItem> = answers.map((ans) => {
+    return {
+      difficulty: ans.difficulty,
+      grade: gradeAnswer(book, ans),
+    };
+  });
+
+  const difficultiesMatch = (items: Array<GradeHistoryItem>) => {
+    const difficulties = items.map((h) => h.difficulty);
+    return uniqueCount(difficulties) === 1;
+  };
+
+  const allCorrect = (items: Array<GradeHistoryItem>) => {
+    return items.every((item) => item.grade === "CORRECT");
+  };
+
+  const allWrong = (items: Array<GradeHistoryItem>) => {
+    return items.every((item) => item.grade === "WRONG");
+  };
+
+  const latestDifficulty = lastItem(history)?.difficulty || STARTING_DIFFICULTY;
+
+  if (history.length >= CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY) {
+    const recent = last(history, CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY);
+    if (difficultiesMatch(recent) && allCorrect(recent)) {
+      return nextDifficulty(latestDifficulty);
+    }
+  }
+
+  if (history.length >= CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY) {
+    const recent = last(history, CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY);
+    if (difficultiesMatch(recent) && allWrong(recent)) {
+      return previousDifficulty(latestDifficulty);
+    }
+  }
+
+  return latestDifficulty;
 }
 
 export const selectChoice = (state: RootState): IChoice | null => {
@@ -268,7 +319,8 @@ export const selectCanPageForward = (state: RootState): boolean => {
   return hasNextPage && questionStatus !== "UNANSWERED";
 };
 
-type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | "CORRECT" | "WRONG";
+type Grade = "CORRECT" | "WRONG";
+type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | Grade;
 
 function getBook(state: RootState, bookId: string): IBook | null {
   const books = state.content.books;
@@ -285,4 +337,33 @@ function randomMode(): Mode {
     return "number";
   }
   return "size";
+}
+
+function gradeAnswer(book: IBook, answer: Answer): Grade | "ERROR" {
+  const questionAndPage = Book.getQuestionById(book, answer.questionId);
+  if (!questionAndPage || !questionAndPage.question) {
+    console.warn("Sentry I need to tell you that something bad happened!");
+    return "ERROR";
+  }
+  const isSelectionCorrect = Question.isSelectionCorrect(
+    questionAndPage.question,
+    answer.mode,
+    answer.difficulty,
+    answer.stimulusId
+  );
+  return isSelectionCorrect ? "CORRECT" : "WRONG";
+}
+
+function nextDifficulty(difficulty: Difficulty): Difficulty {
+  if (difficulty === "easy") {
+    return "medium";
+  }
+  return "hard";
+}
+
+function previousDifficulty(difficulty: Difficulty): Difficulty {
+  if (difficulty === "hard") {
+    return "medium";
+  }
+  return "easy";
 }
