@@ -9,6 +9,8 @@ import Question from "models/Question";
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 import { Mode } from "models/constants";
 
+type Difficulty = "easy" | "medium" | "hard";
+
 interface ReadState {
   /**
    * The **current** page in the book.
@@ -35,6 +37,7 @@ interface AnswerPayload {
 }
 
 interface Answer extends AnswerPayload {
+  difficulty: Difficulty;
   mode: Mode;
 }
 
@@ -95,7 +98,8 @@ export const chooseAnswerAsync = (payload: AnswerPayload): AppThunk => (
     if (!mode) {
       throw new Error("What in the heck is going on");
     }
-    const answer: Answer = { ...payload, mode };
+    const difficulty = selectDifficulty(state);
+    const answer: Answer = { ...payload, mode, difficulty };
     dispatch(chooseAnswer(answer));
     const record = enrichAnswer(answer, state);
     return recordAnswer(record);
@@ -121,6 +125,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
   const isCorrect = Question.isSelectionCorrect(
     question,
     answer.mode,
+    answer.difficulty,
     answer.stimulusId
   );
 
@@ -131,6 +136,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     setupId: state.setupDevice.setupId,
     treatment: state.setupDevice.treatment,
     mode: answer.mode,
+    difficulty: answer.difficulty,
     childName: state.setupDevice.childName,
     parentName: state.setupDevice.parentName,
     readThroughId: state.selectBook.readThroughId,
@@ -215,9 +221,14 @@ export const selectAnswer = (state: RootState): Answer | undefined => {
   return state.read.answers.find((a) => a.questionId === question.sys.id);
 };
 
+function selectDifficulty(state: RootState): Difficulty {
+  return "medium";
+}
+
 export const selectChoice = (state: RootState): IChoice | null => {
   const question = selectQuestion(state);
-  return question ? Question.getChoice(question) : null;
+  const difficulty = selectDifficulty(state);
+  return question ? Question.getChoice(question, difficulty) : null;
 };
 
 // I need to apply the mode when determining if a choice is correct
@@ -234,7 +245,14 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   if (!answer) {
     return "UNANSWERED";
   }
-  if (Question.isSelectionCorrect(question, answer.mode, answer.stimulusId)) {
+  if (
+    Question.isSelectionCorrect(
+      question,
+      answer.mode,
+      answer.difficulty,
+      answer.stimulusId
+    )
+  ) {
     return "CORRECT";
   }
   return "WRONG";
