@@ -7,6 +7,7 @@ import Book from "models/Book";
 import Question from "models/Question";
 
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
+import { finishBook, selectBook } from "../select-book/selectBookSlice";
 import { Mode } from "models/constants";
 import { last, uniqueCount, lastItem } from "lib/array";
 
@@ -53,10 +54,6 @@ export const readSlice = createSlice({
   name: "read",
   initialState,
   reducers: {
-    finishBook: (state) => {
-      state.pageNumber = initialState.pageNumber;
-      state.answers = initialState.answers;
-    },
     nextPage: (state) => {
       state.pageNumber++;
       state.randomMode = randomMode();
@@ -66,6 +63,10 @@ export const readSlice = createSlice({
     },
   },
   extraReducers: {
+    [finishBook.toString()]: (state) => {
+      state.pageNumber = initialState.pageNumber;
+      state.answers = initialState.answers;
+    },
     [signOut.toString()]: (state) => {
       state.pageNumber = initialState.pageNumber;
       state.answers = initialState.answers;
@@ -75,7 +76,6 @@ export const readSlice = createSlice({
 });
 
 const { chooseAnswer, nextPage } = readSlice.actions;
-export const { finishBook } = readSlice.actions;
 
 // The name nextPage is taken by the basic action
 export const goToNextPage = (): AppThunk => (dispatch, getState) => {
@@ -145,14 +145,6 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
 
 export default readSlice.reducer;
 
-export const selectBook = (state: RootState) => {
-  const bookId = state.selectBook.bookId;
-  if (!bookId) {
-    return null;
-  }
-  return getBook(state, bookId);
-};
-
 export const selectPageNumber = (state: RootState) => state.read.pageNumber;
 
 export const selectPage = (state: RootState) => {
@@ -214,6 +206,9 @@ export const selectAnswer = (state: RootState): Answer | undefined => {
   return state.read.answers.find((a) => a.questionId === question.sys.id);
 };
 
+/**
+ * Note: In "assessment" books, the difficulty is irrelevant - we just play through the book as-is.
+ */
 function selectDifficulty(state: RootState): Difficulty {
   const CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY = 1;
   const CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY = 1;
@@ -321,15 +316,6 @@ export const selectCanPageForward = (state: RootState): boolean => {
 
 type Grade = "CORRECT" | "WRONG";
 type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | Grade;
-
-function getBook(state: RootState, bookId: string): IBook | null {
-  const books = state.content.books;
-  if (!books || !books.length) {
-    return null;
-  }
-  const book = books.find((b) => b.sys.id === bookId);
-  return book || null;
-}
 
 function randomMode(): Mode {
   const r = Math.random();

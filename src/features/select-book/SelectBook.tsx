@@ -3,13 +3,27 @@ import { useSelector, useDispatch } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import CenteredLayout from "layouts/Centered";
-import { chooseBook, selectAvailableBooks } from "./selectBookSlice";
+import {
+  chooseBook,
+  selectAvailableBooks,
+  selectBookValidation,
+} from "./selectBookSlice";
+import InvalidBook from "./InvalidBook";
 
 function SelectBook() {
   const dispatch = useDispatch();
   const choices = useSelector(selectAvailableBooks);
+  const validation = useSelector(selectBookValidation);
 
   const [selected, setSelected] = React.useState<string | null>(null);
+
+  if (validation.status === "error") {
+    return (
+      <CenteredLayout>
+        <InvalidBook problems={validation.problems} />
+      </CenteredLayout>
+    );
+  }
 
   return (
     <CenteredLayout>

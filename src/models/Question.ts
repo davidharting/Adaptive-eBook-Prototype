@@ -15,9 +15,12 @@ class Question {
 
   static areChoicesValid(question: IQuestion) {
     // TODO: Validate that it has a hard, easy, and medium
-    return question.fields.choices.length === 1;
+    return question.fields.choices.length === 3;
   }
 
+  /**
+   * Note: In "assessment" books, the difficulty will not be relevant - there should only be one Choice per Question.
+   */
   static getChoice(question: IQuestion, difficulty: Difficulty) {
     if (!Question.areChoicesValid(question)) {
       throw new InvalidChoiceError(question);

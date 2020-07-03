@@ -5,8 +5,10 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import NewSession from "features/setup-device/SetupDevice";
 import ResetDevice from "features/setup-device/ResetDevice";
 import SelectBook from "features/select-book/SelectBook";
+import InvalidBook from "features/select-book/InvalidBook";
 import Read from "features/read/Read";
 import { setContent } from "features/content/contentSlice";
+import { selectBookValidation } from "features/select-book/selectBookSlice";
 import { RootState } from "app/store";
 import content from "content.json";
 
@@ -25,16 +27,7 @@ function App() {
     dispatch(setContent(content));
   }, [dispatch]);
 
-  const gameStatus: GameStatus = useSelector((state: RootState) => {
-    if (state.setupDevice.status === "unstarted") {
-      return "CREATE_SESSION";
-    }
-    if (state.selectBook.bookId === null) {
-      return "PICK_BOOK";
-    }
-    return "PLAYING";
-  });
-
+  const gameStatus: GameStatus = useSelector(selectGameStatus);
   const showHeader = gameStatus !== "CREATE_SESSION";
 
   return (
@@ -75,4 +68,20 @@ function useVhCustomProperty() {
       window.removeEventListener("resize", updateVh);
     };
   }, []);
+}
+
+function selectGameStatus(state: RootState): GameStatus {
+  if (state.setupDevice.status === "unstarted") {
+    return "CREATE_SESSION";
+  }
+  if (state.selectBook.bookId === null) {
+    return "PICK_BOOK";
+  }
+
+  const bookValidation = selectBookValidation(state);
+  if (bookValidation.status === "error") {
+    return "PICK_BOOK";
+  }
+
+  return "PLAYING";
 }
