@@ -56,35 +56,42 @@ function hasNextPage(book: IBook, pageNumber: number) {
 
 export interface BookValidation {
   status: "ok" | "error";
-  problems: Array<string>;
+  message?: string;
+  questions?: Array<QuestionError>;
 }
 
 /**
  * Note: Once there are "assessment" books, this validation logic will need to change,a long with difficulty handling.
  */
 function validate(book: IBook): BookValidation {
-  const problems: Array<string> = [];
-
   const pages = getPages(book);
   if (!pages) {
-    problems.push("Book contains no pages.");
-    return { status: "error", problems };
+    return { status: "error", message: "Book contains no pages." };
   }
 
+  const questions: Array<QuestionError> = [];
   pages.forEach((p, i) => {
     const question = BookPage.asQuestion(p);
     if (question) {
-      if (!Question.areChoicesValid(question)) {
-        problems.push(`Question on page ${i + 1} has invalid choices.`);
+      const validation = Question.validate(question);
+      if (validation.status === "error") {
+        questions.push({
+          message: `Question on page ${i + 1} has invalid choices.`,
+          problems: validation.problems,
+        });
       }
     }
   });
 
-  if (problems.length > 1) {
-    return { status: "error", problems };
+  if (questions.length > 1) {
+    return {
+      status: "error",
+      message: "There was a problem with one or more questions in this book.",
+      questions,
+    };
   }
 
-  return { status: "ok", problems };
+  return { status: "ok" };
 }
 
 const Book = {
@@ -96,3 +103,8 @@ const Book = {
   validate,
 };
 export default Book;
+
+export interface QuestionError {
+  message: string;
+  problems: Array<string>;
+}

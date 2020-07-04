@@ -2,9 +2,11 @@ import React from "react";
 import { useDispatch } from "react-redux";
 import Button from "react-bootstrap/Button";
 import { finishBook } from "./selectBookSlice";
+import { BookValidation } from "models/Book";
 
-function InvalidBook({ problems }: InvalidBookProps) {
+function InvalidBook({ error }: InvalidBookProps) {
   const dispatch = useDispatch();
+
   return (
     <div>
       <h1>There are problems with this book</h1>
@@ -13,17 +15,8 @@ function InvalidBook({ problems }: InvalidBookProps) {
         this adaptive eBook and see this error page, please contact&nbsp;
         <a href="mailto:davideharting@gmail.com">davideharting@gmail.com</a>.
       </p>
-      <h2>Errors:</h2>
-      {problems.length < 1 && (
-        <p>We could not automatically determine the problem with this book.</p>
-      )}
-      {problems.length > 1 && (
-        <ul>
-          {problems.map((problem) => (
-            <li>{problem}</li>
-          ))}
-        </ul>
-      )}
+      {error.message && <b>{error.message}</b>}
+      {error.questions && <QuestionErrors questions={error.questions} />}
       <Button variant="primary" onClick={() => dispatch(finishBook())}>
         Choose a different book
       </Button>
@@ -32,7 +25,32 @@ function InvalidBook({ problems }: InvalidBookProps) {
 }
 
 interface InvalidBookProps {
-  problems: Array<string>;
+  error: BookValidation;
+}
+
+function QuestionErrors({ questions }: QuestionErrorsProps) {
+  return (
+    <>
+      <h2>Problems</h2>
+      {questions.map((q) => (
+        <li>
+          {q.message}
+          <ul>
+            {q.problems.map((p) => (
+              <li>{p}</li>
+            ))}
+          </ul>
+        </li>
+      ))}
+    </>
+  );
+}
+
+interface QuestionErrorsProps {
+  questions: Array<{
+    message: string;
+    problems: Array<string>;
+  }>;
 }
 
 export default InvalidBook;

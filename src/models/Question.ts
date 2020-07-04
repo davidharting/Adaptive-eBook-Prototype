@@ -1,7 +1,7 @@
 import { IQuestion } from "types/generated/contentful";
 import { Difficulty, Mode } from "./constants";
 import Choice from "./Choice";
-import { uniqueCount } from "lib/array";
+import { Validation } from "types/validation";
 
 class Question {
   static isSelectionCorrect(
@@ -14,19 +14,32 @@ class Question {
     return Choice.isSelectionCorrect(choice, mode, stimulusId);
   }
 
-  static areChoicesValid(question: IQuestion) {
-    return (
-      question.fields.choices.length === 3 &&
-      uniqueCount(question.fields.choices.map((c) => c.fields.difficulty)) === 3
+  static validate(question: IQuestion): Validation {
+    const counts = { easy: 0, medium: 0, hard: 0 };
+    const difficulties = question.fields.choices.map(
+      (c) => c.fields.difficulty
     );
+    difficulties.forEach((d) => {
+      counts[d]++;
+    });
+
+    const problems = Object.entries(counts)
+      .filter(([_, count]) => count !== 1)
+      .map(
+        ([d, count]) =>
+          `There should be exactly one "${d}" Choice, but instead there are ${count}`
+      );
+
+    return { status: problems.length > 0 ? "error" : "ok", problems };
   }
 
   /**
    * Note: In "assessment" books, the difficulty will not be relevant - there should only be one Choice per Question.
    */
   static getChoice(question: IQuestion, difficulty: Difficulty) {
-    if (!Question.areChoicesValid(question)) {
-      throw new InvalidChoiceError(question);
+    const validation = Question.validate(question);
+    if (validation.status === "error") {
+      throw new InvalidQuestionError(question, validation.problems);
     }
 
     const choice = question.fields.choices.find(
@@ -34,7 +47,7 @@ class Question {
     );
 
     if (!choice) {
-      throw new InvalidChoiceError(question);
+      throw new InvalidQuestionError(question);
     }
 
     return choice;
@@ -51,11 +64,13 @@ class Question {
 
 export default Question;
 
-class InvalidChoiceError extends Error {
+class InvalidQuestionError extends Error {
   questionId: string;
+  problems: Array<string>;
 
-  constructor(question: IQuestion) {
-    super("Question has invalid choices.");
+  constructor(question: IQuestion, problems: Array<string> = []) {
+    super("Invalid Question Error");
     this.questionId = question.sys.id;
+    this.problems = problems;
   }
 }

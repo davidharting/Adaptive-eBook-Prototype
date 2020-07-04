@@ -73,5 +73,5 @@ export const selectBookValidation = (state: RootState): BookValidation => {
   if (book) {
     return Book.validate(book);
   }
-  return { status: "ok", problems: [] };
+  return { status: "ok" };
 };

@@ -13,6 +13,10 @@ import { last, uniqueCount, lastItem } from "lib/array";
 
 type Difficulty = "easy" | "medium" | "hard";
 
+// TODO: Now I have a bug where once you change difficulty settings, the feedback page is broken.
+// e.g., get something right, difficulty increments. You should be seeing Good Job! Overlayed on your latest choice
+// But instead, the difficulty advances on the _current page_ instead of waiting for the next page.
+
 interface ReadState {
   /**
    * The **current** page in the book.
@@ -41,6 +45,7 @@ interface AnswerPayload {
 interface Answer extends AnswerPayload {
   difficulty: Difficulty;
   mode: Mode;
+  pageNumber: number;
 }
 
 const initialState: ReadState = {
@@ -100,7 +105,8 @@ export const chooseAnswerAsync = (payload: AnswerPayload): AppThunk => (
       throw new Error("What in the heck is going on");
     }
     const difficulty = selectDifficulty(state);
-    const answer: Answer = { ...payload, mode, difficulty };
+    const pageNumber = selectPageNumber(state);
+    const answer: Answer = { ...payload, mode, difficulty, pageNumber };
     dispatch(chooseAnswer(answer));
     const record = enrichAnswer(answer, state);
     return recordAnswer(record);
@@ -227,9 +233,9 @@ function selectDifficulty(state: RootState): Difficulty {
     return STARTING_DIFFICULTY;
   }
 
-  interface GradeHistoryItem {
-    difficulty: Difficulty;
-    grade: Grade | "ERROR";
+  const latestAnswer = lastItem(answers);
+  if (latestAnswer && latestAnswer.pageNumber === selectPageNumber(state)) {
+    return latestAnswer.difficulty;
   }
 
   const history: Array<GradeHistoryItem> = answers.map((ans) => {
@@ -274,6 +280,7 @@ function selectDifficulty(state: RootState): Difficulty {
 export const selectChoice = (state: RootState): IChoice | null => {
   const question = selectQuestion(state);
   const difficulty = selectDifficulty(state);
+  console.log("Selecting choice with difficulty", difficulty);
   return question ? Question.getChoice(question, difficulty) : null;
 };
 
@@ -352,4 +359,9 @@ function previousDifficulty(difficulty: Difficulty): Difficulty {
     return "medium";
   }
   return "easy";
+}
+
+interface GradeHistoryItem {
+  difficulty: Difficulty;
+  grade: Grade | "ERROR";
 }

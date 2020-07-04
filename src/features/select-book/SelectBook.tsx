@@ -20,7 +20,7 @@ function SelectBook() {
   if (validation.status === "error") {
     return (
       <CenteredLayout>
-        <InvalidBook problems={validation.problems} />
+        <InvalidBook error={validation} />
       </CenteredLayout>
     );
   }
