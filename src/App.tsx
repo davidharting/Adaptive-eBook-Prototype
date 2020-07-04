@@ -5,7 +5,6 @@ import "bootstrap/dist/css/bootstrap.min.css";
 import NewSession from "features/setup-device/SetupDevice";
 import ResetDevice from "features/setup-device/ResetDevice";
 import SelectBook from "features/select-book/SelectBook";
-import InvalidBook from "features/select-book/InvalidBook";
 import Read from "features/read/Read";
 import { setContent } from "features/content/contentSlice";
 import { selectBookValidation } from "features/select-book/selectBookSlice";
