@@ -7,7 +7,15 @@ import Book from "models/Book";
 import Question from "models/Question";
 
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
+import { finishBook, selectBook } from "../select-book/selectBookSlice";
 import { Mode } from "models/constants";
+import { last, uniqueCount, lastItem } from "lib/array";
+
+type Difficulty = "easy" | "medium" | "hard";
+
+// TODO: Now I have a bug where once you change difficulty settings, the feedback page is broken.
+// e.g., get something right, difficulty increments. You should be seeing Good Job! Overlayed on your latest choice
+// But instead, the difficulty advances on the _current page_ instead of waiting for the next page.
 
 interface ReadState {
   /**
@@ -35,7 +43,9 @@ interface AnswerPayload {
 }
 
 interface Answer extends AnswerPayload {
+  difficulty: Difficulty;
   mode: Mode;
+  pageNumber: number;
 }
 
 const initialState: ReadState = {
@@ -49,10 +59,6 @@ export const readSlice = createSlice({
   name: "read",
   initialState,
   reducers: {
-    finishBook: (state) => {
-      state.pageNumber = initialState.pageNumber;
-      state.answers = initialState.answers;
-    },
     nextPage: (state) => {
       state.pageNumber++;
       state.randomMode = randomMode();
@@ -62,6 +68,10 @@ export const readSlice = createSlice({
     },
   },
   extraReducers: {
+    [finishBook.toString()]: (state) => {
+      state.pageNumber = initialState.pageNumber;
+      state.answers = initialState.answers;
+    },
     [signOut.toString()]: (state) => {
       state.pageNumber = initialState.pageNumber;
       state.answers = initialState.answers;
@@ -71,7 +81,6 @@ export const readSlice = createSlice({
 });
 
 const { chooseAnswer, nextPage } = readSlice.actions;
-export const { finishBook } = readSlice.actions;
 
 // The name nextPage is taken by the basic action
 export const goToNextPage = (): AppThunk => (dispatch, getState) => {
@@ -95,7 +104,9 @@ export const chooseAnswerAsync = (payload: AnswerPayload): AppThunk => (
     if (!mode) {
       throw new Error("What in the heck is going on");
     }
-    const answer: Answer = { ...payload, mode };
+    const difficulty = selectDifficulty(state);
+    const pageNumber = selectPageNumber(state);
+    const answer: Answer = { ...payload, mode, difficulty, pageNumber };
     dispatch(chooseAnswer(answer));
     const record = enrichAnswer(answer, state);
     return recordAnswer(record);
@@ -111,6 +122,8 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     throw new Error("Cannot find book for answer");
   }
 
+  const grade = gradeAnswer(book, answer);
+
   const getQuestion = Book.getQuestionById(book, answer.questionId);
   if (!getQuestion) {
     throw new Error("AAAaaaahhhhhh");
@@ -118,19 +131,11 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
 
   const { question, pageNumber } = getQuestion;
 
-  const isCorrect = Question.isSelectionCorrect(
-    question,
-    answer.mode,
-    answer.stimulusId
-  );
-
-  // TODO: Really need a randomly generated "playthrough" ID
-  // To represent a single session within the book
-
   return {
     setupId: state.setupDevice.setupId,
     treatment: state.setupDevice.treatment,
     mode: answer.mode,
+    difficulty: answer.difficulty,
     childName: state.setupDevice.childName,
     parentName: state.setupDevice.parentName,
     readThroughId: state.selectBook.readThroughId,
@@ -140,19 +145,11 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     questionId: answer.questionId,
     stimulusId: answer.stimulusId,
     questionText: question.fields.quantityPrompt,
-    isCorrect,
+    isCorrect: grade === "CORRECT",
   };
 }
 
 export default readSlice.reducer;
-
-export const selectBook = (state: RootState) => {
-  const bookId = state.selectBook.bookId;
-  if (!bookId) {
-    return null;
-  }
-  return getBook(state, bookId);
-};
 
 export const selectPageNumber = (state: RootState) => state.read.pageNumber;
 
@@ -215,9 +212,76 @@ export const selectAnswer = (state: RootState): Answer | undefined => {
   return state.read.answers.find((a) => a.questionId === question.sys.id);
 };
 
+/**
+ * Note: In "assessment" books, the difficulty is irrelevant - we just play through the book as-is.
+ */
+function selectDifficulty(state: RootState): Difficulty {
+  const CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY = 1;
+  const CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY = 1;
+
+  const STARTING_DIFFICULTY = "easy";
+
+  const book = selectBook(state);
+  const answers = state.read.answers;
+
+  if (
+    !book ||
+    answers.length < 1 ||
+    (answers.length < CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY &&
+      answers.length < CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY)
+  ) {
+    return STARTING_DIFFICULTY;
+  }
+
+  const latestAnswer = lastItem(answers);
+  if (latestAnswer && latestAnswer.pageNumber === selectPageNumber(state)) {
+    return latestAnswer.difficulty;
+  }
+
+  const history: Array<GradeHistoryItem> = answers.map((ans) => {
+    return {
+      difficulty: ans.difficulty,
+      grade: gradeAnswer(book, ans),
+    };
+  });
+
+  const difficultiesMatch = (items: Array<GradeHistoryItem>) => {
+    const difficulties = items.map((h) => h.difficulty);
+    return uniqueCount(difficulties) === 1;
+  };
+
+  const allCorrect = (items: Array<GradeHistoryItem>) => {
+    return items.every((item) => item.grade === "CORRECT");
+  };
+
+  const allWrong = (items: Array<GradeHistoryItem>) => {
+    return items.every((item) => item.grade === "WRONG");
+  };
+
+  const latestDifficulty = lastItem(history)?.difficulty || STARTING_DIFFICULTY;
+
+  if (history.length >= CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY) {
+    const recent = last(history, CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY);
+    if (difficultiesMatch(recent) && allCorrect(recent)) {
+      return nextDifficulty(latestDifficulty);
+    }
+  }
+
+  if (history.length >= CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY) {
+    const recent = last(history, CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY);
+    if (difficultiesMatch(recent) && allWrong(recent)) {
+      return previousDifficulty(latestDifficulty);
+    }
+  }
+
+  return latestDifficulty;
+}
+
 export const selectChoice = (state: RootState): IChoice | null => {
   const question = selectQuestion(state);
-  return question ? Question.getChoice(question) : null;
+  const difficulty = selectDifficulty(state);
+  console.log("Selecting choice with difficulty", difficulty);
+  return question ? Question.getChoice(question, difficulty) : null;
 };
 
 // I need to apply the mode when determining if a choice is correct
@@ -234,7 +298,14 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   if (!answer) {
     return "UNANSWERED";
   }
-  if (Question.isSelectionCorrect(question, answer.mode, answer.stimulusId)) {
+  if (
+    Question.isSelectionCorrect(
+      question,
+      answer.mode,
+      answer.difficulty,
+      answer.stimulusId
+    )
+  ) {
     return "CORRECT";
   }
   return "WRONG";
@@ -250,16 +321,8 @@ export const selectCanPageForward = (state: RootState): boolean => {
   return hasNextPage && questionStatus !== "UNANSWERED";
 };
 
-type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | "CORRECT" | "WRONG";
-
-function getBook(state: RootState, bookId: string): IBook | null {
-  const books = state.content.books;
-  if (!books || !books.length) {
-    return null;
-  }
-  const book = books.find((b) => b.sys.id === bookId);
-  return book || null;
-}
+type Grade = "CORRECT" | "WRONG";
+type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | Grade;
 
 function randomMode(): Mode {
   const r = Math.random();
@@ -267,4 +330,38 @@ function randomMode(): Mode {
     return "number";
   }
   return "size";
+}
+
+function gradeAnswer(book: IBook, answer: Answer): Grade | "ERROR" {
+  const questionAndPage = Book.getQuestionById(book, answer.questionId);
+  if (!questionAndPage || !questionAndPage.question) {
+    console.warn("Sentry I need to tell you that something bad happened!");
+    return "ERROR";
+  }
+  const isSelectionCorrect = Question.isSelectionCorrect(
+    questionAndPage.question,
+    answer.mode,
+    answer.difficulty,
+    answer.stimulusId
+  );
+  return isSelectionCorrect ? "CORRECT" : "WRONG";
+}
+
+function nextDifficulty(difficulty: Difficulty): Difficulty {
+  if (difficulty === "easy") {
+    return "medium";
+  }
+  return "hard";
+}
+
+function previousDifficulty(difficulty: Difficulty): Difficulty {
+  if (difficulty === "hard") {
+    return "medium";
+  }
+  return "easy";
+}
+
+interface GradeHistoryItem {
+  difficulty: Difficulty;
+  grade: Grade | "ERROR";
 }

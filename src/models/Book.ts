@@ -1,5 +1,6 @@
 import { IBook, IQuestion } from "types/generated/contentful";
 import BookPage, { IBookPage } from "./BookPage";
+import Question from "./Question";
 
 function getPages(book: IBook): IBookPage[] | null {
   const pages: IBookPage[] | undefined = book.fields.pages;
@@ -53,5 +54,57 @@ function hasNextPage(book: IBook, pageNumber: number) {
   return pageNumber < pages.length - 1;
 }
 
-const Book = { getPages, getPage, hasNextPage, getQuestion, getQuestionById };
+export interface BookValidation {
+  status: "ok" | "error";
+  message?: string;
+  questions?: Array<QuestionError>;
+}
+
+/**
+ * Note: Once there are "assessment" books, this validation logic will need to change,a long with difficulty handling.
+ */
+function validate(book: IBook): BookValidation {
+  const pages = getPages(book);
+  if (!pages) {
+    return { status: "error", message: "Book contains no pages." };
+  }
+
+  const questions: Array<QuestionError> = [];
+  pages.forEach((p, i) => {
+    const question = BookPage.asQuestion(p);
+    if (question) {
+      const validation = Question.validate(question);
+      if (validation.status === "error") {
+        questions.push({
+          message: `Question on page ${i + 1} has invalid choices.`,
+          problems: validation.problems,
+        });
+      }
+    }
+  });
+
+  if (questions.length) {
+    return {
+      status: "error",
+      message: "There was a problem with one or more questions in this book.",
+      questions,
+    };
+  }
+
+  return { status: "ok" };
+}
+
+const Book = {
+  getPages,
+  getPage,
+  hasNextPage,
+  getQuestion,
+  getQuestionById,
+  validate,
+};
 export default Book;
+
+export interface QuestionError {
+  message: string;
+  problems: Array<string>;
+}

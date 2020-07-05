@@ -1,10 +1,9 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BookPageLayout from "layouts/BookPage";
+import { finishBook, selectBook } from "features/select-book/selectBookSlice";
 import {
-  finishBook,
   goToNextPage,
-  selectBook,
   selectPage,
   selectPageNumber,
   selectOnLastPage,

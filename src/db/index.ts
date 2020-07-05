@@ -1,5 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
+import { Difficulty } from "models/constants";
 
 var config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -24,6 +25,7 @@ export interface AnswerDocument {
   setupId: string | null;
   treatment: string | null;
   mode: string | null;
+  difficulty: Difficulty;
   questionId: string;
   stimulusId: string;
   bookId: string;

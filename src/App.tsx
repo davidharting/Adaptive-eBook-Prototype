@@ -7,10 +7,12 @@ import ResetDevice from "features/setup-device/ResetDevice";
 import SelectBook from "features/select-book/SelectBook";
 import Read from "features/read/Read";
 import { setContent } from "features/content/contentSlice";
+import { selectBookValidation } from "features/select-book/selectBookSlice";
 import { RootState } from "app/store";
 import content from "content.json";
+import InvalidBook from "features/select-book/InvalidBook";
 
-type GameStatus = "CREATE_SESSION" | "PICK_BOOK" | "PLAYING";
+type GameStatus = "CREATE_SESSION" | "PICK_BOOK" | "INVALID_BOOK" | "PLAYING";
 
 // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
 const ONE_HUNDRED_VH = "calc(var(--vh, 1vh) * 100)";
@@ -25,16 +27,7 @@ function App() {
     dispatch(setContent(content));
   }, [dispatch]);
 
-  const gameStatus: GameStatus = useSelector((state: RootState) => {
-    if (state.setupDevice.status === "unstarted") {
-      return "CREATE_SESSION";
-    }
-    if (state.selectBook.bookId === null) {
-      return "PICK_BOOK";
-    }
-    return "PLAYING";
-  });
-
+  const gameStatus: GameStatus = useSelector(selectGameStatus);
   const showHeader = gameStatus !== "CREATE_SESSION";
 
   return (
@@ -50,6 +43,7 @@ function App() {
       >
         {gameStatus === "CREATE_SESSION" && <NewSession />}
         {gameStatus === "PICK_BOOK" && <SelectBook />}
+        {gameStatus === "INVALID_BOOK" && <InvalidBook />}
         {gameStatus === "PLAYING" && <Read />}
       </main>
     </>
@@ -75,4 +69,20 @@ function useVhCustomProperty() {
       window.removeEventListener("resize", updateVh);
     };
   }, []);
+}
+
+function selectGameStatus(state: RootState): GameStatus {
+  if (state.setupDevice.status === "unstarted") {
+    return "CREATE_SESSION";
+  }
+  if (state.selectBook.bookId === null) {
+    return "PICK_BOOK";
+  }
+
+  const bookValidation = selectBookValidation(state);
+  if (bookValidation.status === "error") {
+    return "INVALID_BOOK";
+  }
+
+  return "PLAYING";
 }
