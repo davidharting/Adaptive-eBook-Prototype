@@ -66,58 +66,6 @@ export interface IChoice extends Entry<IChoiceFields> {
   };
 }
 
-export interface IDifficultyFields {
-  /** Level */
-  level: number;
-
-  /** Name */
-  name: string;
-}
-
-export interface IDifficulty extends Entry<IDifficultyFields> {
-  sys: {
-    id: string;
-    type: string;
-    createdAt: string;
-    updatedAt: string;
-    locale: string;
-    contentType: {
-      sys: {
-        id: "difficulty";
-        linkType: "ContentType";
-        type: "Link";
-      };
-    };
-  };
-}
-
-export interface IOptionFields {
-  /** Is this correct? */
-  isThisCorrect: boolean;
-
-  /** Content */
-  content?: string | undefined;
-}
-
-/** An option for a response to a question. */
-
-export interface IOption extends Entry<IOptionFields> {
-  sys: {
-    id: string;
-    type: string;
-    createdAt: string;
-    updatedAt: string;
-    locale: string;
-    contentType: {
-      sys: {
-        id: "option";
-        linkType: "ContentType";
-        type: "Link";
-      };
-    };
-  };
-}
-
 export interface IPageFields {
   /** Prompt */
   prompt: string;
@@ -175,41 +123,7 @@ export interface IQuestion extends Entry<IQuestionFields> {
   };
 }
 
-export interface IStimulusFields {
-  /** Title */
-  title?: string | undefined;
-
-  /** Image */
-  image: Asset;
-}
-
-/** Each question in a book has a stimulus (some image) of a specific difficulty. It is a part of the question itself. The child will inspect the stimulus and attempt to answer a question about it.  */
-
-export interface IStimulus extends Entry<IStimulusFields> {
-  sys: {
-    id: string;
-    type: string;
-    createdAt: string;
-    updatedAt: string;
-    locale: string;
-    contentType: {
-      sys: {
-        id: "stimulus";
-        linkType: "ContentType";
-        type: "Link";
-      };
-    };
-  };
-}
-
-export type CONTENT_TYPE =
-  | "book"
-  | "choice"
-  | "difficulty"
-  | "option"
-  | "page"
-  | "question"
-  | "stimulus";
+export type CONTENT_TYPE = "book" | "choice" | "page" | "question";
 
 export type LOCALE_CODE = "en-US";
 
