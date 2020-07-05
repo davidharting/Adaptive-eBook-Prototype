@@ -83,7 +83,7 @@ function validate(book: IBook): BookValidation {
     }
   });
 
-  if (questions.length > 1) {
+  if (questions.length) {
     return {
       status: "error",
       message: "There was a problem with one or more questions in this book.",
