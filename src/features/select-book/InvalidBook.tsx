@@ -1,43 +1,44 @@
 import React from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
-import { finishBook } from "./selectBookSlice";
-import { BookValidation } from "models/Book";
+import Container from "react-bootstrap/Container";
+import { finishBook, selectBookValidation } from "./selectBookSlice";
 
-function InvalidBook({ error }: InvalidBookProps) {
+function InvalidBook() {
   const dispatch = useDispatch();
+  const validation = useSelector(selectBookValidation);
 
   return (
-    <div>
+    <Container>
       <h1>There are problems with this book</h1>
       <p>
         This error should only be seen during development. If you are a user of
         this adaptive eBook and see this error page, please contact&nbsp;
         <a href="mailto:davideharting@gmail.com">davideharting@gmail.com</a>.
       </p>
-      {error.message && <b>{error.message}</b>}
-      {error.questions && <QuestionErrors questions={error.questions} />}
+      {validation.message && <b>{validation.message}</b>}
+      {validation.questions && (
+        <QuestionErrors questions={validation.questions} />
+      )}
       <Button variant="primary" onClick={() => dispatch(finishBook())}>
         Choose a different book
       </Button>
-    </div>
+    </Container>
   );
 }
 
-interface InvalidBookProps {
-  error: BookValidation;
-}
+export default InvalidBook;
 
 function QuestionErrors({ questions }: QuestionErrorsProps) {
   return (
     <>
       <h2>Problems</h2>
       {questions.map((q) => (
-        <li>
+        <li key={q.message}>
           {q.message}
           <ul>
             {q.problems.map((p) => (
-              <li>{p}</li>
+              <li key={p}>{p}</li>
             ))}
           </ul>
         </li>
@@ -52,5 +53,3 @@ interface QuestionErrorsProps {
     problems: Array<string>;
   }>;
 }
-
-export default InvalidBook;

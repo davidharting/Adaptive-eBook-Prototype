@@ -10,8 +10,9 @@ import { setContent } from "features/content/contentSlice";
 import { selectBookValidation } from "features/select-book/selectBookSlice";
 import { RootState } from "app/store";
 import content from "content.json";
+import InvalidBook from "features/select-book/InvalidBook";
 
-type GameStatus = "CREATE_SESSION" | "PICK_BOOK" | "PLAYING";
+type GameStatus = "CREATE_SESSION" | "PICK_BOOK" | "INVALID_BOOK" | "PLAYING";
 
 // https://css-tricks.com/the-trick-to-viewport-units-on-mobile/
 const ONE_HUNDRED_VH = "calc(var(--vh, 1vh) * 100)";
@@ -42,6 +43,7 @@ function App() {
       >
         {gameStatus === "CREATE_SESSION" && <NewSession />}
         {gameStatus === "PICK_BOOK" && <SelectBook />}
+        {gameStatus === "INVALID_BOOK" && <InvalidBook />}
         {gameStatus === "PLAYING" && <Read />}
       </main>
     </>
@@ -79,7 +81,7 @@ function selectGameStatus(state: RootState): GameStatus {
 
   const bookValidation = selectBookValidation(state);
   if (bookValidation.status === "error") {
-    return "PICK_BOOK";
+    return "INVALID_BOOK";
   }
 
   return "PLAYING";
