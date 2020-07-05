@@ -1,16 +1,16 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 import {
   IBook,
-  IOption,
   IPage,
-  IStimulus,
+  IChoice,
+  IQuestion,
 } from "../../types/generated/contentful";
 
 interface ContentState {
   books: Array<IBook>;
 }
 
-type Entry = IBook | IOption | IPage | IStimulus;
+type Entry = IBook | IPage | IQuestion | IChoice;
 export type SetContentPayload = Array<Entry>;
 
 const initialState: ContentState = { books: [] };
