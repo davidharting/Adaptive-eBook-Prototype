@@ -55,10 +55,10 @@ class Question {
 
   static getPrompt(question: IQuestion, mode: Mode): string {
     if (mode === "number") {
-      return question.fields.quantityPrompt;
+      return question.fields.numberPrompt.fields.text;
     }
 
-    return question.fields.sizePrompt;
+    return question.fields.sizePrompt.fields.text;
   }
 }
 

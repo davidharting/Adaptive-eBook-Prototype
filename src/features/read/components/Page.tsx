@@ -14,7 +14,7 @@ function isPage(page: BookPage): page is IPage {
 
 function Page({ page }: PageProps) {
   if (isPage(page)) {
-    return <p>{page.fields.prompt}</p>;
+    return <p>{page.fields.narrative.fields.text}</p>;
   }
   return <Question question={page} />;
 }
