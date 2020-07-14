@@ -1,4 +1,4 @@
-import { IQuestion } from "types/generated/contentful";
+import { IQuestion, IPrompt } from "types/generated/contentful";
 import { Difficulty, Mode } from "./constants";
 import Choice from "./Choice";
 import { Validation } from "types/validation";
@@ -53,12 +53,17 @@ class Question {
     return choice;
   }
 
-  static getPrompt(question: IQuestion, mode: Mode): string {
+  static getPromptText(question: IQuestion, mode: Mode): string {
+    const prompt = Question.getPrompt(question, mode);
+    return prompt.fields.text;
+  }
+
+  static getPrompt(question: IQuestion, mode: Mode): IPrompt {
     if (mode === "number") {
-      return question.fields.numberPrompt.fields.text;
+      return question.fields.numberPrompt;
     }
 
-    return question.fields.sizePrompt.fields.text;
+    return question.fields.sizePrompt;
   }
 }
 

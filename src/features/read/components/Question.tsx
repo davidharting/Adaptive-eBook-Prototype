@@ -5,6 +5,8 @@ import Button from "react-bootstrap/Button";
 import { Asset } from "contentful";
 import { IQuestion, IChoice } from "types/generated/contentful";
 
+import Prompt from "./Prompt";
+
 import {
   chooseAnswerAsync,
   selectAnswer,
@@ -20,12 +22,14 @@ interface QuestionProps {
 }
 
 function Question({ question }: QuestionProps) {
-  const prompt = useSelector(selectPrompt);
+  const narrative = question.fields.narrative;
+  const questionPrompt = useSelector(selectPrompt);
   const choice = useSelector(selectChoice);
 
   return (
     <>
-      <p>{prompt}</p>
+      {narrative && <Prompt prompt={narrative} />}
+      {questionPrompt && <Prompt prompt={questionPrompt} />}
       <div className="d-flex align-items-center justify-content-around">
         {choice && <Choice choice={choice} questionId={question.sys.id} />}
       </div>

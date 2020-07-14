@@ -1,7 +1,7 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
 import { AppThunk, RootState } from "app/store";
-import { IQuestion, IBook, IChoice } from "types/generated/contentful";
+import { IQuestion, IBook, IChoice, IPrompt } from "types/generated/contentful";
 import { AnswerDocument, recordAnswer } from "db";
 import Book from "models/Book";
 import Question from "models/Question";
@@ -12,10 +12,6 @@ import { Mode } from "models/constants";
 import { last, uniqueCount, lastItem } from "lib/array";
 
 type Difficulty = "easy" | "medium" | "hard";
-
-// TODO: Now I have a bug where once you change difficulty settings, the feedback page is broken.
-// e.g., get something right, difficulty increments. You should be seeing Good Job! Overlayed on your latest choice
-// But instead, the difficulty advances on the _current page_ instead of waiting for the next page.
 
 interface ReadState {
   /**
@@ -144,7 +140,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     pageNumber: pageNumber ? pageNumber + 1 : -1,
     questionId: answer.questionId,
     stimulusId: answer.stimulusId,
-    questionText: Question.getPrompt(question, answer.mode),
+    questionText: Question.getPromptText(question, answer.mode),
     isCorrect: grade === "CORRECT",
   };
 }
@@ -190,7 +186,7 @@ const selectMode = (state: RootState): Mode | null => {
   return treatment;
 };
 
-export const selectPrompt = (state: RootState): string | null => {
+export const selectPrompt = (state: RootState): IPrompt | null => {
   // Getting prompt based on treatment could get pushed down into Question model
   const question = selectQuestion(state);
   const mode = selectMode(state);
