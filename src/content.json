@@ -8,6 +8,486 @@
           "id": "hfznm2gke77t"
         }
       },
+      "id": "2BlyKws0lKvYeQwcevvA3A",
+      "type": "Entry",
+      "createdAt": "2020-05-28T02:02:40.637Z",
+      "updatedAt": "2020-07-15T00:13:47.236Z",
+      "environment": {
+        "sys": {
+          "id": "master",
+          "type": "Link",
+          "linkType": "Environment"
+        }
+      },
+      "revision": 13,
+      "contentType": {
+        "sys": {
+          "type": "Link",
+          "linkType": "ContentType",
+          "id": "question"
+        }
+      },
+      "locale": "en-US"
+    },
+    "fields": {
+      "internalTitle": "A",
+      "narrative": {
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "hfznm2gke77t"
+            }
+          },
+          "id": "5z9fgJbjHv25kV2XtSBZdr",
+          "type": "Entry",
+          "createdAt": "2020-07-14T23:50:04.206Z",
+          "updatedAt": "2020-07-14T23:50:04.206Z",
+          "environment": {
+            "sys": {
+              "id": "master",
+              "type": "Link",
+              "linkType": "Environment"
+            }
+          },
+          "revision": 1,
+          "contentType": {
+            "sys": {
+              "type": "Link",
+              "linkType": "ContentType",
+              "id": "prompt"
+            }
+          },
+          "locale": "en-US"
+        },
+        "fields": {
+          "text": "Some narrative before the question."
+        }
+      },
+      "numberPrompt": {
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "hfznm2gke77t"
+            }
+          },
+          "id": "Zh5kl99h6gR5zR2iV3mYI",
+          "type": "Entry",
+          "createdAt": "2020-07-13T02:45:35.949Z",
+          "updatedAt": "2020-07-13T02:45:35.949Z",
+          "environment": {
+            "sys": {
+              "id": "master",
+              "type": "Link",
+              "linkType": "Environment"
+            }
+          },
+          "revision": 1,
+          "contentType": {
+            "sys": {
+              "type": "Link",
+              "linkType": "ContentType",
+              "id": "prompt"
+            }
+          },
+          "locale": "en-US"
+        },
+        "fields": {
+          "text": "Which one has more stars?"
+        }
+      },
+      "sizePrompt": {
+        "sys": {
+          "space": {
+            "sys": {
+              "type": "Link",
+              "linkType": "Space",
+              "id": "hfznm2gke77t"
+            }
+          },
+          "id": "3Ns8kCLqLkkfqpg0dZOdBz",
+          "type": "Entry",
+          "createdAt": "2020-07-13T02:51:16.951Z",
+          "updatedAt": "2020-07-13T02:51:16.951Z",
+          "environment": {
+            "sys": {
+              "id": "master",
+              "type": "Link",
+              "linkType": "Environment"
+            }
+          },
+          "revision": 1,
+          "contentType": {
+            "sys": {
+              "type": "Link",
+              "linkType": "ContentType",
+              "id": "prompt"
+            }
+          },
+          "locale": "en-US"
+        },
+        "fields": {
+          "text": "Which one has bigger stars?"
+        }
+      },
+      "choices": [
+        {
+          "sys": {
+            "space": {
+              "sys": {
+                "type": "Link",
+                "linkType": "Space",
+                "id": "hfznm2gke77t"
+              }
+            },
+            "id": "A05Tvqg5cMZ5e88ETKY68",
+            "type": "Entry",
+            "createdAt": "2020-07-04T15:36:19.418Z",
+            "updatedAt": "2020-07-13T02:52:06.178Z",
+            "environment": {
+              "sys": {
+                "id": "master",
+                "type": "Link",
+                "linkType": "Environment"
+              }
+            },
+            "revision": 2,
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "choice"
+              }
+            },
+            "locale": "en-US"
+          },
+          "fields": {
+            "difficulty": "easy",
+            "stimulusA": {
+              "sys": {
+                "space": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "Space",
+                    "id": "hfznm2gke77t"
+                  }
+                },
+                "id": "456u3pkddohHfKyrGg0hyi",
+                "type": "Asset",
+                "createdAt": "2020-05-27T21:26:10.397Z",
+                "updatedAt": "2020-05-27T21:26:10.397Z",
+                "environment": {
+                  "sys": {
+                    "id": "master",
+                    "type": "Link",
+                    "linkType": "Environment"
+                  }
+                },
+                "revision": 1,
+                "locale": "en-US"
+              },
+              "fields": {
+                "title": "Three black and white stars",
+                "file": {
+                  "url": "//images.ctfassets.net/hfznm2gke77t/456u3pkddohHfKyrGg0hyi/52ac0a59c95aa130f08c7cce5594ac4e/three-stars.png",
+                  "details": {
+                    "size": 5112,
+                    "image": {
+                      "width": 468,
+                      "height": 251
+                    }
+                  },
+                  "fileName": "three-stars.png",
+                  "contentType": "image/png"
+                }
+              }
+            },
+            "stimulusB": {
+              "sys": {
+                "space": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "Space",
+                    "id": "hfznm2gke77t"
+                  }
+                },
+                "id": "tbwuJO6OS9QkThGaIZ7wn",
+                "type": "Asset",
+                "createdAt": "2020-05-27T21:46:48.383Z",
+                "updatedAt": "2020-05-27T21:46:48.383Z",
+                "environment": {
+                  "sys": {
+                    "id": "master",
+                    "type": "Link",
+                    "linkType": "Environment"
+                  }
+                },
+                "revision": 1,
+                "locale": "en-US"
+              },
+              "fields": {
+                "title": "four yellow stars",
+                "file": {
+                  "url": "//images.ctfassets.net/hfznm2gke77t/tbwuJO6OS9QkThGaIZ7wn/ee12463f764f2167b1c9b225845ccbe7/Four-stars.png",
+                  "details": {
+                    "size": 45440,
+                    "image": {
+                      "width": 1264,
+                      "height": 369
+                    }
+                  },
+                  "fileName": "Four-stars.png",
+                  "contentType": "image/png"
+                }
+              }
+            },
+            "quantityCorrectStimulus": "B",
+            "sizeCorrectStimulus": "B"
+          }
+        },
+        {
+          "sys": {
+            "space": {
+              "sys": {
+                "type": "Link",
+                "linkType": "Space",
+                "id": "hfznm2gke77t"
+              }
+            },
+            "id": "jLZQmqghtRyxt9N57B3ix",
+            "type": "Entry",
+            "createdAt": "2020-07-01T22:39:30.292Z",
+            "updatedAt": "2020-07-01T22:41:17.730Z",
+            "environment": {
+              "sys": {
+                "id": "master",
+                "type": "Link",
+                "linkType": "Environment"
+              }
+            },
+            "revision": 2,
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "choice"
+              }
+            },
+            "locale": "en-US"
+          },
+          "fields": {
+            "difficulty": "medium",
+            "stimulusA": {
+              "sys": {
+                "space": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "Space",
+                    "id": "hfznm2gke77t"
+                  }
+                },
+                "id": "FeCZtvUKIrfEtgQu1UbYg",
+                "type": "Asset",
+                "createdAt": "2020-05-27T21:47:28.963Z",
+                "updatedAt": "2020-05-27T21:47:28.963Z",
+                "environment": {
+                  "sys": {
+                    "id": "master",
+                    "type": "Link",
+                    "linkType": "Environment"
+                  }
+                },
+                "revision": 1,
+                "locale": "en-US"
+              },
+              "fields": {
+                "title": "one big star",
+                "file": {
+                  "url": "//images.ctfassets.net/hfznm2gke77t/FeCZtvUKIrfEtgQu1UbYg/131c0bd17a01b5b9a67afe92474dd31e/05-star_37717_lg.gif",
+                  "details": {
+                    "size": 16337,
+                    "image": {
+                      "width": 1024,
+                      "height": 974
+                    }
+                  },
+                  "fileName": "05-star_37717_lg.gif",
+                  "contentType": "image/gif"
+                }
+              }
+            },
+            "stimulusB": {
+              "sys": {
+                "space": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "Space",
+                    "id": "hfznm2gke77t"
+                  }
+                },
+                "id": "456u3pkddohHfKyrGg0hyi",
+                "type": "Asset",
+                "createdAt": "2020-05-27T21:26:10.397Z",
+                "updatedAt": "2020-05-27T21:26:10.397Z",
+                "environment": {
+                  "sys": {
+                    "id": "master",
+                    "type": "Link",
+                    "linkType": "Environment"
+                  }
+                },
+                "revision": 1,
+                "locale": "en-US"
+              },
+              "fields": {
+                "title": "Three black and white stars",
+                "file": {
+                  "url": "//images.ctfassets.net/hfznm2gke77t/456u3pkddohHfKyrGg0hyi/52ac0a59c95aa130f08c7cce5594ac4e/three-stars.png",
+                  "details": {
+                    "size": 5112,
+                    "image": {
+                      "width": 468,
+                      "height": 251
+                    }
+                  },
+                  "fileName": "three-stars.png",
+                  "contentType": "image/png"
+                }
+              }
+            },
+            "quantityCorrectStimulus": "B",
+            "sizeCorrectStimulus": "A"
+          }
+        },
+        {
+          "sys": {
+            "space": {
+              "sys": {
+                "type": "Link",
+                "linkType": "Space",
+                "id": "hfznm2gke77t"
+              }
+            },
+            "id": "5EKYu4i847fmT2izl9y2dy",
+            "type": "Entry",
+            "createdAt": "2020-07-04T15:36:25.841Z",
+            "updatedAt": "2020-07-04T15:36:25.841Z",
+            "environment": {
+              "sys": {
+                "id": "master",
+                "type": "Link",
+                "linkType": "Environment"
+              }
+            },
+            "revision": 1,
+            "contentType": {
+              "sys": {
+                "type": "Link",
+                "linkType": "ContentType",
+                "id": "choice"
+              }
+            },
+            "locale": "en-US"
+          },
+          "fields": {
+            "difficulty": "hard",
+            "stimulusA": {
+              "sys": {
+                "space": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "Space",
+                    "id": "hfznm2gke77t"
+                  }
+                },
+                "id": "3Elyha4XLGzwvhY8mmNBMj",
+                "type": "Asset",
+                "createdAt": "2020-05-27T21:43:45.180Z",
+                "updatedAt": "2020-05-27T21:43:45.180Z",
+                "environment": {
+                  "sys": {
+                    "id": "master",
+                    "type": "Link",
+                    "linkType": "Environment"
+                  }
+                },
+                "revision": 1,
+                "locale": "en-US"
+              },
+              "fields": {
+                "title": "5 grey stars",
+                "file": {
+                  "url": "//images.ctfassets.net/hfznm2gke77t/3Elyha4XLGzwvhY8mmNBMj/acdbd4b99e35f6c20707ac6d7737f400/5Stars.png",
+                  "details": {
+                    "size": 13119,
+                    "image": {
+                      "width": 678,
+                      "height": 445
+                    }
+                  },
+                  "fileName": "5Stars.png",
+                  "contentType": "image/png"
+                }
+              }
+            },
+            "stimulusB": {
+              "sys": {
+                "space": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "Space",
+                    "id": "hfznm2gke77t"
+                  }
+                },
+                "id": "456u3pkddohHfKyrGg0hyi",
+                "type": "Asset",
+                "createdAt": "2020-05-27T21:26:10.397Z",
+                "updatedAt": "2020-05-27T21:26:10.397Z",
+                "environment": {
+                  "sys": {
+                    "id": "master",
+                    "type": "Link",
+                    "linkType": "Environment"
+                  }
+                },
+                "revision": 1,
+                "locale": "en-US"
+              },
+              "fields": {
+                "title": "Three black and white stars",
+                "file": {
+                  "url": "//images.ctfassets.net/hfznm2gke77t/456u3pkddohHfKyrGg0hyi/52ac0a59c95aa130f08c7cce5594ac4e/three-stars.png",
+                  "details": {
+                    "size": 5112,
+                    "image": {
+                      "width": 468,
+                      "height": 251
+                    }
+                  },
+                  "fileName": "three-stars.png",
+                  "contentType": "image/png"
+                }
+              }
+            },
+            "quantityCorrectStimulus": "A",
+            "sizeCorrectStimulus": "A"
+          }
+        }
+      ]
+    }
+  },
+  {
+    "sys": {
+      "space": {
+        "sys": {
+          "type": "Link",
+          "linkType": "Space",
+          "id": "hfznm2gke77t"
+        }
+      },
       "id": "5z9fgJbjHv25kV2XtSBZdr",
       "type": "Entry",
       "createdAt": "2020-07-14T23:50:04.206Z",
@@ -248,7 +728,7 @@
             "id": "2BlyKws0lKvYeQwcevvA3A",
             "type": "Entry",
             "createdAt": "2020-05-28T02:02:40.637Z",
-            "updatedAt": "2020-07-13T03:00:46.263Z",
+            "updatedAt": "2020-07-15T00:13:47.236Z",
             "environment": {
               "sys": {
                 "id": "master",
@@ -256,7 +736,7 @@
                 "linkType": "Environment"
               }
             },
-            "revision": 12,
+            "revision": 13,
             "contentType": {
               "sys": {
                 "type": "Link",
@@ -268,6 +748,40 @@
           },
           "fields": {
             "internalTitle": "A",
+            "narrative": {
+              "sys": {
+                "space": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "Space",
+                    "id": "hfznm2gke77t"
+                  }
+                },
+                "id": "5z9fgJbjHv25kV2XtSBZdr",
+                "type": "Entry",
+                "createdAt": "2020-07-14T23:50:04.206Z",
+                "updatedAt": "2020-07-14T23:50:04.206Z",
+                "environment": {
+                  "sys": {
+                    "id": "master",
+                    "type": "Link",
+                    "linkType": "Environment"
+                  }
+                },
+                "revision": 1,
+                "contentType": {
+                  "sys": {
+                    "type": "Link",
+                    "linkType": "ContentType",
+                    "id": "prompt"
+                  }
+                },
+                "locale": "en-US"
+              },
+              "fields": {
+                "text": "Some narrative before the question."
+              }
+            },
             "numberPrompt": {
               "sys": {
                 "space": {
@@ -1708,452 +2222,6 @@
                 "text": "The end!"
               }
             }
-          }
-        }
-      ]
-    }
-  },
-  {
-    "sys": {
-      "space": {
-        "sys": {
-          "type": "Link",
-          "linkType": "Space",
-          "id": "hfznm2gke77t"
-        }
-      },
-      "id": "2BlyKws0lKvYeQwcevvA3A",
-      "type": "Entry",
-      "createdAt": "2020-05-28T02:02:40.637Z",
-      "updatedAt": "2020-07-13T03:00:46.263Z",
-      "environment": {
-        "sys": {
-          "id": "master",
-          "type": "Link",
-          "linkType": "Environment"
-        }
-      },
-      "revision": 12,
-      "contentType": {
-        "sys": {
-          "type": "Link",
-          "linkType": "ContentType",
-          "id": "question"
-        }
-      },
-      "locale": "en-US"
-    },
-    "fields": {
-      "internalTitle": "A",
-      "numberPrompt": {
-        "sys": {
-          "space": {
-            "sys": {
-              "type": "Link",
-              "linkType": "Space",
-              "id": "hfznm2gke77t"
-            }
-          },
-          "id": "Zh5kl99h6gR5zR2iV3mYI",
-          "type": "Entry",
-          "createdAt": "2020-07-13T02:45:35.949Z",
-          "updatedAt": "2020-07-13T02:45:35.949Z",
-          "environment": {
-            "sys": {
-              "id": "master",
-              "type": "Link",
-              "linkType": "Environment"
-            }
-          },
-          "revision": 1,
-          "contentType": {
-            "sys": {
-              "type": "Link",
-              "linkType": "ContentType",
-              "id": "prompt"
-            }
-          },
-          "locale": "en-US"
-        },
-        "fields": {
-          "text": "Which one has more stars?"
-        }
-      },
-      "sizePrompt": {
-        "sys": {
-          "space": {
-            "sys": {
-              "type": "Link",
-              "linkType": "Space",
-              "id": "hfznm2gke77t"
-            }
-          },
-          "id": "3Ns8kCLqLkkfqpg0dZOdBz",
-          "type": "Entry",
-          "createdAt": "2020-07-13T02:51:16.951Z",
-          "updatedAt": "2020-07-13T02:51:16.951Z",
-          "environment": {
-            "sys": {
-              "id": "master",
-              "type": "Link",
-              "linkType": "Environment"
-            }
-          },
-          "revision": 1,
-          "contentType": {
-            "sys": {
-              "type": "Link",
-              "linkType": "ContentType",
-              "id": "prompt"
-            }
-          },
-          "locale": "en-US"
-        },
-        "fields": {
-          "text": "Which one has bigger stars?"
-        }
-      },
-      "choices": [
-        {
-          "sys": {
-            "space": {
-              "sys": {
-                "type": "Link",
-                "linkType": "Space",
-                "id": "hfznm2gke77t"
-              }
-            },
-            "id": "A05Tvqg5cMZ5e88ETKY68",
-            "type": "Entry",
-            "createdAt": "2020-07-04T15:36:19.418Z",
-            "updatedAt": "2020-07-13T02:52:06.178Z",
-            "environment": {
-              "sys": {
-                "id": "master",
-                "type": "Link",
-                "linkType": "Environment"
-              }
-            },
-            "revision": 2,
-            "contentType": {
-              "sys": {
-                "type": "Link",
-                "linkType": "ContentType",
-                "id": "choice"
-              }
-            },
-            "locale": "en-US"
-          },
-          "fields": {
-            "difficulty": "easy",
-            "stimulusA": {
-              "sys": {
-                "space": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Space",
-                    "id": "hfznm2gke77t"
-                  }
-                },
-                "id": "456u3pkddohHfKyrGg0hyi",
-                "type": "Asset",
-                "createdAt": "2020-05-27T21:26:10.397Z",
-                "updatedAt": "2020-05-27T21:26:10.397Z",
-                "environment": {
-                  "sys": {
-                    "id": "master",
-                    "type": "Link",
-                    "linkType": "Environment"
-                  }
-                },
-                "revision": 1,
-                "locale": "en-US"
-              },
-              "fields": {
-                "title": "Three black and white stars",
-                "file": {
-                  "url": "//images.ctfassets.net/hfznm2gke77t/456u3pkddohHfKyrGg0hyi/52ac0a59c95aa130f08c7cce5594ac4e/three-stars.png",
-                  "details": {
-                    "size": 5112,
-                    "image": {
-                      "width": 468,
-                      "height": 251
-                    }
-                  },
-                  "fileName": "three-stars.png",
-                  "contentType": "image/png"
-                }
-              }
-            },
-            "stimulusB": {
-              "sys": {
-                "space": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Space",
-                    "id": "hfznm2gke77t"
-                  }
-                },
-                "id": "tbwuJO6OS9QkThGaIZ7wn",
-                "type": "Asset",
-                "createdAt": "2020-05-27T21:46:48.383Z",
-                "updatedAt": "2020-05-27T21:46:48.383Z",
-                "environment": {
-                  "sys": {
-                    "id": "master",
-                    "type": "Link",
-                    "linkType": "Environment"
-                  }
-                },
-                "revision": 1,
-                "locale": "en-US"
-              },
-              "fields": {
-                "title": "four yellow stars",
-                "file": {
-                  "url": "//images.ctfassets.net/hfznm2gke77t/tbwuJO6OS9QkThGaIZ7wn/ee12463f764f2167b1c9b225845ccbe7/Four-stars.png",
-                  "details": {
-                    "size": 45440,
-                    "image": {
-                      "width": 1264,
-                      "height": 369
-                    }
-                  },
-                  "fileName": "Four-stars.png",
-                  "contentType": "image/png"
-                }
-              }
-            },
-            "quantityCorrectStimulus": "B",
-            "sizeCorrectStimulus": "B"
-          }
-        },
-        {
-          "sys": {
-            "space": {
-              "sys": {
-                "type": "Link",
-                "linkType": "Space",
-                "id": "hfznm2gke77t"
-              }
-            },
-            "id": "jLZQmqghtRyxt9N57B3ix",
-            "type": "Entry",
-            "createdAt": "2020-07-01T22:39:30.292Z",
-            "updatedAt": "2020-07-01T22:41:17.730Z",
-            "environment": {
-              "sys": {
-                "id": "master",
-                "type": "Link",
-                "linkType": "Environment"
-              }
-            },
-            "revision": 2,
-            "contentType": {
-              "sys": {
-                "type": "Link",
-                "linkType": "ContentType",
-                "id": "choice"
-              }
-            },
-            "locale": "en-US"
-          },
-          "fields": {
-            "difficulty": "medium",
-            "stimulusA": {
-              "sys": {
-                "space": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Space",
-                    "id": "hfznm2gke77t"
-                  }
-                },
-                "id": "FeCZtvUKIrfEtgQu1UbYg",
-                "type": "Asset",
-                "createdAt": "2020-05-27T21:47:28.963Z",
-                "updatedAt": "2020-05-27T21:47:28.963Z",
-                "environment": {
-                  "sys": {
-                    "id": "master",
-                    "type": "Link",
-                    "linkType": "Environment"
-                  }
-                },
-                "revision": 1,
-                "locale": "en-US"
-              },
-              "fields": {
-                "title": "one big star",
-                "file": {
-                  "url": "//images.ctfassets.net/hfznm2gke77t/FeCZtvUKIrfEtgQu1UbYg/131c0bd17a01b5b9a67afe92474dd31e/05-star_37717_lg.gif",
-                  "details": {
-                    "size": 16337,
-                    "image": {
-                      "width": 1024,
-                      "height": 974
-                    }
-                  },
-                  "fileName": "05-star_37717_lg.gif",
-                  "contentType": "image/gif"
-                }
-              }
-            },
-            "stimulusB": {
-              "sys": {
-                "space": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Space",
-                    "id": "hfznm2gke77t"
-                  }
-                },
-                "id": "456u3pkddohHfKyrGg0hyi",
-                "type": "Asset",
-                "createdAt": "2020-05-27T21:26:10.397Z",
-                "updatedAt": "2020-05-27T21:26:10.397Z",
-                "environment": {
-                  "sys": {
-                    "id": "master",
-                    "type": "Link",
-                    "linkType": "Environment"
-                  }
-                },
-                "revision": 1,
-                "locale": "en-US"
-              },
-              "fields": {
-                "title": "Three black and white stars",
-                "file": {
-                  "url": "//images.ctfassets.net/hfznm2gke77t/456u3pkddohHfKyrGg0hyi/52ac0a59c95aa130f08c7cce5594ac4e/three-stars.png",
-                  "details": {
-                    "size": 5112,
-                    "image": {
-                      "width": 468,
-                      "height": 251
-                    }
-                  },
-                  "fileName": "three-stars.png",
-                  "contentType": "image/png"
-                }
-              }
-            },
-            "quantityCorrectStimulus": "B",
-            "sizeCorrectStimulus": "A"
-          }
-        },
-        {
-          "sys": {
-            "space": {
-              "sys": {
-                "type": "Link",
-                "linkType": "Space",
-                "id": "hfznm2gke77t"
-              }
-            },
-            "id": "5EKYu4i847fmT2izl9y2dy",
-            "type": "Entry",
-            "createdAt": "2020-07-04T15:36:25.841Z",
-            "updatedAt": "2020-07-04T15:36:25.841Z",
-            "environment": {
-              "sys": {
-                "id": "master",
-                "type": "Link",
-                "linkType": "Environment"
-              }
-            },
-            "revision": 1,
-            "contentType": {
-              "sys": {
-                "type": "Link",
-                "linkType": "ContentType",
-                "id": "choice"
-              }
-            },
-            "locale": "en-US"
-          },
-          "fields": {
-            "difficulty": "hard",
-            "stimulusA": {
-              "sys": {
-                "space": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Space",
-                    "id": "hfznm2gke77t"
-                  }
-                },
-                "id": "3Elyha4XLGzwvhY8mmNBMj",
-                "type": "Asset",
-                "createdAt": "2020-05-27T21:43:45.180Z",
-                "updatedAt": "2020-05-27T21:43:45.180Z",
-                "environment": {
-                  "sys": {
-                    "id": "master",
-                    "type": "Link",
-                    "linkType": "Environment"
-                  }
-                },
-                "revision": 1,
-                "locale": "en-US"
-              },
-              "fields": {
-                "title": "5 grey stars",
-                "file": {
-                  "url": "//images.ctfassets.net/hfznm2gke77t/3Elyha4XLGzwvhY8mmNBMj/acdbd4b99e35f6c20707ac6d7737f400/5Stars.png",
-                  "details": {
-                    "size": 13119,
-                    "image": {
-                      "width": 678,
-                      "height": 445
-                    }
-                  },
-                  "fileName": "5Stars.png",
-                  "contentType": "image/png"
-                }
-              }
-            },
-            "stimulusB": {
-              "sys": {
-                "space": {
-                  "sys": {
-                    "type": "Link",
-                    "linkType": "Space",
-                    "id": "hfznm2gke77t"
-                  }
-                },
-                "id": "456u3pkddohHfKyrGg0hyi",
-                "type": "Asset",
-                "createdAt": "2020-05-27T21:26:10.397Z",
-                "updatedAt": "2020-05-27T21:26:10.397Z",
-                "environment": {
-                  "sys": {
-                    "id": "master",
-                    "type": "Link",
-                    "linkType": "Environment"
-                  }
-                },
-                "revision": 1,
-                "locale": "en-US"
-              },
-              "fields": {
-                "title": "Three black and white stars",
-                "file": {
-                  "url": "//images.ctfassets.net/hfznm2gke77t/456u3pkddohHfKyrGg0hyi/52ac0a59c95aa130f08c7cce5594ac4e/three-stars.png",
-                  "details": {
-                    "size": 5112,
-                    "image": {
-                      "width": 468,
-                      "height": 251
-                    }
-                  },
-                  "fileName": "three-stars.png",
-                  "contentType": "image/png"
-                }
-              }
-            },
-            "quantityCorrectStimulus": "A",
-            "sizeCorrectStimulus": "A"
           }
         }
       ]
