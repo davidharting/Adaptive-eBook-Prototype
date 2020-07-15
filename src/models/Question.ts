@@ -24,10 +24,10 @@ class Question {
     });
 
     const problems = Object.entries(counts)
-      .filter(([_, count]) => count !== 1)
+      .filter(([_, count]) => count > 1)
       .map(
         ([d, count]) =>
-          `There should be exactly one "${d}" Choice, but instead there are ${count}`
+          `There should be at most one "${d}" Choice, but instead there are ${count}`
       );
 
     return { status: problems.length > 0 ? "error" : "ok", problems };

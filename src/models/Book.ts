@@ -64,30 +64,31 @@ export interface BookValidation {
  * Note: Once there are "assessment" books, this validation logic will need to change,a long with difficulty handling.
  */
 function validate(book: IBook): BookValidation {
-  const pages = getPages(book);
-  if (!pages) {
+  const bookPages = getPages(book);
+  if (!bookPages) {
     return { status: "error", message: "Book contains no pages." };
   }
 
-  const questions: Array<QuestionError> = [];
-  pages.forEach((p, i) => {
-    const question = BookPage.asQuestion(p);
-    if (question) {
-      const validation = Question.validate(question);
-      if (validation.status === "error") {
-        questions.push({
-          message: `Question on page ${i + 1} has invalid choices.`,
-          problems: validation.problems,
-        });
+  const questionsErrors: Array<QuestionError> = [];
+  bookPages
+    .map((bookPage) => BookPage.asQuestion(bookPage))
+    .forEach((question, i) => {
+      if (question) {
+        const validation = Question.validate(question);
+        if (validation.status === "error") {
+          questionsErrors.push({
+            message: `Question on page ${i + 1} has invalid choices.`,
+            problems: validation.problems,
+          });
+        }
       }
-    }
-  });
+    });
 
-  if (questions.length) {
+  if (questionsErrors.length) {
     return {
       status: "error",
       message: "There was a problem with one or more questions in this book.",
-      questions,
+      questions: questionsErrors,
     };
   }
 
