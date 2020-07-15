@@ -210,27 +210,32 @@ export const selectAnswer = (state: RootState): Answer | undefined => {
 
 /**
  * Note: In "assessment" books, the difficulty is irrelevant - we just play through the book as-is.
+ *
+ * You cannot "backslide" in difficulty.
+ * To advance difficulty, you must get 4 out of the last 5 questions at the current difficulty level correct.
  */
 function selectDifficulty(state: RootState): Difficulty {
-  const CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY = 1;
-  const CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY = 1;
+  const NUMBER_CORRECT_TO_ADVANCE = 4;
+  /**
+   * How many answers do we "peek back" when we assess if they got NUMBER_CORRECT_TO_ADVANCE
+   */
+  const OUT_OF = 5;
 
   const STARTING_DIFFICULTY = "easy";
 
   const book = selectBook(state);
   const answers = state.read.answers;
 
-  if (
-    !book ||
-    answers.length < 1 ||
-    (answers.length < CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY &&
-      answers.length < CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY)
-  ) {
+  if (!book || answers.length < NUMBER_CORRECT_TO_ADVANCE) {
     return STARTING_DIFFICULTY;
   }
 
   const latestAnswer = lastItem(answers);
   if (latestAnswer && latestAnswer.pageNumber === selectPageNumber(state)) {
+    // This next section is very important!
+    // If we didn't have this check, then after you pick an answer, the content on the page you could change on you!
+    // After the child answers, we stay on that page to show feedback. We want the the difficulty to advance on the _next_ page,
+    // not the current one that they just answered!
     return latestAnswer.difficulty;
   }
 
@@ -246,28 +251,16 @@ function selectDifficulty(state: RootState): Difficulty {
     return uniqueCount(difficulties) === 1;
   };
 
-  const allCorrect = (items: Array<GradeHistoryItem>) => {
-    return items.every((item) => item.grade === "CORRECT");
-  };
-
-  const allWrong = (items: Array<GradeHistoryItem>) => {
-    return items.every((item) => item.grade === "WRONG");
+  const enoughCorrect = (items: Array<GradeHistoryItem>) => {
+    const correctAnswers = items.filter((item) => item.grade === "CORRECT");
+    return correctAnswers.length >= NUMBER_CORRECT_TO_ADVANCE;
   };
 
   const latestDifficulty = lastItem(history)?.difficulty || STARTING_DIFFICULTY;
 
-  if (history.length >= CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY) {
-    const recent = last(history, CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY);
-    if (difficultiesMatch(recent) && allCorrect(recent)) {
-      return nextDifficulty(latestDifficulty);
-    }
-  }
-
-  if (history.length >= CONSECUTIVE_WRONG_TO_DECREASE_DIFFICULTY) {
-    const recent = last(history, CONSECUTIVE_CORRECT_TO_INCREASE_DIFFICULTY);
-    if (difficultiesMatch(recent) && allWrong(recent)) {
-      return previousDifficulty(latestDifficulty);
-    }
+  const recent = last(history, OUT_OF);
+  if (difficultiesMatch(recent) && enoughCorrect(recent)) {
+    return nextDifficulty(latestDifficulty);
   }
 
   return latestDifficulty;

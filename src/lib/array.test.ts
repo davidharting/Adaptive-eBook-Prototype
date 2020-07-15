@@ -12,6 +12,15 @@ describe("lib/array", () => {
       const end = last(a, 5);
       expect(end).toBe(a);
       expect(end).toEqual(["blue", "green", "red"]);
+
+      const answers = [{ a: 1 }, { b: 2 }, { c: 3 }, { d: 4 }];
+      expect(last(answers, 5)).toBe(answers);
+      expect(last(answers, 5)).toEqual([
+        { a: 1 },
+        { b: 2 },
+        { c: 3 },
+        { d: 4 },
+      ]);
     });
 
     test("returns the last n elements of the array", () => {
