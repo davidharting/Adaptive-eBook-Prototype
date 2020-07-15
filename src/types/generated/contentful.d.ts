@@ -7,6 +7,12 @@ export interface IBookFields {
   /** Title */
   title: string;
 
+  /** Cover */
+  cover?: Asset | undefined;
+
+  /** Page Background */
+  pageBackground?: Asset | undefined;
+
   /** Pages */
   pages?: (IPage | IQuestion)[] | undefined;
 }
@@ -67,8 +73,11 @@ export interface IChoice extends Entry<IChoiceFields> {
 }
 
 export interface IPageFields {
-  /** Prompt */
-  prompt: string;
+  /** Internal Title */
+  internalTitle?: string | undefined;
+
+  /** Narrative */
+  narrative: IPrompt;
 
   /** Picture */
   picture?: Asset | undefined;
@@ -93,12 +102,45 @@ export interface IPage extends Entry<IPageFields> {
   };
 }
 
+export interface IPromptFields {
+  /** Text */
+  text: string;
+
+  /** Audio */
+  audio?: Asset | undefined;
+}
+
+/** A prompt is a piece of text with an optional audio recording of it being read. */
+
+export interface IPrompt extends Entry<IPromptFields> {
+  sys: {
+    id: string;
+    type: string;
+    createdAt: string;
+    updatedAt: string;
+    locale: string;
+    contentType: {
+      sys: {
+        id: "prompt";
+        linkType: "ContentType";
+        type: "Link";
+      };
+    };
+  };
+}
+
 export interface IQuestionFields {
-  /** Quantity Prompt */
-  quantityPrompt: string;
+  /** Internal Title */
+  internalTitle: string;
+
+  /** Narrative */
+  narrative?: IPrompt | undefined;
+
+  /** Number Prompt */
+  numberPrompt: IPrompt;
 
   /** Size Prompt */
-  sizePrompt: string;
+  sizePrompt: IPrompt;
 
   /** Choices */
   choices: IChoice[];
@@ -123,7 +165,7 @@ export interface IQuestion extends Entry<IQuestionFields> {
   };
 }
 
-export type CONTENT_TYPE = "book" | "choice" | "page" | "question";
+export type CONTENT_TYPE = "book" | "choice" | "page" | "prompt" | "question";
 
 export type LOCALE_CODE = "en-US";
 

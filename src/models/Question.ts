@@ -1,4 +1,4 @@
-import { IQuestion } from "types/generated/contentful";
+import { IQuestion, IPrompt } from "types/generated/contentful";
 import { Difficulty, Mode } from "./constants";
 import Choice from "./Choice";
 import { Validation } from "types/validation";
@@ -24,10 +24,10 @@ class Question {
     });
 
     const problems = Object.entries(counts)
-      .filter(([_, count]) => count !== 1)
+      .filter(([_, count]) => count > 1)
       .map(
         ([d, count]) =>
-          `There should be exactly one "${d}" Choice, but instead there are ${count}`
+          `There should be at most one "${d}" Choice, but instead there are ${count}`
       );
 
     return { status: problems.length > 0 ? "error" : "ok", problems };
@@ -53,9 +53,14 @@ class Question {
     return choice;
   }
 
-  static getPrompt(question: IQuestion, mode: Mode): string {
+  static getPromptText(question: IQuestion, mode: Mode): string {
+    const prompt = Question.getPrompt(question, mode);
+    return prompt.fields.text;
+  }
+
+  static getPrompt(question: IQuestion, mode: Mode): IPrompt {
     if (mode === "number") {
-      return question.fields.quantityPrompt;
+      return question.fields.numberPrompt;
     }
 
     return question.fields.sizePrompt;

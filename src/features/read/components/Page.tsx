@@ -1,5 +1,6 @@
 import React from "react";
 import { IPage, IQuestion } from "../../../types/generated/contentful";
+import Prompt from "./Prompt";
 import Question from "./Question";
 
 type BookPage = IPage | IQuestion;
@@ -14,7 +15,7 @@ function isPage(page: BookPage): page is IPage {
 
 function Page({ page }: PageProps) {
   if (isPage(page)) {
-    return <p>{page.fields.prompt}</p>;
+    return <Prompt prompt={page.fields.narrative} />;
   }
   return <Question question={page} />;
 }
