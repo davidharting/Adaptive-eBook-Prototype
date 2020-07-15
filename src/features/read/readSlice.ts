@@ -10,8 +10,7 @@ import { shouldAdvanceDifficulty } from "./adaptivity";
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 import { finishBook, selectBook } from "../select-book/selectBookSlice";
 import { Mode } from "models/constants";
-import { last, uniqueCount, lastItem } from "lib/array";
-import { DiffieHellman } from "crypto";
+import { lastItem } from "lib/array";
 
 type Difficulty = "easy" | "medium" | "hard";
 
