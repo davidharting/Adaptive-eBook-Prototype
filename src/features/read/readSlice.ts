@@ -6,10 +6,12 @@ import { AnswerDocument, recordAnswer } from "db";
 import Book from "models/Book";
 import Question from "models/Question";
 
+import { shouldAdvanceDifficulty } from "./adaptivity";
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 import { finishBook, selectBook } from "../select-book/selectBookSlice";
 import { Mode } from "models/constants";
 import { last, uniqueCount, lastItem } from "lib/array";
+import { DiffieHellman } from "crypto";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -38,7 +40,7 @@ interface AnswerPayload {
   stimulusId: string;
 }
 
-interface Answer extends AnswerPayload {
+export interface Answer extends AnswerPayload {
   difficulty: Difficulty;
   mode: Mode;
   pageNumber: number;
@@ -246,34 +248,18 @@ function selectDifficulty(state: RootState): Difficulty {
     };
   });
 
-  const difficultiesMatch = (items: Array<GradeHistoryItem>) => {
-    const difficulties = items.map((h) => h.difficulty);
-    return uniqueCount(difficulties) === 1;
-  };
-
-  const enoughCorrect = (items: Array<GradeHistoryItem>) => {
-    const correctAnswers = items.filter((item) => item.grade === "CORRECT");
-    return correctAnswers.length >= NUMBER_CORRECT_TO_ADVANCE;
-  };
-
   const latestDifficulty = lastItem(history)?.difficulty || STARTING_DIFFICULTY;
 
-  const recent = last(history, OUT_OF);
-  if (difficultiesMatch(recent) && enoughCorrect(recent)) {
-    return nextDifficulty(latestDifficulty);
-  }
-
-  return latestDifficulty;
+  return shouldAdvanceDifficulty(history, NUMBER_CORRECT_TO_ADVANCE, OUT_OF)
+    ? nextDifficulty(latestDifficulty)
+    : latestDifficulty;
 }
 
 export const selectChoice = (state: RootState): IChoice | null => {
   const question = selectQuestion(state);
   const difficulty = selectDifficulty(state);
-  console.log("Selecting choice with difficulty", difficulty);
   return question ? Question.getChoice(question, difficulty) : null;
 };
-
-// I need to apply the mode when determining if a choice is correct
 
 /**
  * Status of the _current_ question
@@ -341,13 +327,6 @@ function nextDifficulty(difficulty: Difficulty): Difficulty {
     return "medium";
   }
   return "hard";
-}
-
-function previousDifficulty(difficulty: Difficulty): Difficulty {
-  if (difficulty === "hard") {
-    return "medium";
-  }
-  return "easy";
 }
 
 interface GradeHistoryItem {
