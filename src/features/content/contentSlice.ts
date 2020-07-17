@@ -1,32 +1,45 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
+import { createClient as createContentfulClient, Entry } from "contentful";
+import { AppThunk, RootState } from "app/store";
 import {
   IBook,
-  IPage,
-  IChoice,
-  IQuestion,
-} from "../../types/generated/contentful";
+  IBookFields,
+  IPageFields,
+  IChoiceFields,
+  IQuestionFields,
+} from "types/generated/contentful";
 
 interface ContentState {
   books: Array<IBook>;
+  status: LoadingState;
 }
 
-type Entry = IBook | IPage | IQuestion | IChoice;
-export type SetContentPayload = Array<Entry>;
+type Fields = IBookFields | IPageFields | IChoiceFields | IQuestionFields;
+type LoadingState = "idle" | "loading" | "done" | "error";
+export type SetContentPayload = Array<Entry<Fields>>;
 
-const initialState: ContentState = { books: [] };
+const initialState: ContentState = { books: [], status: "idle" };
 
 function reduceSetContent(
   state: ContentState,
   action: PayloadAction<SetContentPayload>
 ) {
   let books = action.payload.filter(
-    (entry: Entry) => entry.sys.contentType.sys.id === "book"
+    (entry: Entry<Fields>) => entry.sys.contentType.sys.id === "book"
   );
 
   // Dear TypeScript compiler, I promise you that I have filtered down the list of Entries to only Books
   // However, I do not know how to do this correctly right now
   // @ts-ignore
   state.books = books;
+  state.status = "done";
+}
+
+function reduceSetStatus(
+  state: ContentState,
+  action: PayloadAction<LoadingState>
+) {
+  state.status = action.payload;
 }
 
 export const contentSlice = createSlice({
@@ -34,9 +47,38 @@ export const contentSlice = createSlice({
   initialState,
   reducers: {
     setContent: reduceSetContent,
+    setStatus: reduceSetStatus,
   },
 });
 
 export default contentSlice.reducer;
 
-export const { setContent } = contentSlice.actions;
+const { setContent, setStatus } = contentSlice.actions;
+
+export const fetchContent = (): AppThunk => async (dispatch) => {
+  dispatch(setStatus("loading"));
+
+  const apiKey = process.env.REACT_APP_CONTENTFUL_DELIVERY_API_KEY;
+
+  if (!apiKey) {
+    setStatus("error");
+    throw new Error("Missing environment variable CONTENTFUL_DELIVERY_API_KEY");
+  }
+  const client = createContentfulClient({
+    space: "hfznm2gke77t",
+    environment: "master",
+    accessToken: apiKey,
+  });
+
+  try {
+    const response = await client.getEntries<Fields>();
+    console.log(response.items);
+    dispatch(setContent(response.items));
+  } catch (err) {
+    setStatus(err);
+  }
+};
+
+export function selectLoadingState(state: RootState): LoadingState {
+  return state.content.status;
+}

@@ -2,6 +2,7 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BookPageLayout from "layouts/BookPage";
 import { finishBook, selectBook } from "features/select-book/selectBookSlice";
+import ResetDevice from "features/setup-device/ResetDevice";
 import {
   goToNextPage,
   selectPage,
@@ -10,6 +11,7 @@ import {
   selectCanPageForward,
 } from "./readSlice";
 import Page from "./components/Page";
+import CenteredLayout from "layouts/Centered";
 
 function Read() {
   const dispatch = useDispatch();
@@ -22,10 +24,13 @@ function Read() {
   if (!book) {
     // TODO: Use an effect hook or something to make sure that we get a warning to sentry
     return (
-      <>
-        <h1>Sorry, there has been an error.</h1>
-        <p>We cannot find the book you selected.</p>
-      </>
+      <CenteredLayout>
+        <div>
+          <h1>Sorry, there has been an error.</h1>
+          <p>We cannot find the book you selected.</p>
+          <ResetDevice />
+        </div>
+      </CenteredLayout>
     );
   }
 
