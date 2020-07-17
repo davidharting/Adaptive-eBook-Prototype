@@ -18,7 +18,7 @@ function ResetDevice() {
   return (
     <>
       <Button className="text-muted" variant="link" onClick={openModal}>
-        Reset
+        Reset this device
       </Button>
       {isModalVisible && (
         <Modal show={isModalVisible} onHide={closeModal}>

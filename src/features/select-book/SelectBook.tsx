@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from "react-redux";
 import Button from "react-bootstrap/Button";
 import Form from "react-bootstrap/Form";
 import CenteredLayout from "layouts/Centered";
+import ResetDevice from "features/setup-device/ResetDevice";
 import { chooseBook, selectAvailableBooks } from "./selectBookSlice";
 
 function SelectBook() {
@@ -44,6 +45,9 @@ function SelectBook() {
             {selected === null && "Please choose a book"}
             {selected !== null && "Read this book!"}
           </Button>
+          <br />
+          <br />
+          <ResetDevice />
         </Form>
       </div>
     </CenteredLayout>
