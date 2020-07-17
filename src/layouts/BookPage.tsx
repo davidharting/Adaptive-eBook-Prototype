@@ -22,7 +22,7 @@ function BookPageLayout({
   return (
     <Container
       fluid
-      className="h-100 d-flex flex-column align-items-center justify-content-between"
+      className="d-flex flex-column align-items-center justify-content-between vh-100"
     >
       <div className="w-100 h-100 d-flex flex-column align-items-center justify-content-center">
         {children}
