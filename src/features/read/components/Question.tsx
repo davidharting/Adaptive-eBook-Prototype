@@ -115,9 +115,9 @@ function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
         style={{ maxWidth: "100%", height: "auto" }}
       />
       <Button
+        className="btn-xl"
         disabled={disabled}
         variant="primary"
-        size="lg"
         onClick={() => onClick(stimulus.sys.id)}
         style={{ visibility: disabled ? "hidden" : "visible" }}
       >
