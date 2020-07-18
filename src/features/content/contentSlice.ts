@@ -63,7 +63,10 @@ export const fetchContent = (): AppThunk => async (dispatch) => {
     const response = await getEntries();
     dispatch(setContent(response.items));
   } catch (err) {
-    setStatus(err);
+    // TODO: Report to sentry
+    console.log("Unable to fetch content.");
+    console.error(err);
+    dispatch(setStatus("error"));
   }
 };
 
