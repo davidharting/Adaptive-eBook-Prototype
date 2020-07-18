@@ -3,7 +3,7 @@ import Container from "react-bootstrap/Container";
 import cn from "classnames";
 
 interface CenteredLayoutProps {
-  children: React.ReactChild;
+  children: React.ReactNode;
   /**
    * Whether or not to center vertically in addition to horizontally
    */

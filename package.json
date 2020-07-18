@@ -3,6 +3,7 @@
   "version": "0.1.0",
   "private": true,
   "dependencies": {
+    "@contentful/rich-text-types": "^14.1.1",
     "@reduxjs/toolkit": "^1.2.5",
     "@testing-library/jest-dom": "^5.11.0",
     "@testing-library/react": "^10.4.3",
@@ -15,6 +16,7 @@
     "@types/react-redux": "^7.1.7",
     "bootstrap": "^4.5.0",
     "classnames": "^2.2.6",
+    "contentful": "^7.14.5",
     "dotenv": "^8.2.0",
     "firebase": "^7.15.0",
     "react": "^16.13.1",
@@ -27,12 +29,12 @@
   },
   "scripts": {
     "content:gen-types": "contentful-typescript-codegen --output src/types/generated/contentful.d.ts",
-    "content:export": "touch src/content.json && node ./scripts/contentful-export.js > src/content.json",
+    "content:export": "touch src/content.json && node ./scripts/contentful-export.js > src/lib/contentful/__mocks__/content.json",
     "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint './src/**/*.{ts,tsx,js,jsx}'",
-    "test": "react-scripts test",
-    "test:ci": "react-scripts test --watchAll=false"
+    "test": "react-scripts test --env=jest-environment-jsdom-sixteen",
+    "test:ci": "react-scripts test --env=jest-environment-jsdom-sixteen --watchAll=false"
   },
   "eslintConfig": {
     "extends": "react-app",
@@ -56,11 +58,10 @@
     ]
   },
   "devDependencies": {
-    "@contentful/rich-text-types": "^14.1.0",
     "@types/shortid": "^0.0.29",
-    "contentful": "^7.14.4",
     "contentful-management": "^5.26.2",
     "contentful-typescript-codegen": "^3.2.1",
+    "jest-environment-jsdom-sixteen": "^1.0.3",
     "prettier": "^2.0.5"
   }
 }
