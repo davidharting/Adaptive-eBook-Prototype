@@ -1,5 +1,5 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
-import { createClient as createContentfulClient, Entry } from "contentful";
+import { getEntries } from "lib/contentful/client";
 import { AppThunk, RootState } from "app/store";
 import {
   IBook,
@@ -8,6 +8,7 @@ import {
   IChoiceFields,
   IQuestionFields,
 } from "types/generated/contentful";
+import { Entry } from "contentful";
 
 interface ContentState {
   books: Array<IBook>;
@@ -58,21 +59,8 @@ const { setContent, setStatus } = contentSlice.actions;
 export const fetchContent = (): AppThunk => async (dispatch) => {
   dispatch(setStatus("loading"));
 
-  const apiKey = process.env.REACT_APP_CONTENTFUL_DELIVERY_API_KEY;
-
-  if (!apiKey) {
-    setStatus("error");
-    throw new Error("Missing environment variable CONTENTFUL_DELIVERY_API_KEY");
-  }
-  const client = createContentfulClient({
-    space: "hfznm2gke77t",
-    environment: "master",
-    accessToken: apiKey,
-  });
-
   try {
-    const response = await client.getEntries<Fields>();
-    console.log(response.items);
+    const response = await getEntries();
     dispatch(setContent(response.items));
   } catch (err) {
     setStatus(err);
