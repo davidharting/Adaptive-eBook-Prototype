@@ -71,6 +71,7 @@ function validate(book: IBook): BookValidation {
 
   const questionsErrors: Array<QuestionError> = [];
   bookPages
+    .filter((bookPage) => bookPage.sys.type === "entry")
     .map((bookPage) => BookPage.asQuestion(bookPage))
     .forEach((question, i) => {
       if (question) {
