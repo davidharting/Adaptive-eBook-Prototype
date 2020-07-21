@@ -29,9 +29,11 @@ export const selectBookSlice = createSlice({
       state.bookId = action.payload;
       state.readThroughId = shortid.generate();
     },
-    finishBook: (state) => {
-      state.bookId = null;
+    finishBook: (state, action: PayloadAction<{ repeat: boolean }>) => {
       state.readThroughId = null;
+      if (action.payload.repeat === false) {
+        state.bookId = null;
+      }
     },
   },
   extraReducers: {

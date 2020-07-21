@@ -6,11 +6,15 @@ interface OnClick {
   (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
 }
 
+interface OnFinishBook {
+  (repeatBook: boolean): void;
+}
+
 interface BookPageLayout {
   children: React.ReactNode;
   pageNumber: number;
   pageForward: OnClick | undefined;
-  finishBook: OnClick | undefined;
+  finishBook: OnFinishBook | undefined;
 }
 
 function BookPageLayout({
@@ -43,11 +47,23 @@ function BookPageLayout({
 
         {finishBook && (
           <div className="d-flex flex-row justify-content-around w-100">
-            <Button className="btn-xl" onClick={finishBook}>
+            <Button
+              className="btn-xl"
+              onClick={() => {
+                finishBook(false);
+              }}
+            >
               Choose a different book
             </Button>
             <div style={{ width: "8px" }} />
-            <Button className="btn-xl">Read this book again</Button>
+            <Button
+              className="btn-xl"
+              onClick={() => {
+                finishBook(true);
+              }}
+            >
+              Read this book again
+            </Button>
           </div>
         )}
         <p className="text-muted">Page {pageNumber + 1}</p>
