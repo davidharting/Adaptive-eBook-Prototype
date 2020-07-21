@@ -35,7 +35,9 @@ function Read() {
   }
 
   // TODO: Naming is so wonky. finishBook used by completeBook passed as finishBook
-  const completeBook = onLastPage ? () => dispatch(finishBook()) : undefined;
+  const completeBook = onLastPage
+    ? (repeatBook: boolean) => dispatch(finishBook({ repeat: repeatBook }))
+    : undefined;
   const pageForward = canPageForward
     ? () => dispatch(goToNextPage())
     : undefined;

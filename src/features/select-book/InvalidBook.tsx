@@ -20,7 +20,10 @@ function InvalidBook() {
       {validation.questions && (
         <QuestionErrors questions={validation.questions} />
       )}
-      <Button variant="primary" onClick={() => dispatch(finishBook())}>
+      <Button
+        variant="primary"
+        onClick={() => dispatch(finishBook({ repeat: false }))}
+      >
         Choose a different book
       </Button>
     </Container>
