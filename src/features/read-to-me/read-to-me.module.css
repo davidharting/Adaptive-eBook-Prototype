@@ -1,0 +1,13 @@
+.speaker {
+  height: 32px;
+  width: 32px;
+}
+
+.speaker:hover {
+  opacity: 75%;
+}
+
+.speaker:active {
+  height: 33px;
+  width: 33px;
+}

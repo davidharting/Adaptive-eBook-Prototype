@@ -1,7 +1,8 @@
 import React from "react";
-import Button from "react-bootstrap/Button";
 import { useSelector } from "react-redux";
 import { selectAudioForCurrentBookPage } from "./readToMeSlice";
+import styles from "./read-to-me.module.css";
+import SpeakerIcon from "./speaker-icon.png";
 
 function ReadToMe({ style }: ReadToMeProps) {
   const audioAssetUrls = useSelector(selectAudioForCurrentBookPage);
@@ -10,7 +11,7 @@ function ReadToMe({ style }: ReadToMeProps) {
     return null;
   }
 
-  const onClick = () => {
+  const playAudio = () => {
     // Big limitation - assuming at most 2 audio files!
     const first = new Audio(audioAssetUrls[0]);
     first.onended = () => {
@@ -21,11 +22,14 @@ function ReadToMe({ style }: ReadToMeProps) {
   };
 
   return (
-    <>
-      <Button variant="light" onClick={onClick} style={style}>
-        Audio
-      </Button>
-    </>
+    <img
+      alt="Play audio"
+      className={styles.speaker}
+      style={style}
+      src={SpeakerIcon}
+      role="button"
+      onClick={playAudio}
+    />
   );
 }
 
