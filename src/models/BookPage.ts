@@ -14,13 +14,42 @@ class BookPage {
     return bookPage.sys.contentType.sys.id === "question";
   }
 
-  static asQuestion(bookPage: IBookPage) {
+  static asQuestion(bookPage: IBookPage): IQuestion | null {
     if (BookPage.isPage(bookPage)) {
       return null;
     }
     const question = bookPage as IQuestion;
     return question;
   }
+
+  static asPage(bookPage: IBookPage): IPage | null {
+    if (BookPage.isPage(bookPage)) {
+      const page = bookPage as IPage;
+      return page;
+    }
+    return null;
+  }
+
+  static determineType(bookPage: IBookPage): BookPageDetermination {
+    if (this.isPage(bookPage)) {
+      const page = BookPage.asPage(bookPage);
+      if (page) {
+        return { type: "page", page };
+      }
+    }
+    if (this.isQuestion(bookPage)) {
+      const question = BookPage.asQuestion(bookPage);
+      if (question) {
+        return { type: "question", question };
+      }
+    }
+    return { type: "error" };
+  }
 }
 
 export default BookPage;
+
+type BookPageDetermination =
+  | { type: "question"; question: IQuestion }
+  | { type: "page"; page: IPage }
+  | { type: "error" };
