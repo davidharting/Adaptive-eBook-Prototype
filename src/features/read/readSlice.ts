@@ -180,7 +180,7 @@ const selectQuestion = (state: RootState): IQuestion | null => {
   return book ? Book.getQuestion(book, pageNumber) : null;
 };
 
-const selectMode = (state: RootState): Mode | null => {
+export const selectMode = (state: RootState): Mode | null => {
   const treatment = selectTreatment(state);
   if (treatment === "mixed") {
     return state.read.randomMode;
