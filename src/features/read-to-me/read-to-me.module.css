@@ -1,13 +1,19 @@
-.speaker {
+.speaker,
+.disabledSpeaker {
   height: 32px;
   width: 32px;
 }
 
 .speaker:hover {
-  opacity: 75%;
+  opacity: 0.75;
 }
 
 .speaker:active {
   height: 33px;
   width: 33px;
+}
+
+.disabledSpeaker {
+  cursor: progress;
+  opacity: 0.75;
 }
