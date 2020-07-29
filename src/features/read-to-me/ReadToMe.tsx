@@ -1,5 +1,4 @@
 import React from "react";
-import cn from "classnames";
 import { useSelector } from "react-redux";
 import { selectAudioForCurrentBookPage } from "./readToMeSlice";
 import styles from "./read-to-me.module.css";
