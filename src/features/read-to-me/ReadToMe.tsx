@@ -22,11 +22,6 @@ function ReadToMe({ style }: ReadToMeProps) {
 
   return (
     <>
-      {/* <audio id="read-to-me-audio">
-        {audioAssetUrls.map((url) => (
-          <source key={url} src={url} />
-        ))}
-      </audio> */}
       <Button variant="light" onClick={onClick} style={style}>
         Audio
       </Button>
