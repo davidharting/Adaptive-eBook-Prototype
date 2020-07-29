@@ -1,7 +1,10 @@
 import React from "react";
+import { Asset } from "contentful";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import ReadToMe from "features/read-to-me/ReadToMe";
+
+import styles from "./book-page.module.css";
 
 interface OnClick {
   (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
@@ -11,7 +14,8 @@ interface OnFinishBook {
   (repeatBook: boolean): void;
 }
 
-interface BookPageLayout {
+interface BookPageLayoutProps {
+  backgroundImage?: Asset;
   children: React.ReactNode;
   pageNumber: number;
   pageForward: OnClick | undefined;
@@ -19,16 +23,18 @@ interface BookPageLayout {
 }
 
 function BookPageLayout({
+  backgroundImage,
   children,
   finishBook,
   pageForward,
   pageNumber,
-}: BookPageLayout) {
+}: BookPageLayoutProps) {
   return (
     <Container
       fluid
       className="d-flex flex-column align-items-center justify-content-between vh-100"
     >
+      {backgroundImage && <BackgroundImage asset={backgroundImage} />}
       <ReadToMe style={{ position: "absolute", top: 0, right: 0 }} />
       <div className="w-100 h-100 d-flex flex-column align-items-center justify-content-center">
         {children}
@@ -75,3 +81,17 @@ function BookPageLayout({
 }
 
 export default BookPageLayout;
+
+function BackgroundImage({ asset }: BackgroundImageProps) {
+  return (
+    <img
+      alt={asset.fields.title}
+      src={asset.fields.file.url}
+      className={styles.pageBackground}
+    />
+  );
+}
+
+interface BackgroundImageProps {
+  asset: Asset;
+}

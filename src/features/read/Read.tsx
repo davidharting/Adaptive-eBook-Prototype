@@ -44,6 +44,7 @@ function Read() {
 
   return (
     <BookPageLayout
+      backgroundImage={book.fields.pageBackground}
       finishBook={completeBook}
       pageForward={pageForward}
       pageNumber={pageNumber}
