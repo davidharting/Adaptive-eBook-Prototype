@@ -11,6 +11,7 @@ import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 import { finishBook, selectBook } from "../select-book/selectBookSlice";
 import { Mode } from "models/constants";
 import { lastItem } from "lib/array";
+import { IBookPage } from "models/BookPage";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -150,7 +151,7 @@ export default readSlice.reducer;
 
 export const selectPageNumber = (state: RootState) => state.read.pageNumber;
 
-export const selectPage = (state: RootState) => {
+export const selectPage = (state: RootState): IBookPage | null => {
   const book = selectBook(state);
   const pageNumber = selectPageNumber(state);
   return book ? Book.getPage(book, pageNumber) : null;
@@ -179,7 +180,7 @@ const selectQuestion = (state: RootState): IQuestion | null => {
   return book ? Book.getQuestion(book, pageNumber) : null;
 };
 
-const selectMode = (state: RootState): Mode | null => {
+export const selectMode = (state: RootState): Mode | null => {
   const treatment = selectTreatment(state);
   if (treatment === "mixed") {
     return state.read.randomMode;

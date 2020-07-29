@@ -1,6 +1,7 @@
 import React from "react";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
+import ReadToMe from "features/read-to-me/ReadToMe";
 
 interface OnClick {
   (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
@@ -28,6 +29,7 @@ function BookPageLayout({
       fluid
       className="d-flex flex-column align-items-center justify-content-between vh-100"
     >
+      <ReadToMe style={{ position: "absolute", top: 0, right: 0 }} />
       <div className="w-100 h-100 d-flex flex-column align-items-center justify-content-center">
         {children}
       </div>

@@ -1,15 +1,14 @@
 import React from "react";
-import { IPage, IQuestion } from "../../../types/generated/contentful";
+import { IPage } from "types/generated/contentful";
+import { IBookPage } from "models/BookPage";
 import Prompt from "./Prompt";
 import Question from "./Question";
 
-type BookPage = IPage | IQuestion;
-
 interface PageProps {
-  page: BookPage;
+  page: IBookPage;
 }
 
-function isPage(page: BookPage): page is IPage {
+function isPage(page: IBookPage): page is IPage {
   return page.sys.contentType.sys.id === "page";
 }
 

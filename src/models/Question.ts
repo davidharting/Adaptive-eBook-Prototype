@@ -65,6 +65,22 @@ class Question {
 
     return question.fields.sizePrompt;
   }
+
+  static getAudio(question: IQuestion, mode: Mode): string[] {
+    const audio = [];
+    const narrativeAudio =
+      question.fields.narrative?.fields.audio?.fields.file.url;
+    if (narrativeAudio) {
+      audio.push(narrativeAudio);
+    }
+
+    const prompt = Question.getPrompt(question, mode);
+    const promptAudio = prompt.fields.audio?.fields.file.url;
+    if (promptAudio) {
+      audio.push(promptAudio);
+    }
+    return audio;
+  }
 }
 
 export default Question;
