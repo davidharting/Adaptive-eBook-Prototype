@@ -17,12 +17,17 @@ function ReadToMe({ style }: ReadToMeProps) {
       // Big limitation - assuming at most 2 audio files!
       setDisabled(true);
       const first = new Audio(audioAssetUrls[0]);
+
       first.onended = () => {
-        const second = new Audio(audioAssetUrls[1]);
-        second.onended = () => {
+        if (audioAssetUrls.length > 1) {
+          const second = new Audio(audioAssetUrls[1]);
+          second.onended = () => {
+            setDisabled(false);
+          };
+          second.play();
+        } else {
           setDisabled(false);
-        };
-        second.play();
+        }
       };
       first.play();
     }
