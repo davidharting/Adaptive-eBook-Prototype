@@ -32,7 +32,7 @@ function BookPageLayout({
   return (
     <Container
       fluid
-      className="d-flex flex-column align-items-center justify-content-between vh-100"
+      className="d-flex flex-column align-items-center justify-content-between"
     >
       {backgroundImage && <BackgroundImage asset={backgroundImage} />}
       <ReadToMe style={{ position: "absolute", top: 0, right: 0 }} />
@@ -40,7 +40,9 @@ function BookPageLayout({
         {children}
       </div>
 
-      <div className="w-100 d-flex flex-column align-items-center justify-content-center">
+      <div
+        className={`w-25 d-flex flex-column align-items-center justify-content-center ${styles.nextPage}`}
+      >
         {!finishBook && (
           <Button
             block
@@ -54,7 +56,7 @@ function BookPageLayout({
         )}
 
         {finishBook && (
-          <div className="d-flex flex-row justify-content-around w-100">
+          <div className={`d-flex flex-row justify-content-around w-100`}>
             <Button
               className="btn-xl"
               onClick={() => {
@@ -74,8 +76,8 @@ function BookPageLayout({
             </Button>
           </div>
         )}
-        <p className="text-muted">Page {pageNumber + 1}</p>
       </div>
+      <p className={`text-muted ${styles.pageNumber}`}>Page {pageNumber + 1}</p>
     </Container>
   );
 }

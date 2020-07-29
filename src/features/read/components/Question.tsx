@@ -119,7 +119,7 @@ function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
         disabled={disabled}
         variant="primary"
         onClick={() => onClick(stimulus.sys.id)}
-        style={{ visibility: disabled ? "hidden" : "visible" }}
+        style={{ display: disabled ? "none" : "block" }}
       >
         Select
       </Button>
