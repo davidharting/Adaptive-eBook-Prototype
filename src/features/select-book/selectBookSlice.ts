@@ -13,11 +13,13 @@ import { signOut } from "../setup-device/setupDeviceSlice";
 
 interface SelectBookState {
   bookId: string | null;
+  previewBookId: string | null;
   readThroughId: string | null; // This could live on the read slice but doesn't really matter
 }
 
 const initialState: SelectBookState = {
   bookId: null,
+  previewBookId: null,
   readThroughId: null,
 };
 
@@ -25,7 +27,15 @@ export const selectBookSlice = createSlice({
   name: "selectBook",
   initialState,
   reducers: {
+    clearPreview: (state) => {
+      state.previewBookId = null;
+    },
+    previewBook: (state, action: PayloadAction<string>) => {
+      state.previewBookId = action.payload;
+      state.bookId = null;
+    },
     chooseBook: (state, action: PayloadAction<string>) => {
+      state.previewBookId = null;
       state.bookId = action.payload;
       state.readThroughId = shortid.generate();
     },
@@ -47,7 +57,12 @@ export const selectBookSlice = createSlice({
 
 export default selectBookSlice.reducer;
 
-export const { chooseBook, finishBook } = selectBookSlice.actions;
+export const {
+  clearPreview,
+  chooseBook,
+  previewBook,
+  finishBook,
+} = selectBookSlice.actions;
 
 export const selectAvailableBooks = (state: RootState) => {
   return state.content.books;
@@ -61,6 +76,11 @@ export const selectBook = (state: RootState) => {
   return getBook(state, bookId);
 };
 
+export const selectPreviewBook = (state: RootState) => {
+  const bookId = state.selectBook.previewBookId;
+  return bookId ? getBook(state, bookId) : null;
+};
+
 function getBook(state: RootState, bookId: string): IBook | null {
   const books = state.content.books;
   if (!books || !books.length) {
@@ -68,6 +88,19 @@ function getBook(state: RootState, bookId: string): IBook | null {
   }
   const book = books.find((b) => b.sys.id === bookId);
   return book || null;
+}
+
+type SelectBookStatus = "idle" | "preview" | "selected";
+export function selectStatus(state: RootState): SelectBookStatus {
+  const bookId = state.selectBook.bookId;
+  const previewBookId = state.selectBook.previewBookId;
+  if (bookId === null && previewBookId === null) {
+    return "idle";
+  }
+  if (previewBookId) {
+    return "preview";
+  }
+  return "selected";
 }
 
 export const selectBookValidation = (state: RootState): BookValidation => {

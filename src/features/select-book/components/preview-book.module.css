@@ -1,0 +1,27 @@
+.coverImage {
+  max-width: 100%;
+  max-height: 100vh;
+}
+
+.begin {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+}
+
+.bottomButtons {
+  position: absolute;
+  bottom: 0;
+  left: 0;
+  right: 0;
+
+  padding: 0 1rem 1rem 1rem;
+
+  width: 100%;
+
+  display: flex;
+  flex-direction: row;
+  justify-content: space-between;
+}

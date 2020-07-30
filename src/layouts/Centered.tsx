@@ -11,7 +11,7 @@ interface CenteredLayoutProps {
 }
 
 function CenteredLayout({ children, vertical = true }: CenteredLayoutProps) {
-  const cx = cn("d-flex justify-content-center align-items-center vw-100", {
+  const cx = cn("d-flex justify-content-center align-items-center w-100", {
     "vh-100": vertical,
   });
   return <Container className={cx}>{children}</Container>;
