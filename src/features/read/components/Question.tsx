@@ -30,7 +30,7 @@ function Question({ question }: QuestionProps) {
     <>
       {narrative && <Prompt prompt={narrative} />}
       {questionPrompt && <Prompt prompt={questionPrompt} />}
-      <div className="d-flex align-items-center justify-content-around">
+      <div className="w-100 d-flex align-items-center justify-content-around">
         {choice && <Choice choice={choice} questionId={question.sys.id} />}
       </div>
     </>
@@ -98,28 +98,20 @@ interface OnStimulusClick {
 // e.g., - am I disabled? am I right / wrong?
 
 function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
-  const cx = cn(
-    `d-flex flex-column justify-content-between w-50 h-100`,
-    {
-      "border border-success": decorate === "CORRECT",
-      "border border-danger": decorate === "WRONG",
-    },
-    { [styles.stimulus]: true }
-  );
+  const cx = cn("d-flex flex-column justify-content-between", styles.stimulus, {
+    [styles.stimulusCorrect]: decorate === "CORRECT",
+    [styles.stimulusWrong]: decorate === "WRONG",
+  });
 
   return (
     <div className={cx}>
-      <img
-        alt={stimulus.fields.description}
-        src={stimulus.fields.file.url}
-        style={{ maxWidth: "100%", height: "auto" }}
-      />
+      <img alt={stimulus.fields.description} src={stimulus.fields.file.url} />
       <Button
         className="btn-xl"
         disabled={disabled}
         variant="primary"
         onClick={() => onClick(stimulus.sys.id)}
-        style={{ visibility: disabled ? "hidden" : "visible" }}
+        style={{ display: disabled ? "none" : "block" }}
       >
         Select
       </Button>

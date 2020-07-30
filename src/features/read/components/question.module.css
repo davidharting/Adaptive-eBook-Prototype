@@ -1,14 +1,14 @@
 .stimulus {
   position: relative;
+  max-width: 50%;
 }
 
-.stimulus + .stimulus {
-  /*
-   * I should probably consider leveraging bootstrap's Rows and Cols instead 
-   * That way, if I need to wrap on narrow screens, I get stacking with correct spacing
-   * fo' free
-  */
-  padding-left: 8px;
+.stimulusCorrect {
+  border: 0.125rem solid var(--success);
+}
+
+.stimulusWrong {
+  border: 0.125rem solid var(--danger);
 }
 
 .feedback {

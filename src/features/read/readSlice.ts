@@ -171,6 +171,14 @@ export const selectOnLastPage = (state: RootState): boolean => {
   return !hasNextPage;
 };
 
+export const selectCanFinishBook = (state: RootState): boolean => {
+  const status = selectQuestionStatus(state);
+  if (status === "NOT_QUESTION") {
+    return selectOnLastPage(state);
+  }
+  return status !== "UNANSWERED";
+};
+
 /**
  * Select the _current_ question
  */

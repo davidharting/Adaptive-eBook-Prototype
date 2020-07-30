@@ -1,0 +1,31 @@
+.pageBackground {
+  z-index: -1000;
+  width: 100%;
+
+  /* Vertically center */
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
+
+.pageNumber {
+  position: absolute;
+  bottom: 0;
+}
+
+.nextPage {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 1rem;
+  margin-right: 1rem;
+  width: 25vh;
+}
+
+.finishBook {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 1rem;
+}
