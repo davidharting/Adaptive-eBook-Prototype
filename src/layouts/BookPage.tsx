@@ -74,7 +74,7 @@ function BookPageLayout({
               finishBook(false);
             }}
           >
-            Choose a different book
+            Go to bookshelf
           </Button>
         </div>
       )}
