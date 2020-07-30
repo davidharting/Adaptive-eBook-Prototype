@@ -30,7 +30,7 @@ function Question({ question }: QuestionProps) {
     <>
       {narrative && <Prompt prompt={narrative} />}
       {questionPrompt && <Prompt prompt={questionPrompt} />}
-      <div className="d-flex align-items-center justify-content-around">
+      <div className="w-100 d-flex align-items-center justify-content-around">
         {choice && <Choice choice={choice} questionId={question.sys.id} />}
       </div>
     </>
@@ -99,7 +99,7 @@ interface OnStimulusClick {
 
 function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
   const cx = cn(
-    `d-flex flex-column justify-content-between w-50 h-100`,
+    "d-flex flex-column justify-content-between",
     {
       "border border-success": decorate === "CORRECT",
       "border border-danger": decorate === "WRONG",
@@ -109,11 +109,7 @@ function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
 
   return (
     <div className={cx}>
-      <img
-        alt={stimulus.fields.description}
-        src={stimulus.fields.file.url}
-        style={{ maxWidth: "100%", height: "auto" }}
-      />
+      <img alt={stimulus.fields.description} src={stimulus.fields.file.url} />
       <Button
         className="btn-xl"
         disabled={disabled}
