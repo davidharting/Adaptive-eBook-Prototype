@@ -1,5 +1,6 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
+import CenteredLayout from "layouts/Centered";
 import Button from "react-bootstrap/Button";
 import styles from "./preview-book.module.css";
 import {
@@ -18,7 +19,7 @@ function PreviewBook() {
   }
 
   return (
-    <div>
+    <CenteredLayout>
       {coverImage && (
         <img
           alt={book.fields.title}
@@ -42,7 +43,7 @@ function PreviewBook() {
           Begin!
         </Button>
       </div>
-    </div>
+    </CenteredLayout>
   );
 }
 

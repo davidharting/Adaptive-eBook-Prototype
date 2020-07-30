@@ -1,5 +1,6 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
+import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import CardDeck from "react-bootstrap/CardDeck";
 import Card from "react-bootstrap/Card";
@@ -11,7 +12,7 @@ function SelectBook() {
   const choices = useSelector(selectAvailableBooks);
 
   return (
-    <div>
+    <Container>
       <h1>Bookshelf</h1>
       <CardDeck>
         {choices.map((c) => (
@@ -21,7 +22,7 @@ function SelectBook() {
       <br />
       <br />
       <ResetDevice />
-    </div>
+    </Container>
   );
 }
 
