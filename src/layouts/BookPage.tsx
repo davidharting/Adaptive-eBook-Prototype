@@ -61,19 +61,20 @@ function BookPageLayout({
           <Button
             className="btn-xl"
             onClick={() => {
-              finishBook(false);
+              finishBook(true);
             }}
+            variant="secondary"
           >
-            Choose a different book
+            Read this book again
           </Button>
           <div style={{ width: "8px" }} />
           <Button
             className="btn-xl"
             onClick={() => {
-              finishBook(true);
+              finishBook(false);
             }}
           >
-            Read this book again
+            Choose a different book
           </Button>
         </div>
       )}
