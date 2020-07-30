@@ -40,10 +40,8 @@ function BookPageLayout({
         {children}
       </div>
 
-      <div
-        className={`w-25 d-flex flex-column align-items-center justify-content-center ${styles.nextPage}`}
-      >
-        {!finishBook && (
+      {!finishBook && (
+        <div className={styles.nextPage}>
           <Button
             block
             className="btn-xl"
@@ -53,30 +51,33 @@ function BookPageLayout({
           >
             Next page
           </Button>
-        )}
+        </div>
+      )}
 
-        {finishBook && (
-          <div className={`d-flex flex-row justify-content-around w-100`}>
-            <Button
-              className="btn-xl"
-              onClick={() => {
-                finishBook(false);
-              }}
-            >
-              Choose a different book
-            </Button>
-            <div style={{ width: "8px" }} />
-            <Button
-              className="btn-xl"
-              onClick={() => {
-                finishBook(true);
-              }}
-            >
-              Read this book again
-            </Button>
-          </div>
-        )}
-      </div>
+      {finishBook && (
+        <div
+          className={`d-flex flex-row justify-content-around w-100 ${styles.finishBook}`}
+        >
+          <Button
+            className="btn-xl"
+            onClick={() => {
+              finishBook(false);
+            }}
+          >
+            Choose a different book
+          </Button>
+          <div style={{ width: "8px" }} />
+          <Button
+            className="btn-xl"
+            onClick={() => {
+              finishBook(true);
+            }}
+          >
+            Read this book again
+          </Button>
+        </div>
+      )}
+
       <p className={`text-muted ${styles.pageNumber}`}>Page {pageNumber + 1}</p>
     </Container>
   );

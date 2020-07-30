@@ -20,4 +20,12 @@
   right: 0;
   margin-bottom: 1rem;
   margin-right: 1rem;
+  width: 25vh;
+}
+
+.finishBook {
+  position: absolute;
+  bottom: 0;
+  right: 0;
+  margin-bottom: 1rem;
 }

@@ -98,14 +98,10 @@ interface OnStimulusClick {
 // e.g., - am I disabled? am I right / wrong?
 
 function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
-  const cx = cn(
-    "d-flex flex-column justify-content-between",
-    {
-      "border border-success": decorate === "CORRECT",
-      "border border-danger": decorate === "WRONG",
-    },
-    { [styles.stimulus]: true }
-  );
+  const cx = cn("d-flex flex-column justify-content-between", styles.stimulus, {
+    [styles.stimulusCorrect]: decorate === "CORRECT",
+    [styles.stimulusWrong]: decorate === "WRONG",
+  });
 
   return (
     <div className={cx}>
