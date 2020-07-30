@@ -1,57 +1,60 @@
 import React from "react";
 import { useSelector, useDispatch } from "react-redux";
 import Button from "react-bootstrap/Button";
-import Form from "react-bootstrap/Form";
+import CardDeck from "react-bootstrap/CardDeck";
+import Card from "react-bootstrap/Card";
 import CenteredLayout from "layouts/Centered";
 import ResetDevice from "features/setup-device/ResetDevice";
 import { previewBook, selectAvailableBooks } from "../selectBookSlice";
+import { IBook } from "types/generated/contentful";
 
 function SelectBook() {
-  const dispatch = useDispatch();
   const choices = useSelector(selectAvailableBooks);
-
-  const [selected, setSelected] = React.useState<string | null>(null);
 
   return (
     <CenteredLayout>
       <div>
         <h1>Select a book!</h1>
-        <Form
-          onSubmit={(e: React.FormEvent) => {
-            e.preventDefault();
-            if (selected !== null) {
-              dispatch(previewBook(selected));
-            }
-          }}
-        >
-          <Form.Group>
-            {choices.map((book) => {
-              return (
-                <Form.Check
-                  key={book.sys.id}
-                  type="radio"
-                  name="book"
-                  id={book.sys.id}
-                  label={book.fields.title}
-                  value={book.sys.id}
-                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => {
-                    setSelected(e.target.value);
-                  }}
-                />
-              );
-            })}
-          </Form.Group>
-          <Button variant="primary" disabled={selected === null} type="submit">
-            {selected === null && "Please choose a book"}
-            {selected !== null && "Read this book!"}
-          </Button>
-          <br />
-          <br />
-          <ResetDevice />
-        </Form>
+        <CardDeck>
+          {choices.map((c) => (
+            <BookCard book={c} />
+          ))}
+        </CardDeck>
+        <br />
+        <br />
+        <ResetDevice />
       </div>
     </CenteredLayout>
   );
 }
 
 export default SelectBook;
+
+function BookCard({ book }: BookCardProps) {
+  const dispatch = useDispatch();
+  const cover = book.fields.cover;
+  return (
+    <Card>
+      {cover && (
+        <Card.Img
+          alt={book.fields.title}
+          src={cover.fields.file.url}
+          variant="top"
+        />
+      )}
+      <Card.Body>
+        <Card.Title>{book.fields.title}</Card.Title>
+        <Button
+          variant="primary"
+          onClick={() => dispatch(previewBook(book.sys.id))}
+        >
+          Select
+        </Button>
+      </Card.Body>
+    </Card>
+  );
+}
+
+interface BookCardProps {
+  book: IBook;
+}

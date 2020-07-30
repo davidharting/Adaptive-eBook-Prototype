@@ -27,6 +27,9 @@ export const selectBookSlice = createSlice({
   name: "selectBook",
   initialState,
   reducers: {
+    clearPreview: (state) => {
+      state.previewBookId = null;
+    },
     previewBook: (state, action: PayloadAction<string>) => {
       state.previewBookId = action.payload;
       state.bookId = null;
@@ -54,7 +57,12 @@ export const selectBookSlice = createSlice({
 
 export default selectBookSlice.reducer;
 
-export const { chooseBook, previewBook, finishBook } = selectBookSlice.actions;
+export const {
+  clearPreview,
+  chooseBook,
+  previewBook,
+  finishBook,
+} = selectBookSlice.actions;
 
 export const selectAvailableBooks = (state: RootState) => {
   return state.content.books;

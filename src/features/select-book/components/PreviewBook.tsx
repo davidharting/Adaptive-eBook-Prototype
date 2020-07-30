@@ -2,7 +2,11 @@ import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import styles from "./preview-book.module.css";
-import { chooseBook, selectPreviewBook } from "../selectBookSlice";
+import {
+  chooseBook,
+  clearPreview,
+  selectPreviewBook,
+} from "../selectBookSlice";
 
 function PreviewBook() {
   const dispatch = useDispatch();
@@ -22,12 +26,22 @@ function PreviewBook() {
           className={styles.coverImage}
         />
       )}
-      <Button
-        className={`btn-xl ${styles.begin}`}
-        onClick={() => dispatch(chooseBook(book.sys.id))}
-      >
-        Begin!
-      </Button>
+      <div className={styles.bottomButtons}>
+        <Button
+          className="btn-xl"
+          variant="secondary"
+          onClick={() => dispatch(clearPreview())}
+        >
+          Choose a different book
+        </Button>
+        <Button
+          className="btn-xl"
+          variant="primary"
+          onClick={() => dispatch(chooseBook(book.sys.id))}
+        >
+          Begin!
+        </Button>
+      </div>
     </div>
   );
 }
