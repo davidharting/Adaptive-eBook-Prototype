@@ -1,10 +1,12 @@
 import React from "react";
+import cn from "classnames";
 import { Asset } from "contentful";
 import Container from "react-bootstrap/Container";
 import Button from "react-bootstrap/Button";
 import ReadToMe from "features/read-to-me/ReadToMe";
 
 import styles from "./book-page.module.css";
+import { useIsScrollable } from "lib/browser/window";
 
 interface OnClick {
   (event: React.MouseEvent<HTMLButtonElement, MouseEvent>): void;
@@ -29,6 +31,8 @@ function BookPageLayout({
   pageForward,
   pageNumber,
 }: BookPageLayoutProps) {
+  const isScrollable = useIsScrollable();
+
   return (
     <Container
       fluid
@@ -79,7 +83,13 @@ function BookPageLayout({
         </div>
       )}
 
-      <p className={`text-muted ${styles.pageNumber}`}>Page {pageNumber + 1}</p>
+      <p
+        className={cn("text-muted", {
+          [styles.bottomCenter]: isScrollable !== true,
+        })}
+      >
+        Page {pageNumber + 1}
+      </p>
     </Container>
   );
 }
