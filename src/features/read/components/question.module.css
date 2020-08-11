@@ -3,6 +3,11 @@
   max-width: 50%;
 }
 
+.stimulus img {
+  max-width: 100%;
+  height: auto;
+}
+
 .stimulusCorrect {
   border: 0.125rem solid var(--success);
 }
