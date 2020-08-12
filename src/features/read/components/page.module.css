@@ -1,0 +1,9 @@
+.pictureContainer {
+  max-width: 50%;
+  z-index: 1000;
+}
+
+.picture {
+  max-width: 100%;
+  height: auto;
+}
