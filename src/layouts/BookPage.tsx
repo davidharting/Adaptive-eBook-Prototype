@@ -87,9 +87,11 @@ function BookPageLayout({
         className={cn("text-muted", {
           [styles.bottomCenter]: isScrollable !== true,
         })}
+        style={{ zIndex: 50 }}
       >
         Page {pageNumber + 1}
       </p>
+      <div className={styles.divider} />
     </Container>
   );
 }

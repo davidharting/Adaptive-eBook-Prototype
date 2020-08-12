@@ -28,3 +28,15 @@
   right: 0;
   margin-bottom: 1rem;
 }
+
+.divider {
+  width: 1px;
+  background-color: var(--gray);
+  height: 100%;
+
+  /* Vertically center */
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
+}
