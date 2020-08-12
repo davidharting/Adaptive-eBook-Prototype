@@ -3,7 +3,10 @@ import { IPrompt } from "types/generated/contentful";
 
 function Prompt({ prompt }: PromptProps) {
   return (
-    <p className="mb-0 text-center" style={{ fontSize: "2.5rem" }}>
+    <p
+      className="mb-0 text-center"
+      style={{ fontSize: "2.5rem", zIndex: 1000 }}
+    >
       {prompt.fields.text}
     </p>
   );
