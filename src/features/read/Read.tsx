@@ -1,25 +1,24 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BookPageLayout from "layouts/BookPage";
-import { finishBook, selectBook } from "features/select-book/selectBookSlice";
+import { selectBook } from "features/select-book/selectBookSlice";
 import ResetDevice from "features/setup-device/ResetDevice";
 import {
-  goToNextPage,
+  nextPage,
   selectPage,
   selectPageNumber,
-  selectOnLastPage,
-  selectCanPageForward,
+  selectOnCredits,
 } from "./readSlice";
 import BookPage from "./components/BookPage";
 import CenteredLayout from "layouts/Centered";
+import Credits from "./components/Credits";
 
 function Read() {
   const dispatch = useDispatch();
   const book = useSelector(selectBook);
   const pageNumber = useSelector(selectPageNumber);
   const page = useSelector(selectPage);
-  const onLastPage = useSelector(selectOnLastPage);
-  const canPageForward = useSelector(selectCanPageForward);
+  const onCreditsPage = useSelector(selectOnCredits);
 
   if (!book) {
     // TODO: Use an effect hook or something to make sure that we get a warning to sentry
@@ -35,21 +34,18 @@ function Read() {
   }
 
   // TODO: Naming is so wonky. finishBook used by completeBook passed as finishBook
-  const completeBook = onLastPage
-    ? (repeatBook: boolean) => dispatch(finishBook({ repeat: repeatBook }))
-    : undefined;
-  const pageForward = canPageForward
-    ? () => dispatch(goToNextPage())
-    : undefined;
+
+  if (onCreditsPage) {
+    return <Credits />;
+  }
 
   return (
     <BookPageLayout
       backgroundImage={book.fields.pageBackground}
-      finishBook={completeBook}
-      pageForward={pageForward}
+      pageForward={() => dispatch(nextPage())}
       pageNumber={pageNumber}
     >
-      {page === null && (
+      {page === null && onCreditsPage === false && (
         <>
           <h2>Sorry, we cannot find that page.</h2>
         </>

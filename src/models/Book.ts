@@ -13,7 +13,7 @@ function getPages(book: IBook): IBookPage[] | null {
 
 function getPage(book: IBook, pageNumber: number) {
   const pages = getPages(book);
-  if (!pages || !pages.length || pages.length < pageNumber) {
+  if (!pages || !pages.length || pageNumber >= pages.length) {
     return null;
   }
   return pages[pageNumber];
@@ -44,14 +44,6 @@ function getQuestionById(book: IBook, questionId: string): GetQuestion | null {
     return null;
   }
   return { question, pageNumber };
-}
-
-function hasNextPage(book: IBook, pageNumber: number) {
-  const pages = getPages(book);
-  if (!pages || !pages.length) {
-    return false;
-  }
-  return pageNumber < pages.length - 1;
 }
 
 export interface BookValidation {
@@ -99,7 +91,6 @@ function validate(book: IBook): BookValidation {
 const Book = {
   getPages,
   getPage,
-  hasNextPage,
   getQuestion,
   getQuestionById,
   validate,

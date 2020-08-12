@@ -20,8 +20,8 @@ interface BookPageLayoutProps {
   backgroundImage?: Asset;
   children: React.ReactNode;
   pageNumber: number;
-  pageForward: OnClick | undefined;
-  finishBook: OnFinishBook | undefined;
+  pageForward?: OnClick;
+  finishBook?: OnFinishBook;
 }
 
 function BookPageLayout({

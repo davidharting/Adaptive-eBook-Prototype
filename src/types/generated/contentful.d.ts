@@ -15,6 +15,9 @@ export interface IBookFields {
 
   /** Pages */
   pages?: (IPage | IQuestion)[] | undefined;
+
+  /** Credits */
+  credits?: ICredits | undefined;
 }
 
 /** This is an adaptive eBook which contains pages and questions of varying difficulty. */
@@ -72,6 +75,36 @@ export interface IChoice extends Entry<IChoiceFields> {
   };
 }
 
+export interface ICreditsFields {
+  /** Internal Title */
+  internalTitle: string;
+
+  /** Background */
+  background?: Asset | undefined;
+
+  /** Contributors */
+  contributors?: string | undefined;
+}
+
+/** This is the "back cover" of a book, and gives you a place to credit contributors. */
+
+export interface ICredits extends Entry<ICreditsFields> {
+  sys: {
+    id: string;
+    type: string;
+    createdAt: string;
+    updatedAt: string;
+    locale: string;
+    contentType: {
+      sys: {
+        id: "credits";
+        linkType: "ContentType";
+        type: "Link";
+      };
+    };
+  };
+}
+
 export interface IPageFields {
   /** Internal Title */
   internalTitle?: string | undefined;
@@ -108,6 +141,9 @@ export interface IPromptFields {
 
   /** Audio */
   audio?: Asset | undefined;
+
+  /** LongText */
+  longText?: string | undefined;
 }
 
 /** A prompt is a piece of text with an optional audio recording of it being read. */
@@ -165,7 +201,13 @@ export interface IQuestion extends Entry<IQuestionFields> {
   };
 }
 
-export type CONTENT_TYPE = "book" | "choice" | "page" | "prompt" | "question";
+export type CONTENT_TYPE =
+  | "book"
+  | "choice"
+  | "credits"
+  | "page"
+  | "prompt"
+  | "question";
 
 export type LOCALE_CODE = "en-US";
 
