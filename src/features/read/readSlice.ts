@@ -277,6 +277,15 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   return "WRONG";
 };
 
+export const selectCanPageForward = (state: RootState): boolean => {
+  const questionStatus = selectQuestionStatus(state);
+
+  if (questionStatus === "NOT_QUESTION") {
+    return true;
+  }
+  return questionStatus !== "UNANSWERED";
+};
+
 type Grade = "CORRECT" | "WRONG";
 type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | Grade;
 
