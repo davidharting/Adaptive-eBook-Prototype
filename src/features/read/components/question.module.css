@@ -1,6 +1,5 @@
 .stimulus {
-  position: relative;
-  max-width: 50%;
+  max-width: 49%;
 }
 
 .stimulus img {
@@ -14,11 +13,4 @@
 
 .stimulusWrong {
   border: 0.125rem solid var(--danger);
-}
-
-.feedback {
-  position: absolute;
-  top: 50%;
-  width: 100%;
-  text-align: center;
 }
