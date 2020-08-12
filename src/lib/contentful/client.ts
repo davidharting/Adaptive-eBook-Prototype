@@ -14,7 +14,9 @@ export function getEntries(): Promise<EntryCollection<Fields>> {
   const client = createContentfulClient(
     shouldUsePreviewApi ? "preview" : "production"
   );
-  return client.getEntries<Fields>();
+  // Big assumption here that we have less than 1000 entries!
+  // Once this assumption breaks, we have to page through and gather up items
+  return client.getEntries<Fields>({ skip: 0, limit: 1000 });
 }
 
 type ContentMode = "production" | "preview";
