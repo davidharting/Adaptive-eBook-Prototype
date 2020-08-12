@@ -10,7 +10,7 @@ import {
   selectOnLastPage,
   selectCanPageForward,
 } from "./readSlice";
-import Page from "./components/Page";
+import BookPage from "./components/BookPage";
 import CenteredLayout from "layouts/Centered";
 
 function Read() {
@@ -54,7 +54,7 @@ function Read() {
           <h2>Sorry, we cannot find that page.</h2>
         </>
       )}
-      {page && <Page page={page} />}
+      {page && <BookPage bookPage={page} />}
     </BookPageLayout>
   );
 }

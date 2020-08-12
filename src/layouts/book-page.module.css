@@ -9,7 +9,7 @@
   transform: translateY(-50%);
 }
 
-.pageNumber {
+.bottomCenter {
   position: absolute;
   bottom: 0;
 }
@@ -20,7 +20,6 @@
   right: 0;
   margin-bottom: 1rem;
   margin-right: 1rem;
-  width: 25vh;
 }
 
 .finishBook {
@@ -28,4 +27,16 @@
   bottom: 0;
   right: 0;
   margin-bottom: 1rem;
+}
+
+.divider {
+  width: 1px;
+  background-color: var(--gray);
+  height: 100%;
+
+  /* Vertically center */
+  position: absolute;
+  margin: 0;
+  top: 50%;
+  transform: translateY(-50%);
 }

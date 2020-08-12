@@ -1,22 +1,28 @@
 import React from "react";
 import { IPage } from "types/generated/contentful";
-import { IBookPage } from "models/BookPage";
 import Prompt from "./Prompt";
-import Question from "./Question";
-
-interface PageProps {
-  page: IBookPage;
-}
-
-function isPage(page: IBookPage): page is IPage {
-  return page.sys.contentType.sys.id === "page";
-}
+import styles from "./page.module.css";
 
 function Page({ page }: PageProps) {
-  if (isPage(page)) {
-    return <Prompt prompt={page.fields.narrative} />;
-  }
-  return <Question question={page} />;
+  const picture = page.fields.picture;
+  return (
+    <>
+      <Prompt prompt={page.fields.narrative} />
+      {picture ? (
+        <div className={styles.pictureContainer}>
+          <img
+            src={picture.fields.file.url}
+            alt={picture.fields.description}
+            className={styles.picture}
+          />
+        </div>
+      ) : null}
+    </>
+  );
 }
 
 export default Page;
+
+interface PageProps {
+  page: IPage;
+}

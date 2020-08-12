@@ -115,14 +115,6 @@ function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
       >
         Select
       </Button>
-      {decorate === "CORRECT" && (
-        <p className={`text-success ${styles.feedback}`}>Nice work!</p>
-      )}
-      {decorate === "WRONG" && (
-        <p className={`text-danger ${styles.feedback}`}>
-          Sorry, this is not the right one!
-        </p>
-      )}
     </div>
   );
 }
