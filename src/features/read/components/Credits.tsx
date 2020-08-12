@@ -29,9 +29,34 @@ function Credits() {
       }
       pageNumber={pageNumber}
     >
-      content goes here
+      {credits && credits.fields.contributors ? (
+        <Contributors contributors={credits?.fields.contributors} />
+      ) : null}
     </BookPageLayout>
   );
 }
 
 export default Credits;
+
+function Contributors({ contributors }: ContributorsProps) {
+  const lines = contributors.split("\n");
+
+  return (
+    <>
+      <h1>Credits</h1>
+      {lines.map((line, i) => (
+        <p
+          key={i}
+          className="mb-0"
+          style={{ fontSize: "1.5rem", zIndex: 1000 }}
+        >
+          {line}
+        </p>
+      ))}
+    </>
+  );
+}
+
+interface ContributorsProps {
+  contributors: string;
+}
