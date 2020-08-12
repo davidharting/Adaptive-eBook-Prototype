@@ -78,16 +78,8 @@ export const readSlice = createSlice({
   },
 });
 
-const { chooseAnswer, nextPage } = readSlice.actions;
-
-// The name nextPage is taken by the basic action
-export const goToNextPage = (): AppThunk => (dispatch, getState) => {
-  const state = getState();
-  const hasNextPage = selectHasNextPage(state);
-  if (hasNextPage) {
-    dispatch(nextPage());
-  }
-};
+const { chooseAnswer } = readSlice.actions;
+export const { nextPage } = readSlice.actions;
 
 export const chooseAnswerAsync = (payload: AnswerPayload): AppThunk => (
   dispatch,
@@ -157,26 +149,17 @@ export const selectPage = (state: RootState): IBookPage | null => {
   return book ? Book.getPage(book, pageNumber) : null;
 };
 
-export const selectHasNextPage = (state: RootState): boolean => {
+export const selectOnCredits = (state: RootState): boolean => {
   const book = selectBook(state);
   const pageNumber = selectPageNumber(state);
   if (!book) {
     return false;
   }
-  return Book.hasNextPage(book, pageNumber);
-};
-
-export const selectOnLastPage = (state: RootState): boolean => {
-  const hasNextPage = selectHasNextPage(state);
-  return !hasNextPage;
-};
-
-export const selectCanFinishBook = (state: RootState): boolean => {
-  const status = selectQuestionStatus(state);
-  if (status === "NOT_QUESTION") {
-    return selectOnLastPage(state);
+  const pages = book.fields.pages;
+  if (!pages || pages.length < 1) {
+    return true;
   }
-  return status !== "UNANSWERED";
+  return pageNumber >= pages.length;
 };
 
 /**
@@ -295,13 +278,12 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
 };
 
 export const selectCanPageForward = (state: RootState): boolean => {
-  const hasNextPage = selectHasNextPage(state);
   const questionStatus = selectQuestionStatus(state);
 
   if (questionStatus === "NOT_QUESTION") {
-    return hasNextPage;
+    return true;
   }
-  return hasNextPage && questionStatus !== "UNANSWERED";
+  return questionStatus !== "UNANSWERED";
 };
 
 type Grade = "CORRECT" | "WRONG";
