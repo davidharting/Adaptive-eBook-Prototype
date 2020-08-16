@@ -19,6 +19,7 @@ interface OnFinishBook {
 interface BookPageLayoutProps {
   backgroundImage?: Asset;
   children?: React.ReactNode;
+  divider?: boolean;
   pageNumber: number;
   pageForward?: OnClick;
   finishBook?: OnFinishBook;
@@ -27,6 +28,7 @@ interface BookPageLayoutProps {
 function BookPageLayout({
   backgroundImage,
   children,
+  divider,
   finishBook,
   pageForward,
   pageNumber,
@@ -91,7 +93,7 @@ function BookPageLayout({
       >
         Page {pageNumber + 1}
       </p>
-      <div className={styles.divider} />
+      {divider === true && <div className={styles.divider} />}
     </Container>
   );
 }
