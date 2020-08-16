@@ -21,7 +21,7 @@ function NewSession() {
   };
 
   return (
-    <CenteredLayout>
+    <CenteredLayout vertical={false}>
       <div>
         <h1>First, let's set up this device</h1>
         <p>
