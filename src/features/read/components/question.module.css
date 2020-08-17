@@ -6,11 +6,3 @@
   max-width: 100%;
   height: auto;
 }
-
-.stimulusCorrect {
-  border: 0.125rem solid var(--success);
-}
-
-.stimulusWrong {
-  border: 0.125rem solid var(--danger);
-}
