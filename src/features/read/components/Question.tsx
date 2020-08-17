@@ -1,4 +1,5 @@
 import React from "react";
+import cn from "classnames";
 import { useDispatch, useSelector } from "react-redux";
 import Button from "react-bootstrap/Button";
 import { Asset } from "contentful";
@@ -52,8 +53,10 @@ function QuestionText({ question }: { question: IQuestion }) {
 function Feedback({ grade }: { grade: Grade }) {
   return (
     <p
-      className="mb-0 text-center"
-      style={{ fontSize: "2.5rem", zIndex: 1000 }}
+      className={cn("mb-0 text-center", {
+        [styles.correct]: grade === "CORRECT",
+        [styles.wrong]: grade === "WRONG",
+      })}
     >
       {grade}
     </p>
