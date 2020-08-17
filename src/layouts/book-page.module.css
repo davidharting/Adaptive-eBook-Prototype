@@ -14,12 +14,10 @@
   bottom: 0;
 }
 
-.nextPage {
+.bottomCenterWithMargin {
   position: absolute;
   bottom: 0;
-  right: 0;
   margin-bottom: 1rem;
-  margin-right: 1rem;
 }
 
 .finishBook {

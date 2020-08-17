@@ -19,6 +19,7 @@ interface OnFinishBook {
 interface BookPageLayoutProps {
   backgroundImage?: Asset;
   children?: React.ReactNode;
+  divider?: boolean;
   pageNumber: number;
   pageForward?: OnClick;
   finishBook?: OnFinishBook;
@@ -27,6 +28,7 @@ interface BookPageLayoutProps {
 function BookPageLayout({
   backgroundImage,
   children,
+  divider,
   finishBook,
   pageForward,
   pageNumber,
@@ -45,13 +47,17 @@ function BookPageLayout({
       </div>
 
       {!finishBook && (
-        <div className={styles.nextPage}>
+        <div
+          className={cn("w-100 d-flex justify-content-end", {
+            [styles.bottomCenterWithMargin]: isScrollable !== true,
+          })}
+          style={{ paddingRight: "1rem" }}
+        >
           <Button
-            block
             className="btn-xl"
             disabled={!pageForward}
             onClick={pageForward}
-            style={{ visibility: pageForward ? "visible" : "hidden" }}
+            style={{ display: pageForward ? "block" : "none" }}
           >
             Next page
           </Button>
@@ -91,7 +97,7 @@ function BookPageLayout({
       >
         Page {pageNumber + 1}
       </p>
-      <div className={styles.divider} />
+      {divider === true && <div className={styles.divider} />}
     </Container>
   );
 }

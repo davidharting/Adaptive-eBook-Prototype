@@ -14,7 +14,7 @@ function SelectBook() {
   return (
     <Container>
       <h1>Bookshelf</h1>
-      <CardDeck>
+      <CardDeck className="justify-content-center">
         {choices.map((c) => (
           <BookCard book={c} />
         ))}
@@ -32,7 +32,9 @@ function BookCard({ book }: BookCardProps) {
   const dispatch = useDispatch();
   const cover = book.fields.cover;
   return (
-    <Card>
+    <Card
+      style={{ minWidth: "300px", marginBottom: "1rem", maxWidth: "350px" }}
+    >
       {cover && (
         <Card.Img
           alt={book.fields.title}

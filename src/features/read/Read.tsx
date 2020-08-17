@@ -9,6 +9,7 @@ import {
   selectPageNumber,
   selectOnCredits,
   selectCanPageForward,
+  selectQuestionStatus,
 } from "./readSlice";
 import BookPage from "./components/BookPage";
 import CenteredLayout from "layouts/Centered";
@@ -21,6 +22,7 @@ function Read() {
   const page = useSelector(selectPage);
   const onCreditsPage = useSelector(selectOnCredits);
   const canPageForward = useSelector(selectCanPageForward);
+  const questionStatus = useSelector(selectQuestionStatus);
 
   if (!book) {
     // TODO: Use an effect hook or something to make sure that we get a warning to sentry
@@ -44,6 +46,7 @@ function Read() {
   return (
     <BookPageLayout
       backgroundImage={book.fields.pageBackground}
+      divider={questionStatus !== "NOT_QUESTION"}
       pageForward={canPageForward ? () => dispatch(nextPage()) : undefined}
       pageNumber={pageNumber}
     >
