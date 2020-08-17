@@ -286,7 +286,7 @@ export const selectCanPageForward = (state: RootState): boolean => {
   return questionStatus !== "UNANSWERED";
 };
 
-type Grade = "CORRECT" | "WRONG";
+export type Grade = "CORRECT" | "WRONG";
 type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | Grade;
 
 function randomMode(): Mode {

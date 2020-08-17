@@ -11,6 +11,7 @@ import {
   selectQuestionStatus,
   selectPrompt,
   selectChoice,
+  Grade,
 } from "../readSlice";
 
 import styles from "./question.module.css";
@@ -20,18 +21,42 @@ interface QuestionProps {
 }
 
 function Question({ question }: QuestionProps) {
-  const narrative = question.fields.narrative;
-  const questionPrompt = useSelector(selectPrompt);
+  const status = useSelector(selectQuestionStatus);
   const choice = useSelector(selectChoice);
 
   return (
     <>
-      {narrative && <Prompt prompt={narrative} />}
-      {questionPrompt && <Prompt prompt={questionPrompt} />}
+      {status === "UNANSWERED" || status === "NOT_QUESTION" ? (
+        <QuestionText question={question} />
+      ) : (
+        <Feedback grade={status} />
+      )}
       <div className="w-100 d-flex align-items-center justify-content-around">
         {choice && <Choice choice={choice} questionId={question.sys.id} />}
       </div>
     </>
+  );
+}
+
+function QuestionText({ question }: { question: IQuestion }) {
+  const narrative = question.fields.narrative;
+  const questionPrompt = useSelector(selectPrompt);
+  return (
+    <>
+      {narrative && <Prompt prompt={narrative} />}
+      {questionPrompt && <Prompt prompt={questionPrompt} />}
+    </>
+  );
+}
+
+function Feedback({ grade }: { grade: Grade }) {
+  return (
+    <p
+      className="mb-0 text-center"
+      style={{ fontSize: "2.5rem", zIndex: 1000 }}
+    >
+      {grade}
+    </p>
   );
 }
 
@@ -75,11 +100,6 @@ interface StimulusProps {
 interface OnStimulusClick {
   (stimulusId: string): void;
 }
-
-// TODO: Stimulus should probably be own file
-// When it is its own file that will make me want to rethink the data passing
-// The stimulus should be able to use it's stimulus ID and then ask more about itself of state
-// e.g., - am I disabled? am I right / wrong?
 
 function Stimulus({ disabled, onClick, stimulus }: StimulusProps) {
   return (
