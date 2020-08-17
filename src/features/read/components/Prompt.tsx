@@ -1,5 +1,6 @@
 import React from "react";
 import { IPrompt } from "types/generated/contentful";
+import PromptModel from "models/Prompt";
 
 function Prompt({ prompt }: PromptProps) {
   return (
@@ -7,7 +8,7 @@ function Prompt({ prompt }: PromptProps) {
       className="mb-0 text-center"
       style={{ fontSize: "2.5rem", zIndex: 1000 }}
     >
-      {prompt.fields.text}
+      {PromptModel.getText(prompt)}
     </p>
   );
 }
