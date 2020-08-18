@@ -7,10 +7,16 @@
   height: auto;
 }
 
-.stimulusCorrect {
-  border: 0.125rem solid var(--success);
+.correct,
+.wrong {
+  font-size: 2.5rem;
+  z-index: 1000;
 }
 
-.stimulusWrong {
-  border: 0.125rem solid var(--danger);
+.correct {
+  color: var(--success);
+}
+
+.wrong {
+  color: var(--danger);
 }

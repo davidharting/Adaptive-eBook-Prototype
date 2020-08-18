@@ -9,10 +9,10 @@ import Prompt from "./Prompt";
 
 import {
   chooseAnswerAsync,
-  selectAnswer,
   selectQuestionStatus,
   selectPrompt,
   selectChoice,
+  Grade,
 } from "../readSlice";
 
 import styles from "./question.module.css";
@@ -22,14 +22,16 @@ interface QuestionProps {
 }
 
 function Question({ question }: QuestionProps) {
-  const narrative = question.fields.narrative;
-  const questionPrompt = useSelector(selectPrompt);
+  const status = useSelector(selectQuestionStatus);
   const choice = useSelector(selectChoice);
 
   return (
     <>
-      {narrative && <Prompt prompt={narrative} />}
-      {questionPrompt && <Prompt prompt={questionPrompt} />}
+      {status === "UNANSWERED" || status === "NOT_QUESTION" ? (
+        <QuestionText question={question} />
+      ) : (
+        <Feedback grade={status} />
+      )}
       <div className="w-100 d-flex align-items-center justify-content-around">
         {choice && <Choice choice={choice} questionId={question.sys.id} />}
       </div>
@@ -37,37 +39,48 @@ function Question({ question }: QuestionProps) {
   );
 }
 
+function QuestionText({ question }: { question: IQuestion }) {
+  const narrative = question.fields.narrative;
+  const questionPrompt = useSelector(selectPrompt);
+  return (
+    <>
+      {narrative && <Prompt prompt={narrative} />}
+      {questionPrompt && <Prompt prompt={questionPrompt} />}
+    </>
+  );
+}
+
+function Feedback({ grade }: { grade: Grade }) {
+  return (
+    <p
+      className={cn("mb-0 text-center", {
+        [styles.correct]: grade === "CORRECT",
+        [styles.wrong]: grade === "WRONG",
+      })}
+    >
+      {grade === "CORRECT" ? "Correct! ✅" : "Sorry, that's not right. ⛔️"}
+    </p>
+  );
+}
+
 function Choice({ choice, questionId }: ChoiceProps) {
   const dispatch = useDispatch();
 
   const status = useSelector(selectQuestionStatus);
-  const answer = useSelector(selectAnswer);
 
   const selectStimulus = (stimulusId: string) => {
     dispatch(chooseAnswerAsync({ questionId, stimulusId }));
-  };
-
-  const decorate = (stimulusId: string) => {
-    if (
-      (status === "CORRECT" || status === "WRONG") &&
-      stimulusId === answer?.stimulusId
-    ) {
-      return status;
-    }
-    return false;
   };
 
   const disabled = status !== "UNANSWERED";
   return (
     <>
       <Stimulus
-        decorate={decorate(choice.fields.stimulusA.sys.id)}
         disabled={disabled}
         onClick={selectStimulus}
         stimulus={choice.fields.stimulusA}
       />
       <Stimulus
-        decorate={decorate(choice.fields.stimulusB.sys.id)}
         disabled={disabled}
         onClick={selectStimulus}
         stimulus={choice.fields.stimulusB}
@@ -82,7 +95,6 @@ interface ChoiceProps {
 }
 
 interface StimulusProps {
-  decorate?: "CORRECT" | "WRONG" | false;
   disabled: boolean;
   onClick: OnStimulusClick;
   stimulus: Asset;
@@ -92,19 +104,11 @@ interface OnStimulusClick {
   (stimulusId: string): void;
 }
 
-// TODO: Stimulus should probably be own file
-// When it is its own file that will make me want to rethink the data passing
-// The stimulus should be able to use it's stimulus ID and then ask more about itself of state
-// e.g., - am I disabled? am I right / wrong?
-
-function Stimulus({ decorate, disabled, onClick, stimulus }: StimulusProps) {
-  const cx = cn("d-flex flex-column justify-content-between", styles.stimulus, {
-    [styles.stimulusCorrect]: decorate === "CORRECT",
-    [styles.stimulusWrong]: decorate === "WRONG",
-  });
-
+function Stimulus({ disabled, onClick, stimulus }: StimulusProps) {
   return (
-    <div className={cx}>
+    <div
+      className={`d-flex flex-column justify-content-between ${styles.stimulus}`}
+    >
       <img alt={stimulus.fields.description} src={stimulus.fields.file.url} />
       <Button
         className="btn-xl"
