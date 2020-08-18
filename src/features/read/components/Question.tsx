@@ -58,7 +58,7 @@ function Feedback({ grade }: { grade: Grade }) {
         [styles.wrong]: grade === "WRONG",
       })}
     >
-      {grade}
+      {grade === "CORRECT" ? "Correct! ✅" : "Sorry, that's not right. ⛔️"}
     </p>
   );
 }
