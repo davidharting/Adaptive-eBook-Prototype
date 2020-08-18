@@ -16,7 +16,7 @@ function SelectBook() {
       <h1>Bookshelf</h1>
       <CardDeck className="justify-content-center">
         {choices.map((c) => (
-          <BookCard book={c} />
+          <BookCard key={c.sys.id} book={c} />
         ))}
       </CardDeck>
       <br />
