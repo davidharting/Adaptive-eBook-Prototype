@@ -12,6 +12,7 @@ import { finishBook, selectBook } from "../select-book/selectBookSlice";
 import { Mode } from "models/constants";
 import { lastItem } from "lib/array";
 import { IBookPage } from "models/BookPage";
+import { flipCoin } from "lib/math/random";
 
 type Difficulty = "easy" | "medium" | "hard";
 
@@ -290,11 +291,7 @@ export type Grade = "CORRECT" | "WRONG";
 type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | Grade;
 
 function randomMode(): Mode {
-  const r = Math.random();
-  if (r <= 0.5) {
-    return "number";
-  }
-  return "size";
+  return flipCoin("number", "size");
 }
 
 function gradeAnswer(book: IBook, answer: Answer): Grade | "ERROR" {
