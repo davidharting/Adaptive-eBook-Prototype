@@ -208,7 +208,7 @@ export const selectAnswer = (state: RootState): Answer | undefined => {
  * You cannot "backslide" in difficulty.
  * To advance difficulty, you must get 4 out of the last 5 questions at the current difficulty level correct.
  */
-function selectDifficulty(state: RootState): Difficulty {
+export function selectDifficulty(state: RootState): Difficulty {
   const NUMBER_CORRECT_TO_ADVANCE = 4;
   /**
    * How many answers do we "peek back" when we assess if they got NUMBER_CORRECT_TO_ADVANCE
@@ -233,18 +233,27 @@ function selectDifficulty(state: RootState): Difficulty {
     return latestAnswer.difficulty;
   }
 
-  const history: Array<GradeHistoryItem> = answers.map((ans) => {
-    return {
-      difficulty: ans.difficulty,
-      grade: gradeAnswer(book, ans),
-    };
-  });
+  const history = selectHistory(state);
 
   const latestDifficulty = lastItem(history)?.difficulty || STARTING_DIFFICULTY;
 
   return shouldAdvanceDifficulty(history, NUMBER_CORRECT_TO_ADVANCE, OUT_OF)
     ? nextDifficulty(latestDifficulty)
     : latestDifficulty;
+}
+
+export function selectHistory(state: RootState): GradeHistoryItem[] {
+  const book = selectBook(state);
+  const answers = state.read.answers;
+  if (!book || answers.length < 1) {
+    return [];
+  }
+  return answers.map((ans) => {
+    return {
+      difficulty: ans.difficulty,
+      grade: gradeAnswer(book, ans),
+    };
+  });
 }
 
 export const selectChoice = (state: RootState): IChoice | null => {

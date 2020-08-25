@@ -1,3 +1,5 @@
+import React from "react";
+
 export function getBooleanQueryParam(key: string): boolean {
   if (
     typeof window === "object" &&
@@ -13,4 +15,13 @@ export function getBooleanQueryParam(key: string): boolean {
     }
   }
   return false;
+}
+
+export function useBooleanQueryParam(key: string) {
+  const [value, setValue] = React.useState<boolean>(false);
+  React.useEffect(() => {
+    const v = getBooleanQueryParam(key);
+    setValue(v);
+  }, [key]);
+  return value;
 }

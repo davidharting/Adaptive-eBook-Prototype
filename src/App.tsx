@@ -14,6 +14,7 @@ import { selectBookValidation } from "features/select-book/selectBookSlice";
 import { RootState } from "app/store";
 import InvalidBook from "features/select-book/InvalidBook";
 import CenteredLayout from "layouts/Centered";
+import DebugTools from "features/debug-tools/DebugTools";
 
 type GameStatus = "CREATE_SESSION" | "PICK_BOOK" | "INVALID_BOOK" | "PLAYING";
 
@@ -52,6 +53,7 @@ function App() {
   return (
     <>
       <main>
+        <DebugTools />
         {gameStatus === "CREATE_SESSION" && <NewSession />}
         {gameStatus === "PICK_BOOK" && <SelectBook />}
         {gameStatus === "INVALID_BOOK" && <InvalidBook />}
