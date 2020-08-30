@@ -35,7 +35,7 @@ function BookCard({ book }: BookCardProps) {
     <Card
       style={{ minWidth: "300px", marginBottom: "1rem", maxWidth: "350px" }}
     >
-      {cover && (
+      {cover && cover.fields && (
         <Card.Img
           alt={book.fields.title}
           src={cover.fields.file.url}
