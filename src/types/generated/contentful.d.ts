@@ -109,11 +109,17 @@ export interface IPageFields {
   /** Internal Title */
   internalTitle?: string | undefined;
 
-  /** Narrative */
-  narrative: IPrompt;
-
   /** Picture */
   picture?: Asset | undefined;
+
+  /** Number Narrative */
+  numberNarrative?: IPrompt | undefined;
+
+  /** Mixed Narrative */
+  narrative: IPrompt;
+
+  /** Size Narrative */
+  sizeNarrative?: IPrompt | undefined;
 }
 
 /** A page of an eBook containing content, but no question.  */

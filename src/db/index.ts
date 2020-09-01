@@ -43,11 +43,6 @@ export interface AnswerDocument {
   // TODO: choseCorrectStimulus
 }
 
-interface Auditable {
-  createdAt: firebase.firestore.FieldValue;
-  deploy: string;
-}
-
 function getInsertAuditFields() {
   return {
     createdAt: firebase.firestore.FieldValue.serverTimestamp(),
