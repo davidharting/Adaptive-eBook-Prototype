@@ -10,6 +10,9 @@ class Page {
   static getPrompt(page: IPage, treatment: Treatment): IPrompt | null {
     switch (treatment) {
       case "mixed": {
+        // Originally, the page only had a single narrative field.
+        // When we added fields that are specific to the treatment,
+        // the original field was repurposes to be the "mixed treatment" narrative field
         return page.fields.narrative;
       }
       case "number": {
