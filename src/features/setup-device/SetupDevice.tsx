@@ -46,7 +46,7 @@ function NewSession() {
             />
           </Form.Group>
           <Form.Group>
-            <Form.Label>What treatment were you assigned?</Form.Label>
+            <Form.Label>What type of book were you assigned?</Form.Label>
             <Form.Control
               as="select"
               onChange={(e) => {
