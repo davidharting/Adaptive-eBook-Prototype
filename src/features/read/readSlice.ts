@@ -1,22 +1,22 @@
 import { createSlice, PayloadAction } from "@reduxjs/toolkit";
 
+import { lastItem } from "lib/array";
 import { AppThunk, RootState } from "app/store";
 import { IQuestion, IBook, IChoice, IPrompt } from "types/generated/contentful";
 import { AnswerDocument, recordAnswer } from "db";
+import { Mode } from "models/constants";
 import Book from "models/Book";
+import { IBookPage } from "models/BookPage";
 import Question from "models/Question";
 
 import { shouldAdvanceDifficulty } from "./adaptivity";
+import { nextMode } from "./mixed-treatment";
 import { signOut, selectTreatment } from "../setup-device/setupDeviceSlice";
 import { finishBook, selectBook } from "../select-book/selectBookSlice";
-import { Mode } from "models/constants";
-import { lastItem } from "lib/array";
-import { IBookPage } from "models/BookPage";
-import { flipCoin } from "lib/math/random";
 
 type Difficulty = "easy" | "medium" | "hard";
 
-interface ReadState {
+export interface ReadState {
   /**
    * The **current** page in the book.
    */
@@ -29,7 +29,10 @@ interface ReadState {
   answers: Answer[];
   /**
    * The "randomMode" property is only relevant when in the Mixed Treatment.
-   * This mode property describes the randomly generated mode for the current page.
+   * This mode property describes the "randomly" generated mode for the current page.
+   * "Random" is in quotes because of course we are using a pseudo-random number generator.
+   * But more importantly, because there are constraints. Because chance is clumpy, we want to cap how many in a row of a given mode a child may experience.
+   * See `./mixed-treatment.js#nextMode` for implementation details
    * If in the Number or Size Treatment, this value will be ignored.
    * In the Mixed treatment, we will take on the random mode as the current mode of the page.
    */
@@ -51,7 +54,7 @@ const initialState: ReadState = {
   // The pageNumber corresponds to the book.pages array and is 0-indexed
   pageNumber: 0,
   answers: [],
-  randomMode: randomMode(),
+  randomMode: nextMode([]),
 };
 
 export const readSlice = createSlice({
@@ -60,7 +63,7 @@ export const readSlice = createSlice({
   reducers: {
     nextPage: (state) => {
       state.pageNumber++;
-      state.randomMode = randomMode();
+      state.randomMode = nextMode(state.answers);
     },
     chooseAnswer: (state, action: PayloadAction<Answer>) => {
       state.answers.push(action.payload);
@@ -298,10 +301,6 @@ export const selectCanPageForward = (state: RootState): boolean => {
 
 export type Grade = "CORRECT" | "WRONG";
 type QuestionStatus = "NOT_QUESTION" | "UNANSWERED" | Grade;
-
-function randomMode(): Mode {
-  return flipCoin("number", "size");
-}
 
 function gradeAnswer(book: IBook, answer: Answer): Grade | "ERROR" {
   const questionAndPage = Book.getQuestionById(book, answer.questionId);
