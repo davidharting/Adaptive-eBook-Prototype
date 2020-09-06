@@ -46,7 +46,9 @@ function BookCard({ book }: BookCardProps) {
         <Card.Title>{book.fields.title}</Card.Title>
         <Button
           variant="primary"
-          onClick={() => dispatch(previewBook(book.sys.id))}
+          onClick={() => {
+            dispatch(previewBook(book.sys.id));
+          }}
         >
           Select
         </Button>

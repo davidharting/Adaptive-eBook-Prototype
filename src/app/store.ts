@@ -1,4 +1,5 @@
 import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
+import { createReduxEnhancer } from "@sentry/react";
 
 import contentReducer from "../features/content/contentSlice";
 import counterReducer from "../features/counter/counterSlice";
@@ -38,6 +39,7 @@ const loadState = () => {
 };
 
 export const store = configureStore({
+  enhancers: [createReduxEnhancer({})],
   preloadedState: loadState(),
   reducer: {
     content: contentReducer,
