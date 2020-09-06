@@ -47,8 +47,8 @@ function BookCard({ book }: BookCardProps) {
         <Button
           variant="primary"
           onClick={() => {
-            throw new Error("Whoops it broke!");
             dispatch(previewBook(book.sys.id));
+            throw new Error("Whoops it broke!");
           }}
         >
           Select
