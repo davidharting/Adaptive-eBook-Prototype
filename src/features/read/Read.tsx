@@ -1,6 +1,7 @@
 import React from "react";
 import { useDispatch, useSelector } from "react-redux";
 import BookPageLayout from "layouts/BookPage";
+import BookPageModel from "models/BookPage";
 import { selectBook } from "features/select-book/selectBookSlice";
 import ResetDevice from "features/setup-device/ResetDevice";
 import {
@@ -19,7 +20,7 @@ function Read() {
   const dispatch = useDispatch();
   const book = useSelector(selectBook);
   const pageNumber = useSelector(selectPageNumber);
-  const page = useSelector(selectPage);
+  const bookPage = useSelector(selectPage);
   const onCreditsPage = useSelector(selectOnCredits);
   const canPageForward = useSelector(selectCanPageForward);
   const questionStatus = useSelector(selectQuestionStatus);
@@ -43,19 +44,24 @@ function Read() {
     return <Credits />;
   }
 
+  const shouldShowBackgroundImage =
+    bookPage === null || BookPageModel.determineType(bookPage).type !== "page";
+
   return (
     <BookPageLayout
-      backgroundImage={book.fields.pageBackground}
+      backgroundImage={
+        shouldShowBackgroundImage ? book.fields.pageBackground : undefined
+      }
       divider={questionStatus !== "NOT_QUESTION"}
       pageForward={canPageForward ? () => dispatch(nextPage()) : undefined}
       pageNumber={pageNumber}
     >
-      {page === null && onCreditsPage === false && (
+      {bookPage === null && onCreditsPage === false && (
         <>
           <h2>Sorry, we cannot find that page.</h2>
         </>
       )}
-      {page && <BookPage bookPage={page} />}
+      {bookPage && <BookPage bookPage={bookPage} />}
     </BookPageLayout>
   );
 }
