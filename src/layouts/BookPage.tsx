@@ -33,7 +33,7 @@ function BookPageLayout({
   pageForward,
   pageNumber,
 }: BookPageLayoutProps) {
-  const isScrollable = useIsScrollable();
+  const isScrollable = useIsScrollable([pageNumber]);
 
   return (
     <Container

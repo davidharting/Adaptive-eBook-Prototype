@@ -4,7 +4,7 @@ import React from "react";
 // I really need to decide if there is room for the Page Num. or not, even if it isn't scrolling the other content
 // More of a "should I scroll to see page number", not "are we scrolling without it"
 
-export function useIsScrollable(): boolean | null {
+export function useIsScrollable(watch: any[] = []): boolean | null {
   const [isScrollable, setIsScrollable] = React.useState<boolean | null>(null);
 
   const onResize = () => {
@@ -14,6 +14,10 @@ export function useIsScrollable(): boolean | null {
       setIsScrollable(false);
     }
   };
+
+  React.useEffect(() => {
+    onResize();
+  }, [...watch]);
 
   React.useEffect(() => {
     onResize();
