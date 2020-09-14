@@ -52,8 +52,8 @@ function App() {
 
   return (
     <>
+      <div id="top" />
       <main>
-        <a id="top" />
         <DebugTools />
         {gameStatus === "CREATE_SESSION" && <NewSession />}
         {gameStatus === "PICK_BOOK" && <SelectBook />}
