@@ -113,6 +113,7 @@ function Stimulus({ disabled, onClick, stimulus }: StimulusProps) {
       <Button
         className="btn-xl"
         disabled={disabled}
+        href="#top"
         variant="primary"
         onClick={() => onClick(stimulus.sys.id)}
         style={{ display: disabled ? "none" : "block" }}
