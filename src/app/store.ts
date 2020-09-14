@@ -2,7 +2,6 @@ import { configureStore, ThunkAction, Action } from "@reduxjs/toolkit";
 import { createReduxEnhancer } from "@sentry/react";
 
 import contentReducer from "../features/content/contentSlice";
-import counterReducer from "../features/counter/counterSlice";
 import readReducer from "../features/read/readSlice";
 import selectBookReducer from "../features/select-book/selectBookSlice";
 import setupDeviceReducer from "../features/setup-device/setupDeviceSlice";
@@ -15,7 +14,6 @@ const saveState = (state: {
   read: Object;
   selectBook: Object;
   setupDevice: Object;
-  counter: Object;
 }) => {
   try {
     const serializedState = JSON.stringify({
@@ -43,7 +41,6 @@ export const store = configureStore({
   preloadedState: loadState(),
   reducer: {
     content: contentReducer,
-    counter: counterReducer,
     read: readReducer,
     selectBook: selectBookReducer,
     setupDevice: setupDeviceReducer,

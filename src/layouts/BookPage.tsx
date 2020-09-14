@@ -56,6 +56,7 @@ function BookPageLayout({
           <Button
             className="btn-xl"
             disabled={!pageForward}
+            href="#top"
             onClick={pageForward}
             style={{ display: pageForward ? "block" : "none" }}
           >

@@ -48,7 +48,7 @@ function Contributors({ contributors }: ContributorsProps) {
         <p
           key={i}
           className="mb-0"
-          style={{ fontSize: "1.5rem", zIndex: 1000 }}
+          style={{ fontSize: "1.5rem", textAlign: "center", zIndex: 1000 }}
         >
           {line}
         </p>

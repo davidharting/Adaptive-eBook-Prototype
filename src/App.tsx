@@ -52,6 +52,7 @@ function App() {
 
   return (
     <>
+      <div id="top" />
       <main>
         <DebugTools />
         {gameStatus === "CREATE_SESSION" && <NewSession />}
