@@ -17,6 +17,8 @@ export function useIsScrollable(watch: any[] = []): boolean | null {
 
   React.useEffect(() => {
     onResize();
+    // onResize has no deps and we intentionally want the caller to control re-firing it
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [...watch]);
 
   React.useEffect(() => {
