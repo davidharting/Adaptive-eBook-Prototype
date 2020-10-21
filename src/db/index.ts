@@ -1,6 +1,6 @@
 import firebase from "firebase/app";
 import "firebase/firestore";
-import { Difficulty } from "models/constants";
+import { BookType, Difficulty } from "models/constants";
 
 var config = {
   apiKey: process.env.REACT_APP_FIREBASE_API_KEY,
@@ -36,11 +36,7 @@ export interface AnswerDocument {
   questionText: string;
   isCorrect: boolean;
   pageNumber: number;
-
-  // TODO: correctStimulusID
-  // TODO: choseStimulusID
-  // TODO: distractorStimulusID
-  // TODO: choseCorrectStimulus
+  bookType: BookType;
 }
 
 function getInsertAuditFields() {
