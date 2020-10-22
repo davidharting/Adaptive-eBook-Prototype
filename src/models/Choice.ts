@@ -25,7 +25,14 @@ function getCorrectStimulus(choice: IChoice, mode: Mode): Asset {
 }
 
 function getCorrectStimulusLabel(choice: IChoice, mode: Mode): StimuliLabel {
-  return mode === "number"
-    ? choice.fields.quantityCorrectStimulus
-    : choice.fields.sizeCorrectStimulus;
+  const label =
+    mode === "number"
+      ? choice.fields.quantityCorrectStimulus
+      : choice.fields.sizeCorrectStimulus;
+
+  if (!label) {
+    throw new Error(`Missing correct stimulus for mode ${mode}`);
+  }
+
+  return label;
 }
