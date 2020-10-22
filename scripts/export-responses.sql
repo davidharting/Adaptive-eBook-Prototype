@@ -6,6 +6,7 @@ select
   JSON_EXTRACT_SCALAR(data, '$.treatment') as treatment,
   JSON_EXTRACT_SCALAR(data, '$.readThroughId') as read_through_id,
   JSON_EXTRACT_SCALAR(data, '$.bookId') as book_id,
+  COALESCE(JSON_EXTRACT_SCALAR(data, '$.bookType'), "normal") as book_type,
   JSON_EXTRACT_SCALAR(data, '$.bookTitle') as book_title,
   JSON_EXTRACT_SCALAR(data, '$.pageNumber') as page_number,
   JSON_EXTRACT_SCALAR(data, '$.questionId') as question_id,
