@@ -134,6 +134,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     parentName: state.setupDevice.parentName,
     readThroughId: state.selectBook.readThroughId,
     bookId: book.sys.id,
+    bookType: Book.getType(book),
     bookTitle: book.fields.title,
     pageNumber: pageNumber ? pageNumber + 1 : -1,
     questionId: answer.questionId,

@@ -59,11 +59,18 @@ class Question {
   }
 
   static getPrompt(question: IQuestion, mode: Mode): IPrompt {
-    if (mode === "number") {
-      return question.fields.numberPrompt;
+    const prompt =
+      mode === "number"
+        ? question.fields.numberPrompt
+        : question.fields.sizePrompt;
+
+    if (!prompt) {
+      throw new Error(
+        `Missing prompt for mode ${mode} for question ${question.sys.id}`
+      );
     }
 
-    return question.fields.sizePrompt;
+    return prompt;
   }
 
   static getAudio(question: IQuestion, mode: Mode): string[] {

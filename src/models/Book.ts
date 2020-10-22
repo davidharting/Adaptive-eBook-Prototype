@@ -1,6 +1,11 @@
 import { IBook, IQuestion } from "types/generated/contentful";
 import BookPage, { IBookPage } from "./BookPage";
+import { BookType } from "./constants";
 import Question from "./Question";
+
+function getType(book: IBook): BookType {
+  return book.fields.type || "normal";
+}
 
 function getPages(book: IBook): IBookPage[] | null {
   const pages: IBookPage[] | undefined = book.fields.pages;
@@ -89,6 +94,7 @@ function validate(book: IBook): BookValidation {
 }
 
 const Book = {
+  getType,
   getPages,
   getPage,
   getQuestion,

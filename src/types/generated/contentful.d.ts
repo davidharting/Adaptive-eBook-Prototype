@@ -18,6 +18,9 @@ export interface IBookFields {
 
   /** Credits */
   credits?: ICredits | undefined;
+
+  /** Type */
+  type?: "normal" | "pre-test" | "post-test" | undefined;
 }
 
 /** This is an adaptive eBook which contains pages and questions of varying difficulty. */
@@ -50,10 +53,10 @@ export interface IChoiceFields {
   stimulusB: Asset;
 
   /** Number: Correct Stimulus */
-  quantityCorrectStimulus: "A" | "B";
+  quantityCorrectStimulus?: "A" | "B" | undefined;
 
   /** Size: Correct stimulus */
-  sizeCorrectStimulus: "A" | "B";
+  sizeCorrectStimulus?: "A" | "B" | undefined;
 }
 
 /** A choice presents two stimuli as the possible answers to a question. Only one is correct. */
@@ -179,10 +182,10 @@ export interface IQuestionFields {
   narrative?: IPrompt | undefined;
 
   /** Number Prompt */
-  numberPrompt: IPrompt;
+  numberPrompt?: IPrompt | undefined;
 
   /** Size Prompt */
-  sizePrompt: IPrompt;
+  sizePrompt?: IPrompt | undefined;
 
   /** Choices */
   choices: IChoice[];
