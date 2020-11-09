@@ -21,6 +21,9 @@ export interface IBookFields {
 
   /** Type */
   type?: "normal" | "pre-test" | "post-test" | undefined;
+
+  /** Test Type */
+  testType?: "A" | "B" | undefined;
 }
 
 /** This is an adaptive eBook which contains pages and questions of varying difficulty. */
