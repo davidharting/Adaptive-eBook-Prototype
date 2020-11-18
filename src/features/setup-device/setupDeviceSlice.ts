@@ -14,6 +14,7 @@ interface SetupDeviceState {
   childName: string;
   status: SessionStatus;
   treatment: Treatment | null;
+  testType: string;
 }
 
 const initialState: SetupDeviceState = {
@@ -22,12 +23,14 @@ const initialState: SetupDeviceState = {
   parentName: "",
   status: "unstarted",
   treatment: null,
+  testType: "",
 };
 
 type StartSessionPayload = {
   childName: string;
   parentName: string;
   treatment: Treatment;
+  testType: string;
 };
 
 export const sessionSlice = createSlice({
@@ -40,6 +43,7 @@ export const sessionSlice = createSlice({
       state.treatment = action.payload.treatment;
       state.childName = action.payload.childName;
       state.parentName = action.payload.parentName;
+      state.testType = action.payload.testType;
     },
     signOut: (state) => {
       state.setupId = initialState.setupId;
@@ -47,6 +51,7 @@ export const sessionSlice = createSlice({
       state.parentName = initialState.parentName;
       state.status = initialState.status;
       state.treatment = initialState.treatment;
+      state.testType = initialState.testType;
     },
   },
 });

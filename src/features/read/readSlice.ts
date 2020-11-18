@@ -103,6 +103,7 @@ export const chooseAnswerAsync = (payload: AnswerPayload): AppThunk => (
     const answer: Answer = { ...payload, mode, difficulty, pageNumber };
     dispatch(chooseAnswer(answer));
     const record = enrichAnswer(answer, state);
+    console.log(record)
     return recordAnswer(record);
   }
 };
@@ -178,9 +179,51 @@ const selectQuestion = (state: RootState): IQuestion | null => {
 
 export const selectMode = (state: RootState): Mode | null => {
   const treatment = selectTreatment(state);
+  const book = selectBook(state)
+  const bookType = book?.fields.type;
+
+  //check if pre- or post-test
+  if( bookType === "pre-test" || bookType === "post-test" ){
+  //make sure book isn't null (makes getPage feel better)
+    if(book){
+      //if sys.id is a question, then continue. Otherwise, it's narrative page so skip over
+      if(Book.getPage(book,selectPageNumber(state))?.sys.contentType.sys.id === "question"){
+        //since it's a question, grab it
+        const question = selectQuestion(state);
+        
+        if (!question) {
+            throw new Error(
+              `Missing question. Current questions is of type null.`
+            );
+        }
+    
+        //try to get numberPrompt, if we can't, then it's a sizePrompt
+        try{
+          if(Question.getPrompt(question,"number")){
+            return "number";
+          }
+        }
+        catch(err){
+            try{
+              if(Question.getPrompt(question,"size")){
+                return "size";
+              }
+            }
+            catch(err)
+            {
+              throw new Error(
+                `No prompts for question ${question.sys.id}`
+              );
+            }
+        }
+      } 
+    }
+  }
+
   if (treatment === "mixed") {
     return state.read.randomMode;
   }
+
   return treatment;
 };
 
@@ -224,7 +267,7 @@ export function selectDifficulty(state: RootState): Difficulty {
   const book = selectBook(state);
   const answers = state.read.answers;
 
-  if (!book || answers.length < NUMBER_CORRECT_TO_ADVANCE) {
+  if (!book || answers.length < NUMBER_CORRECT_TO_ADVANCE || book?.fields.type === "pre-test" || book?.fields.type === "post-test") {
     return STARTING_DIFFICULTY;
   }
 
