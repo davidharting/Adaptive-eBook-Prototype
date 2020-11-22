@@ -31,6 +31,7 @@
   "scripts": {
     "content:gen-types": "contentful-typescript-codegen --output src/types/generated/contentful.d.ts",
     "content:export": "touch src/content.json && node ./scripts/contentful-export.js > src/lib/contentful/__mocks__/content.json",
+    "format:check": "prettier --check \"./src/**/*.{ts,tsx,js,jsx}\"",
     "start": "BROWSER=none react-scripts start",
     "build": "react-scripts build",
     "lint": "eslint './src/**/*.{ts,tsx,js,jsx}'",
