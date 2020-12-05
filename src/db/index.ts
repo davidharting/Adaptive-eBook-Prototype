@@ -37,6 +37,10 @@ export interface AnswerDocument {
   isCorrect: boolean;
   pageNumber: number;
   bookType: BookType;
+  /**
+   * Assessments are divided into 3 sections.
+   */
+  section: number | null;
 }
 
 function getInsertAuditFields() {
