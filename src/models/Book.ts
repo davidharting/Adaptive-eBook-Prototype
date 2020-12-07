@@ -1,5 +1,5 @@
 import { IBook, IQuestion } from "types/generated/contentful";
-import BookPage, { IBookPage } from "./BookPage";
+import BookPage, { BookPageDetermination, IBookPage } from "./BookPage";
 import { BookType } from "./constants";
 import Question from "./Question";
 
@@ -12,8 +12,28 @@ function getPages(book: IBook): IBookPage[] | null {
   if (!pages || !pages.length) {
     return null;
   }
-
   return pages;
+}
+
+function getQuestions(book: IBook): IQuestion[] {
+  const pages = getPages(book);
+  if (!pages) {
+    return [];
+  }
+
+  const determinations: BookPageDetermination[] = pages.map((page) =>
+    BookPage.determineType(page)
+  );
+
+  // @ts-ignore
+  const filtered: {
+    type: "question";
+    question: IQuestion;
+  }[] = determinations.filter(
+    (determination) => determination.type === "question"
+  );
+
+  return filtered.map((d) => d.question);
 }
 
 function getPage(book: IBook, pageNumber: number) {
@@ -103,6 +123,7 @@ const Book = {
   getPage,
   getQuestion,
   getQuestionById,
+  getQuestions,
   isAssessment,
   validate,
 };

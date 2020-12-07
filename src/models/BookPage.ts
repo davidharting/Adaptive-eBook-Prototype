@@ -49,7 +49,7 @@ class BookPage {
 
 export default BookPage;
 
-type BookPageDetermination =
+export type BookPageDetermination =
   | { type: "question"; question: IQuestion }
   | { type: "page"; page: IPage }
   | { type: "error" };

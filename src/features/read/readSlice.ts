@@ -339,6 +339,34 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   return "WRONG";
 };
 
+export const selectShouldShowFeedback = (state: RootState): boolean => {
+  const book = selectBook(state);
+  if (!book) {
+    return true;
+  }
+  if (!Book.isAssessment(book)) {
+    return true;
+  }
+
+  const currentQuestion = selectQuestion(state);
+  if (!currentQuestion) {
+    return true;
+  }
+  const section = currentQuestion.fields.section;
+  if (!section) {
+    return false;
+  }
+
+  const allQuestions = Book.getQuestions(book);
+  const questionsInCurrentSection = allQuestions.filter(
+    (q) => q.fields.section === section
+  );
+  const slot = questionsInCurrentSection.findIndex(
+    (q) => q.sys.id === currentQuestion.sys.id
+  );
+  return slot === 0 || slot === 1;
+};
+
 export const selectCanPageForward = (state: RootState): boolean => {
   const questionStatus = selectQuestionStatus(state);
 
