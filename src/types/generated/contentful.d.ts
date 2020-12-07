@@ -192,6 +192,9 @@ export interface IQuestionFields {
 
   /** Choices */
   choices: IChoice[];
+
+  /** Section */
+  section?: number | undefined;
 }
 
 /** A question presents a prompt about two stimuli, one of which is correct. */

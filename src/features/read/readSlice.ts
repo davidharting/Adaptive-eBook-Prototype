@@ -142,6 +142,7 @@ function enrichAnswer(answer: Answer, state: RootState): AnswerDocument {
     stimulusId: answer.stimulusId,
     questionText: Question.getPromptText(question, answer.mode),
     isCorrect: grade === "CORRECT",
+    section: question.fields.section || null,
   };
 }
 
