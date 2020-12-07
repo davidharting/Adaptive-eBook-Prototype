@@ -65,18 +65,13 @@ export const {
 } = selectBookSlice.actions;
 
 export const selectAvailableBooks = (state: RootState) => {
-  //define and filter array of viewable books
-  let ViewableBooks: Array<IBook> = state.content.books.filter( book => 
-    ( 
-      (book.fields.type === "pre-test" || "post-test") 
-      && (book.fields.testType === state.setupDevice.testType)
-    )
-    || (book.fields.type === undefined)
-    || (book.fields.type === "normal")
+  return state.content.books.filter(
+    (book) =>
+      (Book.isAssessment(book) &&
+        book.fields.testType === state.setupDevice.testType) ||
+      book.fields.type === undefined ||
+      book.fields.type === "normal"
   );
-
-  //pass back books to be displayed on bookshelf
-  return ViewableBooks;
 };
 
 export const selectBook = (state: RootState) => {

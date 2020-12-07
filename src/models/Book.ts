@@ -51,6 +51,10 @@ function getQuestionById(book: IBook, questionId: string): GetQuestion | null {
   return { question, pageNumber };
 }
 
+function isAssessment(book: IBook): boolean {
+  return book.fields.type === "pre-test" || book.fields.type === "post-test";
+}
+
 export interface BookValidation {
   status: "ok" | "error";
   message?: string;
@@ -99,6 +103,7 @@ const Book = {
   getPage,
   getQuestion,
   getQuestionById,
+  isAssessment,
   validate,
 };
 export default Book;

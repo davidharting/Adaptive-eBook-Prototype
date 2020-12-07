@@ -73,6 +73,23 @@ class Question {
     return prompt;
   }
 
+  static getPromptType(
+    question: IQuestion
+  ): "number" | "size" | "both" | "none" {
+    const numberPrompt = question.fields.numberPrompt;
+    const sizePrompt = question.fields.sizePrompt;
+    if (numberPrompt && sizePrompt) {
+      return "both";
+    }
+    if (numberPrompt) {
+      return "number";
+    }
+    if (sizePrompt) {
+      return "size";
+    }
+    return "none";
+  }
+
   static getAudio(question: IQuestion, mode: Mode): string[] {
     const audio = [];
     const narrativeAudio =
