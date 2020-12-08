@@ -339,7 +339,7 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   return "WRONG";
 };
 
-export const selectShouldShowFeedback = (state: RootState): boolean => {
+export const selectShowFeedback = (state: RootState): boolean => {
   const book = selectBook(state);
   if (!book) {
     return true;

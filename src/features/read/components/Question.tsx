@@ -10,7 +10,7 @@ import Prompt from "./Prompt";
 import {
   chooseAnswerAsync,
   selectQuestionStatus,
-  selectShouldShowFeedback,
+  selectShowFeedback,
   selectPrompt,
   selectChoice,
   Grade,
@@ -25,14 +25,14 @@ interface QuestionProps {
 function Question({ question }: QuestionProps) {
   const status = useSelector(selectQuestionStatus);
   const choice = useSelector(selectChoice);
-  const shouldShowFeedback = useSelector(selectShouldShowFeedback);
+  const showFeedback = useSelector(selectShowFeedback);
 
   return (
     <>
       {status === "UNANSWERED" || status === "NOT_QUESTION" ? (
         <QuestionText question={question} />
       ) : (
-        <Feedback grade={status} maskFeedback={shouldShowFeedback === false} />
+        <Feedback grade={status} maskFeedback={showFeedback === false} />
       )}
       <div className="w-100 d-flex align-items-center justify-content-around">
         {choice && <Choice choice={choice} questionId={question.sys.id} />}
