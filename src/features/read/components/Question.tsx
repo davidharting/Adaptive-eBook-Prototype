@@ -73,6 +73,7 @@ function Feedback({
     <p
       className={cn(
         "mb-0 text-center",
+        { [styles.hidden]: maskFeedback },
         maskFeedback
           ? ""
           : {
