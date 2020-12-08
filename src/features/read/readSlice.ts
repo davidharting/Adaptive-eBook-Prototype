@@ -339,6 +339,11 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
   return "WRONG";
 };
 
+/**
+ * Feedback is a message on the screen that displays after a user selects an answer.
+ * This lets them know if they got it right or wrong, unsurprisingly.
+ * For assessments, we do not want to show feedback on every page.
+ */
 export const selectShowFeedback = (state: RootState): boolean => {
   const book = selectBook(state);
   if (!book) {
