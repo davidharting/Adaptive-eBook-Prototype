@@ -59,19 +59,29 @@ function Feedback({
   grade: Grade;
   maskFeedback: boolean;
 }) {
+  const message = () => {
+    if (maskFeedback) {
+      return "Feedback hidden";
+    }
+    if (grade === "CORRECT") {
+      return "Correct! ✅";
+    }
+    return "Sorry, that's not right. ⛔️";
+  };
+
   return (
     <p
-      className={cn("mb-0 text-center", {
-        [styles.correct]: grade === "CORRECT" && maskFeedback === false,
-        [styles.wrong]: grade === "WRONG" && maskFeedback === false,
-      })}
+      className={cn(
+        "mb-0 text-center",
+        maskFeedback
+          ? ""
+          : {
+              [styles.correct]: grade === "CORRECT",
+              [styles.wrong]: grade === "WRONG",
+            }
+      )}
     >
-      {maskFeedback === false
-        ? grade === "CORRECT"
-          ? "Correct! ✅"
-          : "Sorry, that's not right. ⛔️"
-        : null}
-      {maskFeedback === true ? "Feedback hidden" : null}
+      {message()}
     </p>
   );
 }
