@@ -64,8 +64,8 @@ function NewSession() {
             </Form.Control>
           </Form.Group>
           <Form.Group>
-            <Form.Label>What type of game were you assigned? (Optional)</Form.Label>
-            <Form.Control 
+            <Form.Label>What type of game were you assigned?</Form.Label>
+            <Form.Control
               as="select"
               onChange={(e) => {
                 if (["A", "B"].includes(e.target.value)) {
