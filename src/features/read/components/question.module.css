@@ -8,7 +8,8 @@
 }
 
 .correct,
-.wrong {
+.wrong,
+.hidden {
   font-size: 2.5rem;
   z-index: 1000;
 }

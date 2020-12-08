@@ -12,8 +12,19 @@ function getPages(book: IBook): IBookPage[] | null {
   if (!pages || !pages.length) {
     return null;
   }
-
   return pages;
+}
+
+function getQuestions(book: IBook): IQuestion[] {
+  const pages = getPages(book);
+  if (!pages) {
+    return [];
+  }
+  const isQuestion = (bookPage: IBookPage): bookPage is IQuestion => {
+    const determination = BookPage.determineType(bookPage);
+    return determination.type === "question";
+  };
+  return pages.filter(isQuestion);
 }
 
 function getPage(book: IBook, pageNumber: number) {
@@ -103,6 +114,7 @@ const Book = {
   getPage,
   getQuestion,
   getQuestionById,
+  getQuestions,
   isAssessment,
   validate,
 };
