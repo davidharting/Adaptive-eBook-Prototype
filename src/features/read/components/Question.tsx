@@ -10,6 +10,7 @@ import Prompt from "./Prompt";
 import {
   chooseAnswerAsync,
   selectQuestionStatus,
+  selectShowFeedback,
   selectPrompt,
   selectChoice,
   Grade,
@@ -24,13 +25,14 @@ interface QuestionProps {
 function Question({ question }: QuestionProps) {
   const status = useSelector(selectQuestionStatus);
   const choice = useSelector(selectChoice);
+  const showFeedback = useSelector(selectShowFeedback);
 
   return (
     <>
       {status === "UNANSWERED" || status === "NOT_QUESTION" ? (
         <QuestionText question={question} />
       ) : (
-        <Feedback grade={status} />
+        <Feedback grade={status} maskFeedback={showFeedback === false} />
       )}
       <div className="w-100 d-flex align-items-center justify-content-around">
         {choice && <Choice choice={choice} questionId={question.sys.id} />}
@@ -50,15 +52,37 @@ function QuestionText({ question }: { question: IQuestion }) {
   );
 }
 
-function Feedback({ grade }: { grade: Grade }) {
+function Feedback({
+  grade,
+  maskFeedback,
+}: {
+  grade: Grade;
+  maskFeedback: boolean;
+}) {
+  const message = () => {
+    if (maskFeedback) {
+      return "Feedback hidden";
+    }
+    if (grade === "CORRECT") {
+      return "Correct! ✅";
+    }
+    return "Sorry, that's not right. ⛔️";
+  };
+
   return (
     <p
-      className={cn("mb-0 text-center", {
-        [styles.correct]: grade === "CORRECT",
-        [styles.wrong]: grade === "WRONG",
-      })}
+      className={cn(
+        "mb-0 text-center",
+        { [styles.hidden]: maskFeedback },
+        maskFeedback
+          ? ""
+          : {
+              [styles.correct]: grade === "CORRECT",
+              [styles.wrong]: grade === "WRONG",
+            }
+      )}
     >
-      {grade === "CORRECT" ? "Correct! ✅" : "Sorry, that's not right. ⛔️"}
+      {message()}
     </p>
   );
 }

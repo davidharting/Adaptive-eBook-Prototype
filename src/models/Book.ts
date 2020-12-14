@@ -12,8 +12,19 @@ function getPages(book: IBook): IBookPage[] | null {
   if (!pages || !pages.length) {
     return null;
   }
-
   return pages;
+}
+
+function getQuestions(book: IBook): IQuestion[] {
+  const pages = getPages(book);
+  if (!pages) {
+    return [];
+  }
+  const isQuestion = (bookPage: IBookPage): bookPage is IQuestion => {
+    const determination = BookPage.determineType(bookPage);
+    return determination.type === "question";
+  };
+  return pages.filter(isQuestion);
 }
 
 function getPage(book: IBook, pageNumber: number) {
@@ -49,6 +60,10 @@ function getQuestionById(book: IBook, questionId: string): GetQuestion | null {
     return null;
   }
   return { question, pageNumber };
+}
+
+function isAssessment(book: IBook): boolean {
+  return book.fields.type === "pre-test" || book.fields.type === "post-test";
 }
 
 export interface BookValidation {
@@ -99,6 +114,8 @@ const Book = {
   getPage,
   getQuestion,
   getQuestionById,
+  getQuestions,
+  isAssessment,
   validate,
 };
 export default Book;

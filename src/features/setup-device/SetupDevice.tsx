@@ -9,14 +9,16 @@ function NewSession() {
   const [parentName, setParentName] = React.useState<string>("");
   const [childName, setChildName] = React.useState<string>("");
   const [treatment, setTreatment] = React.useState<Treatment | "">("");
+  const [testType, setTestType] = React.useState<string>("");
   const dispatch = useDispatch();
 
   const disabled = !parentName || !childName || !treatment;
 
   const onSubmit = (e: React.FormEvent) => {
     e.preventDefault();
+    // if (childName && parentName && treatment && testType) { //empty string in Javascript is technically "falsy" therefore && testType == false
     if (childName && parentName && treatment) {
-      dispatch(startSession({ childName, parentName, treatment }));
+      dispatch(startSession({ childName, parentName, treatment, testType }));
     }
   };
 
@@ -59,6 +61,21 @@ function NewSession() {
               <option value="number">A</option>
               <option value="size">B</option>
               <option value="mixed">C</option>
+            </Form.Control>
+          </Form.Group>
+          <Form.Group>
+            <Form.Label>What type of game were you assigned?</Form.Label>
+            <Form.Control
+              as="select"
+              onChange={(e) => {
+                if (["A", "B"].includes(e.target.value)) {
+                  setTestType(e.target.value);
+                }
+              }}
+            >
+              <option value=""></option>
+              <option value="A">A</option>
+              <option value="B">B</option>
             </Form.Control>
           </Form.Group>
           <Button disabled={disabled} variant="primary" type="submit">

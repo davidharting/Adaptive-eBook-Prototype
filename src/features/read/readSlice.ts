@@ -7,6 +7,7 @@ import { AnswerDocument, recordAnswer } from "db";
 import { Mode } from "models/constants";
 import Book from "models/Book";
 import { IBookPage } from "models/BookPage";
+import BookPage from "models/BookPage";
 import Question from "models/Question";
 
 import { shouldAdvanceDifficulty } from "./adaptivity";
@@ -179,10 +180,52 @@ const selectQuestion = (state: RootState): IQuestion | null => {
 
 export const selectMode = (state: RootState): Mode | null => {
   const treatment = selectTreatment(state);
-  if (treatment === "mixed") {
-    return state.read.randomMode;
+  const book = selectBook(state);
+
+  if (!book) {
+    return null;
   }
-  return treatment;
+
+  if (!Book.isAssessment(book)) {
+    if (treatment === "mixed") {
+      return state.read.randomMode;
+    }
+
+    return treatment;
+  }
+
+  const bookPage = Book.getPage(book, selectPageNumber(state));
+  if (!bookPage) {
+    return null;
+  }
+
+  const determine = BookPage.determineType(bookPage);
+  if (determine.type === "page" || determine.type === "error") {
+    return null;
+  }
+  const question = determine.question;
+
+  if (!question) {
+    throw new Error(`Missing question. Current questions is of type null.`);
+  }
+
+  const promptType = Question.getPromptType(question);
+  if (promptType === "number") {
+    return "number";
+  }
+  if (promptType === "size") {
+    return "size";
+  }
+  if (promptType === "both") {
+    throw new Error(
+      "Pre- or post-test question had two prompts instead of one."
+    );
+  }
+  if (promptType === "none") {
+    throw new Error("Pre- or post-test question missing prompt.");
+  }
+
+  return null;
 };
 
 export const selectPrompt = (state: RootState): IPrompt | null => {
@@ -225,7 +268,11 @@ export function selectDifficulty(state: RootState): Difficulty {
   const book = selectBook(state);
   const answers = state.read.answers;
 
-  if (!book || answers.length < NUMBER_CORRECT_TO_ADVANCE) {
+  if (
+    !book ||
+    answers.length < NUMBER_CORRECT_TO_ADVANCE ||
+    Book.isAssessment(book)
+  ) {
     return STARTING_DIFFICULTY;
   }
 
@@ -290,6 +337,39 @@ export const selectQuestionStatus = (state: RootState): QuestionStatus => {
     return "CORRECT";
   }
   return "WRONG";
+};
+
+/**
+ * Feedback is a message on the screen that displays after a user selects an answer.
+ * This lets them know if they got it right or wrong, unsurprisingly.
+ * For assessments, we do not want to show feedback on every page.
+ */
+export const selectShowFeedback = (state: RootState): boolean => {
+  const book = selectBook(state);
+  if (!book) {
+    return true;
+  }
+  if (!Book.isAssessment(book)) {
+    return true;
+  }
+
+  const currentQuestion = selectQuestion(state);
+  if (!currentQuestion) {
+    return true;
+  }
+  const section = currentQuestion.fields.section;
+  if (!section) {
+    return false;
+  }
+
+  const allQuestions = Book.getQuestions(book);
+  const questionsInCurrentSection = allQuestions.filter(
+    (q) => q.fields.section === section
+  );
+  const slot = questionsInCurrentSection.findIndex(
+    (q) => q.sys.id === currentQuestion.sys.id
+  );
+  return slot === 0 || slot === 1;
 };
 
 export const selectCanPageForward = (state: RootState): boolean => {

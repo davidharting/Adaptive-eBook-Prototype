@@ -65,7 +65,13 @@ export const {
 } = selectBookSlice.actions;
 
 export const selectAvailableBooks = (state: RootState) => {
-  return state.content.books;
+  return state.content.books.filter(
+    (book) =>
+      (Book.isAssessment(book) &&
+        book.fields.testType === state.setupDevice.testType) ||
+      book.fields.type === undefined ||
+      book.fields.type === "normal"
+  );
 };
 
 export const selectBook = (state: RootState) => {
